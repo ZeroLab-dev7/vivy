@@ -1,0 +1,33 @@
+[1m[90m[TAILING] Tailing last 30 lines for [nighthelper] process (change the value with --lines option)[39m[22m
+[90m/root/.pm2/logs/nighthelper-out.log last 30 lines:[39m
+  'serverinfo',         'topinvites',   'user',
+  'alias',              'padd',         'pcolor',
+  'pcreate',            'pdelete',      'picon',
+  'plist',              'pname',        'premove',
+  'pshowall',           'antibots',     'antilink-stats',
+  'antilink-whitelist', 'antilink',     'antiwebhook',
+  'lock',               'setup-logs',   'setup-owner',
+  'unlock',             'find',         'join',
+  'stats-voice',        'vclist',       'vdeafen',
+  'vkick',              'vmute',        'vundeafen',
+  'vunmute'
+]
+✅ Loaded 94 legacy commands.
+✅ Loaded 17 slash commands.
+Started refreshing application (/) commands.
+Connected to prefix database.
+Connected to RoomSetupDB.
+Connected to the antiWebhook database.
+Prefix table ready.
+✅ Successfully reloaded application (/) commands GLOBALLY.
+✅ Logged in as Night Control 1.0#9437
+✅ Background tasks initialized: Mute Expiry Check
+✅ Invite Tracker initialized
+✅ Logged in as Night Control 1.0#9437
+Cached 5 invites for Test Aps
+Cached 8 invites for After Hours #soon
+Cached 0 invites for Underground test Dev
+Cached 24 invites for 𝗪𝗥𝗔𝗣 𝗦𝗧𝗔𝗥𝗦
+Cached 8 invites for Underground 💀 | closed
+Cached 91 invites for Five Stars
+

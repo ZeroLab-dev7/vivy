@@ -1,0 +1,58 @@
+🚀 Starting bot...
+✅ Database connected successfully.
+✅ Models synced: WarnSetup, JailSetup, AntiBotSetup, AutoRoleSetup, Economy, AntiLink, AntiWebhook, CustomAlias.
+✅ Loaded 30 events.
+✅ Loaded 84 legacy commands.
+✅ Loaded 16 slash commands.
+Started refreshing application (/) commands.
+⚠️ GUILD_ID not found in config. Registering GLOBAL commands instead (might take up to 1 hour to cache).
+Connected to prefix database.
+Connected to RoomSetupDB.
+Connected to the antiWebhook database.
+Prefix table ready.
+✅ Successfully reloaded application (/) commands GLOBALLY.
+✅ Logged in as Night Control 1.0#9437
+✅ Background tasks initialized: Mute Expiry Check
+✅ Logged in as Night Control 1.0#9437
+(node:274094) DeprecationWarning: The ready event has been renamed to clientReady to distinguish it from the gateway READY event and will only emit under that name in v15. Please use clientReady instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:274094) Warning: Supplying "ephemeral" for interaction response options is deprecated. Utilize flags instead.
+Error in setupmute: DiscordAPIError[10062]: Unknown interaction
+    at handleErrors (/root/discord/nightclub/helper/node_modules/@discordjs/rest/dist/index.js:762:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async BurstHandler.runRequest (/root/discord/nightclub/helper/node_modules/@discordjs/rest/dist/index.js:866:23)
+    at async _REST.request (/root/discord/nightclub/helper/node_modules/@discordjs/rest/dist/index.js:1307:22)
+    at async ChatInputCommandInteraction.deferReply (/root/discord/nightclub/helper/node_modules/discord.js/src/structures/interfaces/InteractionResponses.js:122:22)
+    at async Object.execute (/root/discord/nightclub/helper/slashCommands/Setup Mute/setup-mute.js:26:13)
+    at async Object.execute (/root/discord/nightclub/helper/events/interactionCreate.js:14:11) {
+  requestBody: { files: undefined, json: { type: 5, data: [Object] } },
+  rawError: { message: 'Unknown interaction', code: 10062 },
+  code: 10062,
+  status: 404,
+  method: 'POST',
+  url: 'https://discord.com/api/v10/interactions/1473337785636094083/aW50ZXJhY3Rpb246MTQ3MzMzNzc4NTYzNjA5NDA4Mzp4T25oSm9od1RVZnJmTE1FNUxyTGF1RzdNRUg3S2xWc3R4cnVyU202ZFN2T1IwT1VZTmg1a1JEcUloOVJONXRGdGtCNG81eFhJT2RzWmJqUXl5WTVpT2VwRUw1TXBIOU1OQ0lKTVZFbVo3U2xIM05Oc3lqa1hBMW84Tm9MRGhwbw/callback?with_response=false'
+}
+Error [InteractionNotReplied]: The reply to this interaction has not been sent or deferred.
+    at ChatInputCommandInteraction.editReply (/root/discord/nightclub/helper/node_modules/discord.js/src/structures/interfaces/InteractionResponses.js:246:48)
+    at Object.execute (/root/discord/nightclub/helper/slashCommands/Setup Mute/setup-mute.js:71:31)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.execute (/root/discord/nightclub/helper/events/interactionCreate.js:14:11) {
+  code: 'InteractionNotReplied'
+}
+Interaction Handler Error: DiscordAPIError[40060]: Interaction has already been acknowledged.
+    at handleErrors (/root/discord/nightclub/helper/node_modules/@discordjs/rest/dist/index.js:762:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async BurstHandler.runRequest (/root/discord/nightclub/helper/node_modules/@discordjs/rest/dist/index.js:866:23)
+    at async _REST.request (/root/discord/nightclub/helper/node_modules/@discordjs/rest/dist/index.js:1307:22)
+    at async ChatInputCommandInteraction.reply (/root/discord/nightclub/helper/node_modules/discord.js/src/structures/interfaces/InteractionResponses.js:193:22)
+    at async Object.execute (/root/discord/nightclub/helper/events/interactionCreate.js:26:13) {
+  requestBody: { files: [], json: { type: 4, data: [Object] } },
+  rawError: {
+    message: 'Interaction has already been acknowledged.',
+    code: 40060
+  },
+  code: 40060,
+  status: 400,
+  method: 'POST',
+  url: 'https://discord.com/api/v10/interactions/1473337785636094083/aW50ZXJhY3Rpb246MTQ3MzMzNzc4NTYzNjA5NDA4Mzp4T25oSm9od1RVZnJmTE1FNUxyTGF1RzdNRUg3S2xWc3R4cnVyU202ZFN2T1IwT1VZTmg1a1JEcUloOVJONXRGdGtCNG81eFhJT2RzWmJqUXl5WTVpT2VwRUw1TXBIOU1OQ0lKTVZFbVo3U2xIM05Oc3lqa1hBMW84Tm9MRGhwbw/callback?with_response=false'
+}

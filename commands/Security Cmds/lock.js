@@ -1,0 +1,41 @@
+const UI = require('../../utils/ui');
+const { PermissionsBitField, ChannelType, MessageFlags } = require('discord.js');
+
+module.exports = {
+    name: 'lock',
+    description: 'Lock a channel',
+    async execute(message, args) {
+        if (!message.member.permissions.has(PermissionsBitField.Flags.ManageChannels)) {
+            return message.reply({
+                components: [UI.createContainer({
+                    description: '- <a:warn:1365688576758644797> You need `Manage Channels` permission.'
+                })],
+                flags: MessageFlags.IsComponentsV2
+            });
+        }
+
+        const channel = message.mentions.channels.first() || message.channel;
+
+        try {
+            await channel.permissionOverwrites.edit(message.guild.roles.everyone, {
+                SendMessages: false
+            });
+
+            message.reply({
+                components: [UI.createContainer({
+                    title: '🔒 Channel Locked',
+                    description: `${channel} has been locked for everyone.`
+                })],
+                flags: MessageFlags.IsComponentsV2
+            });
+        } catch (err) {
+            console.error(err);
+            message.reply({
+                components: [UI.createContainer({
+                    description: '- <a:warn:1365688576758644797> Failed to lock channel. Check my permissions.'
+                })],
+                flags: MessageFlags.IsComponentsV2
+            });
+        }
+    },
+};
