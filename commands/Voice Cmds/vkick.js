@@ -41,8 +41,8 @@ module.exports = {
                     description: "Kick a user from a voice channel.",
                     fields: [
                         { name: "Aliases:", value: "- voicekick, vkick, vcreject", inline: false },
-                        { name: "Usage:", value: "- &vkick @user/id", inline: false },
-                        { name: "Example:", value: `- &vkick <@${message.author.id}>\n- &vkick ${message.author.id}`, inline: false }
+                        { name: "Usage:", value: "- ?vkick @user/id", inline: false },
+                        { name: "Example:", value: `- ?vkick <@${message.author.id}>\n- ?vkick ${message.author.id}`, inline: false }
                     ],
                     footer: `Requested by ${message.author.tag}`
                 })],

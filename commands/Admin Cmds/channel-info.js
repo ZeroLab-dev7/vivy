@@ -25,8 +25,8 @@ module.exports = {
                 footer: `Requested by ${message.author.tag}`,
                 fields: [
                     { name: "Aliases:", value: "- cinfo, channel-info" },
-                    { name: "Usage:", value: "- &channelinfo #channel/id" },
-                    { name: "Examples:", value: `- &channelinfo #general\n- &channelinfo 123456789012345678` }
+                    { name: "Usage:", value: "- ?channelinfo #channel/id" },
+                    { name: "Examples:", value: `- ?channelinfo #general\n- ?channelinfo 123456789012345678` }
                 ]
             });
             return message.reply({

@@ -19,20 +19,44 @@ module.exports = {
       // Fetch the user's profile to access the banner
       const userProfile = await interaction.client.users.fetch(user.id, { force: true });
 
-      // Get the user's banner URL
-      const userBanner = userProfile.bannerURL({ dynamic: true, size: 1024 });
+      // Fetch the guild member to check for server-specific banner
+      const member = interaction.guild ? await interaction.guild.members.fetch(user.id).catch(() => null) : null;
 
-      if (userBanner) {
-        // Create an embed to show the user's banner
-        const bannerEmbed = new EmbedBuilder()
-          .setColor("Random") // Set a specific color
-          .setTitle(`Banner of ${user.tag}`)
-          .setURL(userBanner) // URL to the banner
-          .setImage(userBanner) // Main image for the user's banner
+      // Get banner URLs
+      const globalBannerURL = userProfile.bannerURL({ dynamic: true, size: 1024 });
+      const serverBannerURL = member ? member.bannerURL({ dynamic: true, size: 1024 }) : null;
+
+      const embeds = [];
+
+      if (globalBannerURL) {
+        const globalEmbed = new EmbedBuilder()
+          .setColor("Random")
+          .setTitle(`${user.tag}'s Global Banner`)
+          .setURL(globalBannerURL)
+          .setImage(globalBannerURL)
           .setFooter({ text: `Requested by ${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })
           .setTimestamp();
+        embeds.push(globalEmbed);
+      }
 
-        await interaction.reply({ embeds: [bannerEmbed] });
+      if (serverBannerURL) {
+        const serverEmbed = new EmbedBuilder()
+          .setColor("Random")
+          .setTitle(`${user.tag}'s Server Banner`)
+          .setURL(serverBannerURL)
+          .setImage(serverBannerURL)
+          .setFooter({ text: `Requested by ${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })
+          .setTimestamp();
+        embeds.push(serverEmbed);
+      }
+
+      // If only one exists and it's the global banner, make the title match original style
+      if (embeds.length === 1 && globalBannerURL) {
+        embeds[0].setTitle(`Banner of ${user.tag}`);
+      }
+
+      if (embeds.length > 0) {
+        await interaction.reply({ embeds: embeds });
       } else {
         const nobannerEmbed = new EmbedBuilder()
           .setDescription('- This user does not have a banner set.')

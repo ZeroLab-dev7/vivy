@@ -6,6 +6,12 @@ const { PermissionsBitField } = require('discord.js');
 const AntiLink = require('../db/models/AntiLink');
 const { GuildSettings } = require('../db/models');
 
+const AutoModService = require('../services/autoModService');
+const LevelService = require('../services/levelService');
+const CustomCommandService = require('../services/customCommandService');
+const GeneralService = require('../services/generalService');
+const AiService = require('../services/aiService');
+
 const musicSpamCache = new Map();
 
 async function handleAntiLink(message, member) {
@@ -157,9 +163,19 @@ module.exports = {
                 return;
             }
 
-            // Anti-Link Feature
-            const linkHandled = await handleAntiLink(message, member);
-            if (linkHandled) return;
+
+
+            // AI Smart Moderation Check
+            const smartModHandled = await AiService.checkSmartModeration(message);
+            if (smartModHandled) return;
+
+            // AI Auto-Reply Check
+            const autoReplyHandled = await AiService.handleAutoReply(message);
+            if (autoReplyHandled) return;
+
+            // Custom Commands Check
+            const customCmdHandled = await CustomCommandService.matchAndExecute(message);
+            if (customCmdHandled) return;
 
             // Command Handling
             const prefix = await getPrefix(message.guild.id);
@@ -174,10 +190,42 @@ module.exports = {
             if (prefixlessAlias) {
                 const cmd = message.client.commands.get(prefixlessAlias.command_name);
                 if (cmd) {
+                    const devHelper = require('../utils/developerHelper');
+                    const check = await devHelper.checkMaintenanceAndDisabled(prefixlessAlias.command_name, message.author.id, message.client);
+                    if (check.blocked) {
+                        if (check.reason === 'maintenance') {
+                            return message.reply({
+                                components: [UI.createContainer({
+                                    color: 0xFF9900,
+                                    title: '🚧 Maintenance Mode Enabled',
+                                    description: check.message
+                                })]
+                            }).catch(() => {});
+                        } else if (check.reason === 'disabled') {
+                            return message.reply({
+                                components: [UI.createContainer({
+                                    color: 0xFF0000,
+                                    description: `❌ **Command Disabled**\nThe \`${prefixlessAlias.command_name}\` command has been disabled globally by the developers.`
+                                })]
+                            }).catch(() => {});
+                        }
+                        return;
+                    }
                     await cmd.execute(message, parts.slice(1));
+                    await devHelper.logCommand(prefixlessAlias.command_name, message.author.id, message.guild.id, 'prefix');
                     return;
                 }
             }
+
+            const isCommand = message.content.startsWith(prefix);
+
+            // Leveling XP Update (ignore command calls to prevent cooldown hijacking)
+            if (!isCommand) {
+                await LevelService.addXP(message);
+            }
+
+            // Sticky Message Check
+            await GeneralService.handleStickyMessage(message);
 
             if (!message.content.startsWith(prefix)) return;
             const args = message.content.slice(prefix.length).trim().split(/ +/);
@@ -201,7 +249,29 @@ module.exports = {
             }
 
             if (command) {
+                const devHelper = require('../utils/developerHelper');
+                const check = await devHelper.checkMaintenanceAndDisabled(command.name || commandName, message.author.id, message.client);
+                if (check.blocked) {
+                    if (check.reason === 'maintenance') {
+                        return message.reply({
+                            components: [UI.createContainer({
+                                color: 0xFF9900,
+                                title: '🚧 Maintenance Mode Enabled',
+                                description: check.message
+                            })]
+                        }).catch(() => {});
+                    } else if (check.reason === 'disabled') {
+                        return message.reply({
+                            components: [UI.createContainer({
+                                color: 0xFF0000,
+                                description: `❌ **Command Disabled**\nThe \`${command.name || commandName}\` command has been disabled globally by the developers.`
+                            })]
+                        }).catch(() => {});
+                    }
+                    return;
+                }
                 await command.execute(message, args);
+                await devHelper.logCommand(command.name || commandName, message.author.id, message.guild.id, 'prefix');
             }
         } catch (error) {
             console.error('Error processing message:', error);

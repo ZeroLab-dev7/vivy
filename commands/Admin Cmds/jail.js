@@ -31,8 +31,8 @@ module.exports = {
           footer: `Requested by ${message.author.tag}`,
           fields: [
             { name: "Aliases:", value: "- jail, eject" },
-            { name: "Usage:", value: "- &jail @user/id (reason)" },
-            { name: "Examples:", value: `- &jail <@${message.author.id}> advertisement` }
+            { name: "Usage:", value: "- ?jail @user/id (reason)" },
+            { name: "Examples:", value: `- ?jail <@${message.author.id}> advertisement` }
           ]
         })],
         flags: MessageFlags.IsComponentsV2

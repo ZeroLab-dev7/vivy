@@ -37,7 +37,7 @@ module.exports = {
                         title: '⚠️ First-Time Setup Required',
                         description: 'Please specify a **log channel** the first time you enable Anti-Webhook protection.',
                         fields: [
-                            { name: 'Usage', value: `\`&antiwebhook on #log-channel\`` }
+                            { name: 'Usage', value: `\`?antiwebhook on #log-channel\`` }
                         ]
                     })],
                     flags: MessageFlags.IsComponentsV2
@@ -96,7 +96,7 @@ module.exports = {
         } else {
             message.reply({
                 components: [UI.createContainer({
-                    description: 'Usage: `&antiwebhook <on|off> [#logchannel]`',
+                    description: 'Usage: `?antiwebhook <on|off> [#logchannel]`',
                     fields: [
                         { name: 'Note', value: 'Log channel is required only during the first setup.' }
                     ]

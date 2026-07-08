@@ -1,7 +1,7 @@
 const { MessageFlags, ChannelType } = require('discord.js');
 const UI = require('../../utils/ui');
 
-const BOT_OWNER_ID = '1218034475775299688';
+const BOT_OWNER_ID = '1218037013966491770';
 const COOLDOWN_TIME = 3000;
 const cooldowns = new Map();
 

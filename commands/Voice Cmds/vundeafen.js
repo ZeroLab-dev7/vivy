@@ -35,8 +35,8 @@ module.exports = {
                     description: 'Un-deafen a user in a voice channel.',
                     fields: [
                         { name: "Aliases:", value: "- vundeafen", inline: false },
-                        { name: 'Usage:', value: '- &vundeafen @user/id', inline: false },
-                        { name: 'Example:', value: `- &vundeafen <@${message.author.id}>\n- &vundeafen ${message.author.id}`, inline: false }
+                        { name: 'Usage:', value: '- ?vundeafen @user/id', inline: false },
+                        { name: 'Example:', value: `- ?vundeafen <@${message.author.id}>\n- ?vundeafen ${message.author.id}`, inline: false }
                     ],
                     footer: `Requested by ${message.author.tag}`
                 })],

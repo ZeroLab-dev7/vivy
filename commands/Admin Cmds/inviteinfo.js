@@ -25,8 +25,8 @@ module.exports = {
                 footer: `Requested by ${message.author.tag}`,
                 fields: [
                     { name: "Aliases:", value: "iinfo, invite-info" },
-                    { name: "Usage:", value: "&inviteinfo invite-code / full-link" },
-                    { name: "Examples:", value: `- &inviteinfo hpsy\n- &inviteinfo https://discord.gg/hpsy` }
+                    { name: "Usage:", value: "?inviteinfo invite-code / full-link" },
+                    { name: "Examples:", value: `- ?inviteinfo hpsy\n- ?inviteinfo https://discord.gg/hpsy` }
                 ]
             });
             return message.reply({

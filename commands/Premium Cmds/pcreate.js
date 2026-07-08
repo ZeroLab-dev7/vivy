@@ -43,15 +43,15 @@ module.exports = {
                 // not strictly necessary for creation but good for safety
             }
 
-            // 2. Parse Arguments: &pcreate <name> <user_id/mention>
+            // 2. Parse Arguments: ?pcreate <name> <user_id/mention>
             if (args.length < 2) {
                 return message.reply({
                     components: [UI.createContainer({
                         title: "Command: pcreate",
                         description: "Create a premium plan for a specific user.",
                         fields: [
-                            { name: "Usage", value: `\`&pcreate <plan name> <user_id/mention>\`` },
-                            { name: "Example", value: `\`&pcreate OG Plan 1234567890\`` }
+                            { name: "Usage", value: `\`?pcreate <plan name> <user_id/mention>\`` },
+                            { name: "Example", value: `\`?pcreate OG Plan 1234567890\`` }
                         ]
                     })],
                     flags: MessageFlags.IsComponentsV2

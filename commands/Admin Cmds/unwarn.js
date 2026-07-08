@@ -24,7 +24,7 @@ module.exports = {
                         title: 'Command: unwarn',
                         footer: `Requested by ${message.author.tag}`,
                         fields: [
-                            { name: "Examples:", value: `- &unwarn <@${message.author.id}>` }
+                            { name: "Examples:", value: `- ?unwarn <@${message.author.id}>` }
                         ]
                     })],
                     flags: MessageFlags.IsComponentsV2

@@ -15,8 +15,8 @@ module.exports = {
                 footer: `Requested by ${message.author.tag}`,
                 fields: [
                     { name: "Aliases:", value: "- timeout, timeoutuser, settimeout" },
-                    { name: "Usage:", value: "- &timeout (user/id) (time)" },
-                    { name: "Examples:", value: `- &timeout @user/id 24h` }
+                    { name: "Usage:", value: "- ?timeout (user/id) (time)" },
+                    { name: "Examples:", value: `- ?timeout @user/id 24h` }
                 ]
             });
             return message.reply({

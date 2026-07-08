@@ -41,8 +41,8 @@ module.exports = {
                     description: "Unmute a user in a voice channel.",
                     fields: [
                         { name: "Aliases:", value: "- vunmute, voiceunmute", inline: false },
-                        { name: "Usage:", value: "- &vunmute @user/id", inline: false },
-                        { name: "Example:", value: `- &vunmute <@${message.author.id}>\n- &vunmute ${message.author.id}`, inline: false }
+                        { name: "Usage:", value: "- ?vunmute @user/id", inline: false },
+                        { name: "Example:", value: `- ?vunmute <@${message.author.id}>\n- ?vunmute ${message.author.id}`, inline: false }
                     ],
                     footer: `Requested by ${message.author.tag}`
                 })],

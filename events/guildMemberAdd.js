@@ -1,6 +1,7 @@
 const { PermissionsBitField } = require("discord.js");
 const { GuildSettings, JailSetup, JailedUser, AntiBotSetup, Mute, MuteSetup, PubSetup } = require("../db/models");
 const UI = require("../utils/ui");
+const WelcomeService = require("../services/welcomeService");
 
 module.exports = {
   name: "guildMemberAdd",
@@ -136,26 +137,30 @@ module.exports = {
       }
 
       // 3. Auto-Role Assignment
-
       const autoRole = await (require("../db/models/AutoRoleSetup")).findByPk(member.guild.id);
       if (autoRole && autoRole.auto_role_id) {
-        const role = member.guild.roles.cache.get(autoRole.auto_role_id);
-        if (role) {
-          await member.roles.add(role, "Auto-role assignment on join");
-          console.log(`Assigned auto role to user ${member.user.tag} in guild: ${member.guild.name}`);
-        } else {
-          console.warn(`Role with ID ${autoRole.auto_role_id} not found in guild: ${member.guild.name}`);
+        const roleIds = autoRole.auto_role_id.split(',').filter(Boolean);
+        for (const roleId of roleIds) {
+          const role = member.guild.roles.cache.get(roleId);
+          if (role) {
+            await member.roles.add(role, "Auto-role assignment on join").catch(console.error);
+            console.log(`Assigned auto role ${role.name} to user ${member.user.tag} in guild: ${member.guild.name}`);
+          } else {
+            console.warn(`Role with ID ${roleId} not found in guild: ${member.guild.name}`);
+          }
         }
       }
-
       // 4. Pub Message
       const pubSetup = await PubSetup.findByPk(member.guild.id);
       if (pubSetup && pubSetup.is_enabled) {
-        const pubMessage = `## Welcome ${member} to ${member.guild.name}\n> If U like my service join our server Zero Lab \n\nhttps://discord.gg/BVwscM6RfX`;
+        const pubMessage = `# 👋 Welcome ${member}! Thanks for joining **${member.guild.name}** ❤️\n\n> If you're enjoying ZeroLab Bots or need any help, join our **Official Support Server**.\n\n## 📥 Official Support Server for ZeroLab Bots\n• 💬 Get help from our team\n• 🐛 Report bugs & issues\n• 💡 Request new features\n• 🚀 Stay updated with the latest releases\n\n🔗 **Join:** https://discord.gg/kB2cAM897m`;
         
-        // Only send to DM (no fallback to channels)
+        // Only send to DM
         await member.send({ content: pubMessage }).catch(() => {});
       }
+
+      // 5. Visual Welcome & Advanced Custom Welcome Roles
+      await WelcomeService.handleJoin(member);
     } catch (error) {
       console.error("Error in guildMemberAdd event handler:", error);
     }

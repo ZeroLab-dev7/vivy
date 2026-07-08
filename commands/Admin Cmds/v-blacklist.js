@@ -16,7 +16,7 @@ module.exports = {
                     components: [UI.createContainer({
                         title: 'Verification Blacklist Help',
                         fields: [
-                            { name: "Usage:", value: "- &v-blacklist add <user/id> [reason]\n- &v-blacklist remove <user/id>\n- &v-blacklist list" }
+                            { name: "Usage:", value: "- ?v-blacklist add <user/id> [reason]\n- ?v-blacklist remove <user/id>\n- ?v-blacklist list" }
                         ]
                     })],
                     flags: MessageFlags.IsComponentsV2

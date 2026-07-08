@@ -42,7 +42,7 @@ module.exports = {
 
             return message.reply({
                 components: [UI.createContainer({
-                    description: 'Usage: `$setup-logs <#channel|ID|off>`'
+                    description: 'Usage: `?setup-logs <#channel|ID|off>`'
                 })],
                 flags: MessageFlags.IsComponentsV2
             });

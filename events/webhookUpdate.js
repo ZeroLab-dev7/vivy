@@ -3,7 +3,7 @@ const AntiWebhook = require('../db/models/AntiWebhook');
 const { GuildSettings } = require('../db/models');
 
 module.exports = {
-    name: 'webhookUpdate',
+    name: 'webhooksUpdate',
     async execute(channel) {
         try {
             const guild = channel.guild;
@@ -64,18 +64,15 @@ module.exports = {
                     const logChannel = logChannelId ? guild.channels.cache.get(logChannelId) : null;
 
                     if (logChannel) {
-                        const UI = require('../utils/ui');
-                        const logContainer = UI.createContainer({
-                            title: '🛡️ Anti-Webhook Protection',
-                            description: `**Unauthorized Webhook Deleted**\n\n**Executor:** ${executor.tag} (\`${executor.id}\`)\n**Channel:** ${channel}`,
-                            color: 0xFF0000,
-                            footer: 'Security System'
-                        });
+                        const { EmbedBuilder } = require('discord.js');
+                        const embed = new EmbedBuilder()
+                            .setTitle('🛡️ Anti-Webhook Protection')
+                            .setDescription(`**Unauthorized Webhook Deleted**\n\n**Executor:** ${executor.tag} (\`${executor.id}\`)\n**Channel:** ${channel}`)
+                            .setColor(0xFF0000)
+                            .setTimestamp()
+                            .setFooter({ text: 'Security System' });
 
-                        await logChannel.send({
-                            components: [logContainer],
-                            flags: 128 // MessageFlags.IsComponentsV2
-                        });
+                        await logChannel.send({ embeds: [embed] });
                     }
                 }
             }

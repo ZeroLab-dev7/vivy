@@ -39,8 +39,8 @@ module.exports = {
                 footer: `Requested by ${message.author.tag}`,
                 fields: [
                     { name: "Aliases:", value: "- clear, ms7, Msa7, msa7, mse7, msh" },
-                    { name: "Usage:", value: "- &clear (number of messages)" },
-                    { name: "Examples:", value: `- &clear 100\n- &clear 50` }
+                    { name: "Usage:", value: "- ?clear (number of messages)" },
+                    { name: "Examples:", value: `- ?clear 100\n- ?clear 50` }
                 ]
             });
             return message.reply({

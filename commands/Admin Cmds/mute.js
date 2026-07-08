@@ -35,8 +35,8 @@ module.exports = {
                         title: 'Command: Mute',
                         description: 'Mute a user for a specific time.',
                         fields: [
-                            { name: 'Usage:', value: `+mute <@user/id/name> [time] [reason]` },
-                            { name: 'Examples:', value: `- +mute @user 1h spam\n- +mute @user 30m\n- +mute @user` }
+                            { name: 'Usage:', value: `?mute <@user/id/name> [time] [reason]` },
+                            { name: 'Examples:', value: `- ?mute @user 1h spam\n- ?mute @user 30m\n- ?mute @user` }
                         ]
                     })],
                     flags: MessageFlags.IsComponentsV2

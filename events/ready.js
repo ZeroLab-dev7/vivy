@@ -5,25 +5,58 @@ module.exports = {
   name: 'clientReady',
   once: true,
   async execute(client) {
-    client.user.setPresence({
-      status: 'idle',
-      activities: [
-        {
-          type: ActivityType.Playing,
-          name: 'Zero Lab #LoadingToFuture',
+    const statuses = [
+      'https://vivy.zerolab.best/',
+      '?help',
+      '?dashboard to manage server',
+    ];
+    let index = 0;
+
+    const setBotPresence = () => {
+      client.user.setPresence({
+        status: 'online',
+        activities: [
+          {
+            type: ActivityType.Playing,
+            name: statuses[index],
+          },
+        ],
+        afk: false,
+        device: {
+          mobile: true,
         },
-      ],
-      afk: false,
-      device: {
-        mobile: true,
-      },
-    });
+      });
+      index = (index + 1) % statuses.length;
+    };
+
+    // Set initial status
+    setBotPresence();
+
+    // Rotate status every 15 minutes (Warning: Discord enforces a rate limit of 5 presence updates per 60 seconds per connection, which may cause some updates to be queued, delayed, or ignored)
+    setInterval(setBotPresence, 60000);
 
     console.log('✅ Background tasks initialized: Mute Expiry Check');
-    // Check every 30 seconds
+    // Check mutes every 30 seconds
     setInterval(() => checkExpiredMutes(client), 30000);
-    // Initial check
     checkExpiredMutes(client);
+
+    // Initialize Giveaway Expiry Check
+    const GiveawayService = require('../services/giveawayService');
+    console.log('✅ Background tasks initialized: Giveaway Expiry Check');
+    // Check giveaways every 30 seconds
+    setInterval(() => GiveawayService.checkAndResolveGiveaways(client), 30000);
+    GiveawayService.checkAndResolveGiveaways(client);
+
+    // Initialize Broadcast Expiry Check
+    const BroadcastService = require('../services/broadcastService');
+    console.log('✅ Background tasks initialized: Broadcast Expiry Check');
+    setInterval(() => BroadcastService.checkAndSendScheduled(client), 30000);
+    BroadcastService.checkAndSendScheduled(client);
+
+    // Initialize Leveling Voice XP Check
+    const LevelService = require('../services/levelService');
+    console.log('✅ Background tasks initialized: Voice XP Check');
+    setInterval(() => LevelService.checkVoiceXP(client), 60000);
 
     // Initialize Invite Tracker
     const InviteTracker = require('../utils/InviteTracker');

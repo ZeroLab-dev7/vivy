@@ -24,7 +24,7 @@ module.exports = {
                         title: "Command: pmadd",
                         description: "Add a manager to help you manage your premium plan.",
                         fields: [
-                            { name: "Usage", value: `\`&pmadd <user_id/mention>\`` }
+                            { name: "Usage", value: `\`?pmadd <user_id/mention>\`` }
                         ]
                     })],
                     flags: MessageFlags.IsComponentsV2

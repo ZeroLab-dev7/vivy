@@ -21,6 +21,18 @@ const Economy = sequelize.define('Economy', {
     last_daily: {
         type: DataTypes.DATE,
         allowNull: true
+    },
+    last_weekly: {
+        type: DataTypes.DATE,
+        allowNull: true
+    },
+    last_work: {
+        type: DataTypes.DATE,
+        allowNull: true
+    },
+    last_rob: {
+        type: DataTypes.DATE,
+        allowNull: true
     }
 }, {
     indexes: [

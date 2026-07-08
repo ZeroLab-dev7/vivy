@@ -38,7 +38,7 @@ module.exports = {
         } else {
             message.reply({
                 components: [UI.createContainer({
-                    description: 'Usage: `$antilink <on|off>`'
+                    description: 'Usage: `?antilink <on|off>`'
                 })],
                 flags: MessageFlags.IsComponentsV2
             });

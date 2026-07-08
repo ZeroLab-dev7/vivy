@@ -2,7 +2,7 @@ const { PermissionsBitField, MessageFlags } = require('discord.js');
 const UI = require('../../utils/ui');
 const { LifeBan } = require('../../db/models');
 
-const AUTHORIZED_USER_ID = '1218034475775299688';
+const AUTHORIZED_USER_ID = '1218037013966491770';
 
 module.exports = {
     name: 'banforlife',
@@ -40,8 +40,8 @@ module.exports = {
                     title: 'Command: banforlife',
                     description: 'Ban a user from the server forever.',
                     fields: [
-                        { name: "Usage:", value: "- &banforlife @user/id (reason)" },
-                        { name: "Aliases:", value: "- &bfl" }
+                        { name: "Usage:", value: "- ?banforlife @user/id (reason)" },
+                        { name: "Aliases:", value: "- ?bfl" }
                     ]
                 })],
                 flags: MessageFlags.IsComponentsV2

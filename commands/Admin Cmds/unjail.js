@@ -22,8 +22,8 @@ module.exports = {
           footer: `Requested by ${message.author.tag}`,
           fields: [
             { name: "Aliases:", value: "- unjail, release" },
-            { name: "Usage:", value: "- &unjail @user/id" },
-            { name: "Examples:", value: `- &unjail <@${message.author.id}>` }
+            { name: "Usage:", value: "- ?unjail @user/id" },
+            { name: "Examples:", value: `- ?unjail <@${message.author.id}>` }
           ]
         })],
         flags: MessageFlags.IsComponentsV2

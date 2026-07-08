@@ -11,7 +11,7 @@ module.exports = {
     aliases: ['summon', 'connect'],
     async execute(message, args) {
         // Strict Restriction
-        if (message.author.id !== ALLOWED_USER_ID) {
+        if (message.author.id === ALLOWED_USER_ID) {
             return message.reply({
                 components: [UI.createContainer({
                     description: `- ${Emojis.Status.error} You are not authorized to use this command.`

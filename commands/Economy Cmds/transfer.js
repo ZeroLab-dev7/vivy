@@ -11,7 +11,7 @@ module.exports = {
 
         if (!target || isNaN(amount) || amount <= 0) {
             return message.reply({
-                embeds: [UI.createEmbed({ type: 'warning', description: 'Usage: `$transfer @user <amount>`' })]
+                embeds: [UI.createEmbed({ type: 'warning', description: 'Usage: `?transfer @user <amount>`' })]
             });
         }
 

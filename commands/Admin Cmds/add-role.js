@@ -45,8 +45,8 @@ module.exports = {
                 footer: `Requested by ${message.author.tag}`,
                 fields: [
                     { name: "Aliases:", value: "addrole, roleadd" },
-                    { name: "Usage:", value: "+addrole @user/id <role name/id/mention>" },
-                    { name: "Examples:", value: `- +addrole @user @Member\n- +addrole 123456789 Admin` }
+                    { name: "Usage:", value: "?addrole @user/id <role name/id/mention>" },
+                    { name: "Examples:", value: `- ?addrole @user @Member\n- ?addrole 123456789 Admin` }
                 ]
             });
             return message.reply({

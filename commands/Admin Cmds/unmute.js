@@ -35,7 +35,7 @@ module.exports = {
                         title: 'Command: Unmute',
                         description: 'Unmute a user.',
                         fields: [
-                            { name: 'Usage:', value: `+unmute <@user/id/name>` }
+                            { name: 'Usage:', value: `?unmute <@user/id/name>` }
                         ]
                     })],
                     flags: MessageFlags.IsComponentsV2

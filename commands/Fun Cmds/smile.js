@@ -9,11 +9,11 @@ module.exports = {
         const user = message.mentions.users.first() || message.author;
 
         try {
-            const { data } = await axios.get('https://api.waifu.pics/sfw/smile');
+            const { data } = await axios.get('https://nekos.best/api/v2/smile');
 
             const container = UI.createContainer({
                 description: `**${message.author.username}** is smiling! 😸`,
-                image: data.url
+                image: data.results[0].url
             });
 
             message.reply({

@@ -46,8 +46,8 @@ module.exports = {
                         title: "Command: pcolor",
                         description: "Change the color of your premium role.",
                         fields: [
-                            { name: "Usage", value: `\`&pcolor <color_name_or_hex>\`` },
-                            { name: "Examples", value: `\`&pcolor red\`, \`&pcolor #ff00ff\`` }
+                            { name: "Usage", value: `\`?pcolor <color_name_or_hex>\`` },
+                            { name: "Examples", value: `\`?pcolor red\`, \`?pcolor #ff00ff\`` }
                         ]
                     })],
                     flags: MessageFlags.IsComponentsV2

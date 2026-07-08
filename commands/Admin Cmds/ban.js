@@ -46,8 +46,8 @@ module.exports = {
                     description: 'Ban a user from the server.',
                     footer: `Requested by ${message.author.tag}`,
                     fields: [
-                        { name: "Usage:", value: "- &ban @user/id (reason)" },
-                        { name: "Examples:", value: `- &ban <@${message.author.id}> breaking rules` }
+                        { name: "Usage:", value: "- ?ban @user/id (reason)" },
+                        { name: "Examples:", value: `- ?ban <@${message.author.id}> breaking rules` }
                     ]
                 })],
                 flags: MessageFlags.IsComponentsV2

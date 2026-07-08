@@ -1,0 +1,1625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <title>Dashboard — Vivy</title>
+    <meta name="description" content="Configure and manage your Discord server with Vivy's control panel.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="/dashboard.css">
+</head>
+<body>
+
+    <!-- Grid lines overlay & background orbs -->
+    <div class="bg-grid-overlay"></div>
+    <div class="bg-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <!-- Topbar -->
+    <nav class="dash-nav">
+        <div class="dash-nav-logo">
+            <a href="/servers" class="btn-logout btn-sm" style="border:none;padding:6px 10px;font-size:18px;">
+                <i class="fa-solid fa-chevron-left"></i>
+            </a>
+            <div class="logo-icon"><img src="/logo.png" alt="Vivy"></div>
+            <span class="logo-text">Vivy</span>
+        </div>
+        <div class="dash-nav-center">
+            <div class="nav-breadcrumb">
+                <span>Servers</span>
+                <i class="fa-solid fa-chevron-right" style="font-size:10px;color:var(--text-3)"></i>
+                <strong id="guildName">Loading…</strong>
+            </div>
+        </div>
+        <div class="dash-nav-right">
+            <a href="/developer" class="btn-dev" id="devPortalBtn" style="display:none; margin-right:12px;">
+                <i class="fa-solid fa-code"></i> Dev Portal
+            </a>
+            <div class="premium-chip" id="premiumChip" style="display:none">
+                <i class="fa-solid fa-crown"></i> Premium
+            </div>
+            <div class="user-chip" id="userChip">
+                <img src="https://cdn.discordapp.com/embed/avatars/0.png" alt="Avatar" id="userAvatar">
+                <span id="username">…</span>
+            </div>
+            <a href="/auth/discord/logout" class="btn-logout" id="logout-btn">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </a>
+        </div>
+    </nav>
+
+    <!-- Shell -->
+    <div class="dash-shell">
+
+        <!-- Sidebar -->
+        <aside class="dash-sidebar">
+            <span class="sidebar-section-label">General</span>
+            <div class="sidebar-item active" id="nav-overview" onclick="switchTab('overview')">
+                <i class="fa-solid fa-chart-line"></i> Overview
+            </div>
+            <div class="sidebar-item" id="nav-welcome" onclick="switchTab('welcome')">
+                <i class="fa-solid fa-door-open"></i> Welcome & Leave
+            </div>
+            <div class="sidebar-item" id="nav-autorole" onclick="switchTab('autorole')">
+                <i class="fa-solid fa-user-plus"></i> Auto Role
+            </div>
+
+            <span class="sidebar-section-label">Security</span>
+            <div class="sidebar-item" id="nav-security" onclick="switchTab('security')">
+                <i class="fa-solid fa-user-shield"></i> Security & Prefix
+            </div>
+            <div class="sidebar-item" id="nav-antilink" onclick="switchTab('antilink')">
+                <i class="fa-solid fa-link-slash"></i> Anti-Link
+            </div>
+            <div class="sidebar-item" id="nav-automod" onclick="switchTab('automod')">
+                <i class="fa-solid fa-shield-halved"></i> Auto Moderation
+            </div>
+
+            <span class="sidebar-section-label">Moderation</span>
+            <div class="sidebar-item" id="nav-warn" onclick="switchTab('warn')">
+                <i class="fa-solid fa-triangle-exclamation"></i> Warn System
+            </div>
+            <div class="sidebar-item" id="nav-mute" onclick="switchTab('mute')">
+                <i class="fa-solid fa-microphone-slash"></i> Mute System
+            </div>
+            <div class="sidebar-item" id="nav-jail" onclick="switchTab('jail')">
+                <i class="fa-solid fa-lock"></i> Jail System
+            </div>
+            <div class="sidebar-item" id="nav-audit" onclick="switchTab('audit')">
+                <i class="fa-solid fa-list-check"></i> Audit Logs
+            </div>
+            <div class="sidebar-item" id="nav-logs" onclick="switchTab('logs')">
+                <i class="fa-solid fa-book"></i> Server Logs
+            </div>
+
+            <span class="sidebar-section-label">Community</span>
+            <div class="sidebar-item" id="nav-verification" onclick="switchTab('verification')">
+                <i class="fa-solid fa-user-check"></i> Verification
+            </div>
+            <div class="sidebar-item" id="nav-apply" onclick="switchTab('apply')">
+                <i class="fa-solid fa-file-pen"></i> Apply Panel
+            </div>
+            <div class="sidebar-item" id="nav-economy" onclick="switchTab('economy')">
+                <i class="fa-solid fa-coins"></i> Economy Shop
+            </div>
+            <div class="sidebar-item" id="nav-leveling" onclick="switchTab('leveling')">
+                <i class="fa-solid fa-trophy"></i> Leveling System
+            </div>
+            <div class="sidebar-item" id="nav-giveaways" onclick="switchTab('giveaways')">
+                <i class="fa-solid fa-gift"></i> Giveaways
+            </div>
+            <div class="sidebar-item" id="nav-rooms" onclick="switchTab('rooms')">
+                <i class="fa-solid fa-comments"></i> Need Help Rooms
+            </div>
+
+            <span class="sidebar-section-label">Advanced</span>
+            <div class="sidebar-item" id="nav-commands" onclick="switchTab('commands')">
+                <i class="fa-solid fa-code"></i> Custom Commands
+            </div>
+            <div class="sidebar-item" id="nav-apikeys" onclick="switchTab('apikeys')">
+                <i class="fa-solid fa-key"></i> API Keys
+            </div>
+            <div class="sidebar-item" id="nav-premium" onclick="switchTab('premium')">
+                <i class="fa-solid fa-gem"></i> Premium Plan
+            </div>
+        </aside>
+
+        <!-- Main -->
+        <main class="dash-main">
+
+            <!-- ── OVERVIEW TAB ── -->
+            <section class="dash-tab active" id="tab-overview">
+                <div class="page-header">
+                    <h1><span class="gradient-text">Server</span> Overview</h1>
+                    <p>Real-time stats and recent activity for your Discord server.</p>
+                </div>
+
+                <div class="stats-row">
+                    <div class="stat-card">
+                        <div class="stat-icon cyan"><i class="fa-solid fa-users"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="statMembers">—</div>
+                            <div class="stat-label">Total Members</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon purple"><i class="fa-solid fa-shield-virus"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="statBlocks">—</div>
+                            <div class="stat-label">AutoMod Blocks Today</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon green"><i class="fa-solid fa-ticket"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="statTickets">—</div>
+                            <div class="stat-label">Open Tickets</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon amber"><i class="fa-solid fa-ranking-star"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="statMessages">—</div>
+                            <div class="stat-label">Messages Today</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <span class="chart-title">Member Activity — Last 7 Days</span>
+                        <span class="badge badge-info"><i class="fa-solid fa-circle" style="font-size:6px"></i> Live</span>
+                    </div>
+                    <svg class="svg-chart" id="analyticsChart" viewBox="0 0 700 160" preserveAspectRatio="none"></svg>
+                </div>
+            </section>
+
+            <!-- ── WELCOME TAB ── -->
+            <section class="dash-tab" id="tab-welcome">
+                <div class="page-header">
+                    <h1>Welcome <span class="gradient-text">&</span> Leave</h1>
+                    <p>Customize messages and canvas banners for member joins and departures.</p>
+                </div>
+
+                <div class="editor-grid">
+                    <!-- Form -->
+                    <div class="glass-card">
+                        <div class="form-section-title"><i class="fa-solid fa-door-open"></i> Welcome Settings</div>
+
+                        <div class="form-group">
+                            <div class="toggle-row" style="padding:0 0 16px;">
+                                <div class="toggle-info">
+                                    <h4>Enable Welcome Message</h4>
+                                    <p>Post a message when a new member joins</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="welcomeEnabled">
+                                    <span class="toggle-track"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Welcome Channel</label>
+                            <select id="welcomeChannel" class="form-control"><option>Loading channels…</option></select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Message Template</label>
+                            <textarea id="welcomeText" class="form-control" rows="3" oninput="updateLivePreview()">Welcome {user} to {server}!</textarea>
+                            <div class="form-hint">Variables: <code>{user}</code> <code>{username}</code> <code>{server}</code> <code>{memberCount}</code></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Card Background URL (Optional)</label>
+                            <input type="url" id="welcomeBgImage" class="form-control" placeholder="https://example.com/banner.png" oninput="updateLivePreview()">
+                        </div>
+
+                        <div class="form-section-title" style="margin-top:24px;"><i class="fa-solid fa-door-closed"></i> Leave Settings</div>
+
+                        <div class="form-group">
+                            <div class="toggle-row" style="padding:0 0 16px;">
+                                <div class="toggle-info">
+                                    <h4>Enable Leave Message</h4>
+                                    <p>Notify when a member leaves</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="leaveEnabled">
+                                    <span class="toggle-track"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Leave Channel</label>
+                            <select id="leaveChannel" class="form-control"><option>Loading channels…</option></select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Leave Message</label>
+                            <textarea id="leaveText" class="form-control" rows="2">{user} has left the server.</textarea>
+                        </div>
+
+                        <button class="btn btn-primary" id="save-welcome-btn" onclick="saveWelcomeSettings()">
+                            <i class="fa-solid fa-floppy-disk"></i> Save Settings
+                        </button>
+                    </div>
+
+                    <!-- Live Preview -->
+                    <div>
+                        <div class="glass-card-sm" style="margin-bottom:16px;">
+                            <div class="discord-preview-title">Live Preview</div>
+                            <div class="discord-preview">
+                                <div class="discord-msg">
+                                    <img src="https://cdn.discordapp.com/embed/avatars/0.png" class="discord-avatar" alt="Bot">
+                                    <div class="discord-msg-body">
+                                        <div class="discord-msg-header">
+                                            <span class="discord-username">Vivy</span>
+                                            <span class="discord-bot-tag">BOT</span>
+                                        </div>
+                                        <p class="discord-text" id="previewText">Welcome <span class="mention">@User</span> to <span class="mention">Server</span>!</p>
+                                        <div class="discord-embed">
+                                            <div class="embed-body">
+                                                <div class="embed-title">👋 Welcome!</div>
+                                                <div class="embed-desc">Hey <span class="mention">@User</span>, glad you're here!</div>
+                                                <div class="embed-canvas">
+                                                    <div class="embed-canvas-avatar"></div>
+                                                    <div class="embed-canvas-text">
+                                                        <div class="embed-canvas-title">WELCOME</div>
+                                                        <div class="embed-canvas-sub">Member #450,001</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="glass-card-sm">
+                            <div class="form-section-title" style="margin-bottom:12px;font-size:13px;">
+                                <i class="fa-solid fa-circle-info"></i> Quick Tips
+                            </div>
+                            <ul style="font-size:13px;color:var(--text-2);display:flex;flex-direction:column;gap:8px;">
+                                <li><i class="fa-solid fa-check" style="color:var(--green);margin-right:6px;"></i> Use <code style="background:var(--surface-2);padding:1px 5px;border-radius:4px;font-size:11px;color:var(--cyan)">{user}</code> to ping the member</li>
+                                <li><i class="fa-solid fa-check" style="color:var(--green);margin-right:6px;"></i> Canvas banners require Premium tier</li>
+                                <li><i class="fa-solid fa-check" style="color:var(--green);margin-right:6px;"></i> Changes are applied instantly</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── AUTOMOD TAB ── -->
+            <section class="dash-tab" id="tab-automod">
+                <div class="page-header">
+                    <h1>Auto <span class="gradient-text">Moderation</span></h1>
+                    <p>Configure automated protection rules for your server.</p>
+                </div>
+
+                <div class="glass-card" style="margin-bottom:20px;">
+                    <div class="form-section-title"><i class="fa-solid fa-shield-halved"></i> Protection Rules</div>
+
+                    <div class="toggle-row">
+                        <div class="toggle-info">
+                            <h4><i class="fa-solid fa-bolt" style="color:var(--amber);font-size:12px;margin-right:6px;"></i> Message Flood Protection</h4>
+                            <p>Timeout users who send more than 5 messages in 5 seconds</p>
+                        </div>
+                        <label class="toggle-switch"><input type="checkbox" id="amSpam"><span class="toggle-track"></span></label>
+                    </div>
+
+                    <div class="toggle-row">
+                        <div class="toggle-info">
+                            <h4><i class="fa-solid fa-link-slash" style="color:var(--red);font-size:12px;margin-right:6px;"></i> Anti-Link Scan</h4>
+                            <p>Block and delete URL links sent by non-administrators</p>
+                        </div>
+                        <label class="toggle-switch"><input type="checkbox" id="amLinks"><span class="toggle-track"></span></label>
+                    </div>
+                    <div class="form-group" id="amLinksWlGroup" style="margin-left: 20px; margin-right: 20px; margin-top: 5px; margin-bottom: 20px;">
+                        <label class="form-label" style="font-size: 13px;">Bypass / Whitelisted Roles</label>
+                        <select id="amLinksWlRoles" class="form-control" multiple style="height: 100px;">
+                            <option>Loading roles…</option>
+                        </select>
+                        <div class="form-hint" style="font-size: 11px;">Selected roles will bypass the Anti-Link scan and can send links.</div>
+                    </div>
+
+                    <div class="toggle-row">
+                        <div class="toggle-info">
+                            <h4><i class="fa-brands fa-discord" style="color:var(--purple);font-size:12px;margin-right:6px;"></i> Anti-Discord Invites</h4>
+                            <p>Delete invite links advertising external communities</p>
+                        </div>
+                        <label class="toggle-switch"><input type="checkbox" id="amInvites"><span class="toggle-track"></span></label>
+                    </div>
+
+                    <div class="toggle-row">
+                        <div class="toggle-info">
+                            <h4><i class="fa-solid fa-filter" style="color:var(--cyan);font-size:12px;margin-right:6px;"></i> Profanity Filter</h4>
+                            <p>Auto-delete messages containing custom blocked words</p>
+                        </div>
+                        <label class="toggle-switch"><input type="checkbox" id="amBadWords"><span class="toggle-track"></span></label>
+                    </div>
+                </div>
+
+                <div class="editor-grid" style="align-items:start;">
+                    <div class="glass-card">
+                        <div class="form-section-title"><i class="fa-solid fa-list"></i> Blocked Words</div>
+                        <div class="form-group">
+                            <label class="form-label">Comma-separated word list</label>
+                            <textarea id="amBadWordsList" class="form-control" rows="4" placeholder="badword1, badword2, badword3"></textarea>
+                            <div class="form-hint">Words are case-insensitive. Matched in full or partial.</div>
+                        </div>
+                    </div>
+
+                    <div class="glass-card">
+                        <div class="form-section-title"><i class="fa-solid fa-gavel"></i> Punishment Action</div>
+                        <div class="form-group">
+                            <label class="form-label">Action on violation</label>
+                            <select id="amPunishment" class="form-control">
+                                <option value="warn">⚠️ Issue Warning</option>
+                                <option value="timeout">⏳ 10 Minute Timeout</option>
+                                <option value="kick">👢 Kick from Server</option>
+                                <option value="ban">🔨 Permanent Ban</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Log Channel</label>
+                            <select id="amLogChannel" class="form-control"><option>Select channel…</option></select>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top:20px;">
+                    <button class="btn btn-primary" id="save-automod-btn" onclick="saveAutoMod()">
+                        <i class="fa-solid fa-floppy-disk"></i> Save Shield Rules
+                    </button>
+                </div>
+            </section>
+
+            <!-- ── AUDIT LOGS TAB ── -->
+            <section class="dash-tab" id="tab-audit">
+                <div class="page-header">
+                    <h1>Activity <span class="gradient-text">Logs</span></h1>
+                    <p>Track all dashboard configuration changes made by your admins.</p>
+                </div>
+
+                <div class="glass-card">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Admin</th>
+                                <th>Action</th>
+                                <th>Module</th>
+                                <th>Timestamp</th>
+                            </tr>
+                        </thead>
+                        <tbody id="auditLogsBody">
+                            <tr><td colspan="4" style="text-align:center;color:var(--text-2);padding:32px;">No audit logs recorded yet.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- ── ECONOMY TAB ── -->
+            <section class="dash-tab" id="tab-economy">
+                <div class="page-header">
+                    <h1>Economy <span class="gradient-text">Shop</span></h1>
+                    <p>Create purchasable items and role rewards for your server.</p>
+                </div>
+
+                <div class="glass-card" style="margin-bottom:20px;">
+                    <div class="form-section-title"><i class="fa-solid fa-plus"></i> Create Shop Item</div>
+                    <div class="form-grid-3">
+                        <div class="form-group">
+                            <label class="form-label">Item Name</label>
+                            <input type="text" id="shopItemName" class="form-control" placeholder="VIP Gamer Role">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Price (Credits)</label>
+                            <input type="number" id="shopItemPrice" class="form-control" placeholder="1000" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Reward Role</label>
+                            <select id="shopItemRole" class="form-control"><option value="">No role reward</option></select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <input type="text" id="shopItemDesc" class="form-control" placeholder="Grants you the VIP Gamer role on purchase">
+                    </div>
+                    <button class="btn btn-secondary" onclick="addShopItem()"><i class="fa-solid fa-plus"></i> Add Item</button>
+                </div>
+
+                <div class="glass-card">
+                    <div class="form-section-title"><i class="fa-solid fa-store"></i> Shop Inventory</div>
+                    <div id="shopList" style="color:var(--text-2);font-size:14px;">No shop items yet. Create one above!</div>
+                    <div style="margin-top:20px;">
+                        <button class="btn btn-primary" onclick="saveEconomy()"><i class="fa-solid fa-floppy-disk"></i> Save Shop</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── LEVELING SYSTEM TAB ── -->
+            <style>
+            .sub-tabs-container {
+                display: flex;
+                gap: 8px;
+                margin-bottom: 24px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+                padding-bottom: 12px;
+                overflow-x: auto;
+            }
+            .sub-tab-btn {
+                background: transparent;
+                border: none;
+                color: var(--text-2);
+                padding: 10px 16px;
+                font-size: 14px;
+                font-weight: 500;
+                cursor: pointer;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                transition: all 0.2s ease;
+            }
+            .sub-tab-btn:hover {
+                background: rgba(255, 255, 255, 0.03);
+                color: var(--text-1);
+            }
+            .sub-tab-btn.active {
+                background: rgba(0, 245, 255, 0.1);
+                color: #00f5ff;
+                border: 1px solid rgba(0, 245, 255, 0.2);
+            }
+            .leveling-subtab {
+                display: none;
+            }
+            .leveling-subtab.active {
+                display: block;
+            }
+            .stats-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 16px;
+                margin-bottom: 24px;
+            }
+            .stat-card {
+                background: rgba(255, 255, 255, 0.01);
+                border: 1px solid rgba(255, 255, 255, 0.05);
+                border-radius: 12px;
+                padding: 20px;
+                text-align: center;
+                backdrop-filter: blur(10px);
+            }
+            .stat-value {
+                font-size: 28px;
+                font-weight: 800;
+                color: #00f5ff;
+                margin-bottom: 4px;
+            }
+            .stat-label {
+                font-size: 12px;
+                color: var(--text-2);
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+            .form-grid-3 {
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr;
+                gap: 16px;
+                margin-bottom: 16px;
+            }
+            .form-grid-2 {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 16px;
+                margin-bottom: 16px;
+            }
+            @media (max-width: 768px) {
+                .form-grid-3, .form-grid-2 {
+                    grid-template-columns: 1fr;
+                }
+            }
+            </style>
+
+            <section class="dash-tab" id="tab-leveling">
+                <div class="page-header">
+                    <h1>Leveling & <span class="gradient-text">Engagement</span></h1>
+                    <p>Track member activity, configure role rewards, timed boosters, and view leaderboard statistics.</p>
+                </div>
+
+                <!-- Leveling Sub-tabs Navigation -->
+                <div class="sub-tabs-container">
+                    <button class="sub-tab-btn active" onclick="switchLevelingSubTab('overview')"><i class="fa-solid fa-chart-line"></i> Overview</button>
+                    <button class="sub-tab-btn" onclick="switchLevelingSubTab('settings')"><i class="fa-solid fa-sliders"></i> Settings</button>
+                    <button class="sub-tab-btn" onclick="switchLevelingSubTab('rewards')"><i class="fa-solid fa-award"></i> Rewards</button>
+                    <button class="sub-tab-btn" onclick="switchLevelingSubTab('boosters')"><i class="fa-solid fa-rocket"></i> Boosters</button>
+                    <button class="sub-tab-btn" onclick="switchLevelingSubTab('leaderboard')"><i class="fa-solid fa-trophy"></i> Leaderboard</button>
+                    <button class="sub-tab-btn" onclick="switchLevelingSubTab('logs')"><i class="fa-solid fa-list-ul"></i> Activity Logs</button>
+                </div>
+
+                <!-- SUBTAB: Overview -->
+                <div class="leveling-subtab active" id="leveling-subtab-overview">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value" id="lvl-stat-active-users">0</div>
+                            <div class="stat-label">Active Users (Today)</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="lvl-stat-xp-today">0</div>
+                            <div class="stat-label">XP Earned Today</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="lvl-stat-rewards-active">0</div>
+                            <div class="stat-label">Level Rewards Configured</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="lvl-stat-active-boosts">0</div>
+                            <div class="stat-label">Active Boosters</div>
+                        </div>
+                    </div>
+
+                    <div class="glass-card" style="margin-top:20px;">
+                        <div class="form-section-title"><i class="fa-solid fa-chart-area"></i> XP Growth Trend (Past 7 Days)</div>
+                        <div style="height:250px; position:relative;" id="lvl-chart-container">
+                            <div style="color:var(--text-3);padding-top:100px;text-align:center;">Loading analytics chart...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUBTAB: Settings -->
+                <div class="leveling-subtab" id="leveling-subtab-settings">
+                    <div class="glass-card">
+                        <div class="form-section-title"><i class="fa-solid fa-toggle-on"></i> Core Activation</div>
+                        <div class="form-group">
+                            <label class="form-label" style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+                                <input type="checkbox" id="lvl-setting-enabled" style="width:18px;height:18px;"> Enable Leveling System
+                            </label>
+                        </div>
+                    </div>
+
+                    <details style="margin-top:20px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 20px; outline: none;">
+                        <summary style="font-weight:600; cursor:pointer; color:var(--cyan); display:flex; align-items:center; gap:8px; outline:none; user-select:none;">
+                            <i class="fa-solid fa-gears"></i> Advanced Configuration (XP Limits, Cooldowns & Formulas)
+                        </summary>
+                        
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:20px;" class="form-grid-2">
+                            <div class="glass-card" style="background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.03);">
+                                <div class="form-section-title"><i class="fa-solid fa-message"></i> Message XP Settings</div>
+                                <div class="form-group">
+                                    <label class="form-label">Min XP Per Message</label>
+                                    <input type="number" id="lvl-setting-min-xp" class="form-control" value="15">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Max XP Per Message</label>
+                                    <input type="number" id="lvl-setting-max-xp" class="form-control" value="25">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Message XP Cooldown (seconds)</label>
+                                    <input type="number" id="lvl-setting-cooldown" class="form-control" value="60">
+                                </div>
+                            </div>
+
+                            <div class="glass-card" style="background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.03);">
+                                <div class="form-section-title"><i class="fa-solid fa-microphone"></i> Voice XP Settings</div>
+                                <div class="form-group">
+                                    <label class="form-label">Voice XP Grant Interval (minutes)</label>
+                                    <input type="number" id="lvl-setting-voice-interval" class="form-control" value="5">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Voice XP Amount</label>
+                                    <input type="number" id="lvl-setting-voice-xp" class="form-control" value="10">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:20px;" class="form-grid-2">
+                            <div class="glass-card" style="background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.03);">
+                                <div class="form-section-title"><i class="fa-solid fa-calculator"></i> XP Formula</div>
+                                <div class="form-group">
+                                    <label class="form-label">Base XP Needed</label>
+                                    <input type="number" id="lvl-setting-formula-base" class="form-control" value="100">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Level Exponent</label>
+                                    <input type="number" id="lvl-setting-formula-exponent" class="form-control" step="0.1" value="1.8">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">XP Offset</label>
+                                    <input type="number" id="lvl-setting-formula-offset" class="form-control" value="100">
+                                </div>
+                            </div>
+
+                            <div class="glass-card" style="background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.03);">
+                                <div class="form-section-title"><i class="fa-solid fa-shield-halved"></i> Daily & Weekly Limits</div>
+                                <div class="form-group">
+                                    <label class="form-label">Daily XP Cap (0 for unlimited)</label>
+                                    <input type="number" id="lvl-setting-daily-cap" class="form-control" value="0">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Weekly XP Cap (0 for unlimited)</label>
+                                    <input type="number" id="lvl-setting-weekly-cap" class="form-control" value="0">
+                                </div>
+                            </div>
+                        </div>
+                    </details>
+
+                    <div class="glass-card" style="margin-top:20px;">
+                        <div class="form-section-title"><i class="fa-solid fa-bullhorn"></i> Level Announcements</div>
+                        <div class="form-group">
+                            <label class="form-label" style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+                                <input type="checkbox" id="lvl-setting-announce" style="width:18px;height:18px;"> Enable Level Up Announcements
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+                                <input type="checkbox" id="lvl-setting-announce-embed" style="width:18px;height:18px;"> Send as Rich Embed
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Announcement Channel</label>
+                            <select id="lvl-setting-announce-channel" class="form-control">
+                                <option value="">Current/System Channel</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Announcement Color (HEX)</label>
+                            <input type="color" id="lvl-setting-announce-color" class="form-control" style="height:45px;" value="#5865F2">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Announcement Custom Image URL (optional)</label>
+                            <input type="text" id="lvl-setting-announce-image" class="form-control" placeholder="https://example.com/banner.png">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Announcement Message Template</label>
+                            <textarea id="lvl-setting-announce-msg" class="form-control" rows="3">🎉 Congratulations {user}! You reached Level {level}!</textarea>
+                            <div class="form-hint" style="color:var(--text-3);font-size:12px;margin-top:6px;">Variables: <code>{user}</code> (ping), <code>{username}</code>, <code>{level}</code>, <code>{xp}</code>, <code>{server}</code>, <code>{role}</code> (unlocked role if any)</div>
+                        </div>
+                    </div>
+
+                    <div class="glass-card" style="margin-top:20px;">
+                        <div class="form-section-title"><i class="fa-solid fa-user-gear"></i> Role Reward Options</div>
+                        <div class="form-group">
+                            <label class="form-label" style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+                                <input type="checkbox" id="lvl-setting-stack" style="width:18px;height:18px;"> Stack previous reward roles
+                            </label>
+                            <div class="form-hint" style="color:var(--text-3);font-size:12px;margin-top:4px;">If disabled, the bot will replace old reward roles with the newest one when a user levels up.</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-top:12px;">
+                                <input type="checkbox" id="lvl-setting-demote" style="width:18px;height:18px;"> Remove reward roles when level decreases
+                            </label>
+                        </div>
+                    </div>
+
+                    <div style="margin-top:24px;margin-bottom:20px;">
+                        <button class="btn btn-primary" onclick="saveLevelingConfig()"><i class="fa-solid fa-floppy-disk"></i> Save Leveling Settings</button>
+                    </div>
+                </div>
+
+                <!-- SUBTAB: Rewards -->
+                <div class="leveling-subtab" id="leveling-subtab-rewards">
+                    <div class="glass-card">
+                        <div class="form-section-title"><i class="fa-solid fa-plus"></i> Add Level Role Reward</div>
+                        <div class="form-grid-3">
+                            <div class="form-group">
+                                <label class="form-label">Target Level</label>
+                                <input type="number" id="lvl-reward-level" class="form-control" placeholder="5" min="1">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Discord Role</label>
+                                <select id="lvl-reward-role" class="form-control">
+                                    <option value="">Select role...</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" style="display:block;margin-bottom:8px;">Status</label>
+                                <label style="display:flex;align-items:center;gap:8px;margin-top:12px;cursor:pointer;">
+                                    <input type="checkbox" id="lvl-reward-enabled" style="width:18px;height:18px;" checked> Enabled
+                                </label>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary" onclick="addLevelReward()"><i class="fa-solid fa-plus"></i> Add Reward</button>
+                    </div>
+
+                    <div class="glass-card" style="margin-top:20px;">
+                        <div class="form-section-title"><i class="fa-solid fa-table"></i> Configured Role Rewards</div>
+                        <table class="table" style="width:100%;text-align:left;border-collapse:collapse;" id="lvl-rewards-table">
+                            <thead>
+                                <tr>
+                                    <th>Level</th>
+                                    <th>Role</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="lvl-rewards-list">
+                                <tr>
+                                    <td colspan="4" style="color:var(--text-3);padding:20px 0;text-align:center;">No role rewards configured yet.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- SUBTAB: Boosters -->
+                <div class="leveling-subtab" id="leveling-subtab-boosters">
+                    <div class="glass-card">
+                        <div class="form-section-title"><i class="fa-solid fa-circle-plus"></i> Create Channel / Role Multiplier</div>
+                        <div class="form-grid-3">
+                            <div class="form-group">
+                                <label class="form-label">Boost Type</label>
+                                <select id="lvl-boost-type" class="form-control" onchange="toggleBoostTargetInput()">
+                                    <option value="role">Role Boost</option>
+                                    <option value="channel">Channel Boost</option>
+                                    <option value="event">Event Boost (Global/Temporary)</option>
+                                </select>
+                            </div>
+                            <div class="form-group" id="lvl-boost-target-select-container">
+                                <label class="form-label" id="lvl-boost-target-label">Target Role</label>
+                                <select id="lvl-boost-target" class="form-control">
+                                    <option value="">Select target...</option>
+                                </select>
+                            </div>
+                            <div class="form-group" id="lvl-boost-target-text-container" style="display:none">
+                                <label class="form-label">Event Name</label>
+                                <input type="text" id="lvl-boost-target-text" class="form-control" placeholder="Weekend Double XP">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">XP Multiplier</label>
+                                <input type="number" id="lvl-boost-multiplier" class="form-control" step="0.1" placeholder="1.5" min="0.1">
+                            </div>
+                        </div>
+                        
+                        <div id="lvl-boost-event-dates" style="display:none;margin-top:10px;margin-bottom:15px;" class="form-grid-2">
+                            <div class="form-group">
+                                <label class="form-label">Start Time</label>
+                                <input type="datetime-local" id="lvl-boost-start" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">End Time</label>
+                                <input type="datetime-local" id="lvl-boost-end" class="form-control">
+                            </div>
+                        </div>
+
+                        <button class="btn btn-secondary" onclick="addXPBoost()"><i class="fa-solid fa-plus"></i> Add Booster</button>
+                    </div>
+
+                    <div class="glass-card" style="margin-top:20px;">
+                        <div class="form-section-title"><i class="fa-solid fa-bolt"></i> Active XP Boosters</div>
+                        <table class="table" style="width:100%;text-align:left;border-collapse:collapse;" id="lvl-boosts-table">
+                            <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Target</th>
+                                    <th>Multiplier</th>
+                                    <th>Duration</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="lvl-boosts-list">
+                                <tr>
+                                    <td colspan="5" style="color:var(--text-3);padding:20px 0;text-align:center;">No active XP boosts configured.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- SUBTAB: Leaderboard -->
+                <div class="leveling-subtab" id="leveling-subtab-leaderboard">
+                    <div class="glass-card">
+                        <div class="form-section-title"><i class="fa-solid fa-filter"></i> Leaderboard Filter</div>
+                        <div class="form-grid-3" style="display:grid;grid-template-columns:2fr 1fr;gap:20px;align-items:end;">
+                            <div class="form-group">
+                                <label class="form-label">Sort Metric</label>
+                                <select id="lvl-leaderboard-sort" class="form-control" onchange="loadLeaderboardData()">
+                                    <option value="total">Total XP (Default)</option>
+                                    <option value="messages">Message Count</option>
+                                    <option value="voice">Voice Active Time</option>
+                                    <option value="daily">Daily XP</option>
+                                    <option value="weekly">Weekly XP</option>
+                                    <option value="monthly">Monthly XP</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-danger" style="margin-bottom:0;" onclick="resetServerLeaderboard()"><i class="fa-solid fa-trash-can"></i> Reset Leaderboard</button>
+                        </div>
+                    </div>
+
+                    <div class="glass-card" style="margin-top:20px;">
+                        <div class="form-section-title"><i class="fa-solid fa-ranking-star"></i> Server Rankings</div>
+                        <div style="overflow-x:auto;">
+                            <table class="table" style="width:100%;text-align:left;border-collapse:collapse;">
+                                <thead>
+                                    <tr>
+                                        <th>Rank</th>
+                                        <th>User</th>
+                                        <th>Level</th>
+                                        <th>XP</th>
+                                        <th>Messages</th>
+                                        <th>Voice Time</th>
+                                        <th>Today XP</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="lvl-leaderboard-list">
+                                    <tr>
+                                        <td colspan="8" style="color:var(--text-3);padding:20px 0;text-align:center;">Loading ranking data...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUBTAB: Logs -->
+                <div class="leveling-subtab" id="leveling-subtab-logs">
+                    <div class="glass-card">
+                        <div class="form-section-title"><i class="fa-solid fa-clipboard-list"></i> XP Modification & Level Logs</div>
+                        <div style="overflow-x:auto;">
+                            <table class="table" style="width:100%;text-align:left;border-collapse:collapse;">
+                                <thead>
+                                    <tr>
+                                        <th>Timestamp</th>
+                                        <th>User</th>
+                                        <th>Action</th>
+                                        <th>XP Gained</th>
+                                        <th>Old Lvl</th>
+                                        <th>New Lvl</th>
+                                        <th>Details</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="lvl-logs-list">
+                                    <tr>
+                                        <td colspan="7" style="color:var(--text-3);padding:20px 0;text-align:center;">Loading activity logs...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── GIVEAWAYS TAB ── -->
+            <section class="dash-tab" id="tab-giveaways">
+                <div class="page-header">
+                    <h1>Schedule <span class="gradient-text">Giveaway</span></h1>
+                    <p>Launch a new giveaway event in any channel.</p>
+                </div>
+
+                <div class="glass-card" style="max-width:560px;">
+                    <div class="form-section-title"><i class="fa-solid fa-gift"></i> Giveaway Setup</div>
+
+                    <div class="form-group">
+                        <label class="form-label">Target Channel</label>
+                        <select id="giveawayChannel" class="form-control"><option>Loading channels…</option></select>
+                    </div>
+
+                    <div class="form-grid-2">
+                        <div class="form-group">
+                            <label class="form-label">Prize</label>
+                            <input type="text" id="giveawayPrize" class="form-control" placeholder="Nitro Classic 1 Month">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Winners</label>
+                            <input type="number" id="giveawayWinners" class="form-control" value="1" min="1">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Duration (minutes)</label>
+                        <input type="number" id="giveawayDuration" class="form-control" value="60" min="1">
+                    </div>
+
+                    <button class="btn btn-primary" onclick="launchGiveaway()">
+                        <i class="fa-solid fa-rocket"></i> Launch Giveaway
+                    </button>
+                </div>
+            </section>
+
+            <!-- ── CUSTOM COMMANDS TAB ── -->
+            <section class="dash-tab" id="tab-commands">
+                <div class="page-header">
+                    <h1>Custom <span class="gradient-text">Commands</span></h1>
+                    <p>Create your own slash or prefix commands without writing code.</p>
+                </div>
+
+                <div class="glass-card">
+                    <div class="form-section-title"><i class="fa-solid fa-code"></i> Command Builder</div>
+
+                    <div class="form-grid-2" style="margin-bottom:16px;">
+                        <div class="form-group">
+                            <label class="form-label">Command Name</label>
+                            <input type="text" id="cmdName" class="form-control" placeholder="website">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Type</label>
+                            <select id="cmdType" class="form-control">
+                                <option value="prefix">Prefix  (?website)</option>
+                                <option value="slash">Slash  (/website)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Response Template</label>
+                        <textarea id="cmdReply" class="form-control" rows="4" placeholder="Check our site: https://example.com — {server}"></textarea>
+                        <div class="form-hint">Variables: <code>{user}</code> <code>{server}</code> <code>{memberCount}</code></div>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="addCustomCommand()">
+                        <i class="fa-solid fa-square-plus"></i> Create Command
+                    </button>
+                </div>
+
+                <div class="glass-card" style="margin-top:24px;">
+                    <div class="form-section-title"><i class="fa-solid fa-list"></i> Active Custom Commands</div>
+                    <div style="overflow-x:auto;">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Command Name</th>
+                                    <th>Type</th>
+                                    <th>Response Template</th>
+                                    <th style="text-align:right;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="customCommandsBody">
+                                <tr>
+                                    <td colspan="4" style="text-align:center;color:var(--text-2);padding:24px;">No custom commands created yet.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── API KEYS TAB ── -->
+            <section class="dash-tab" id="tab-apikeys">
+                <div class="page-header">
+                    <h1>Developer <span class="gradient-text">API Keys</span></h1>
+                    <p>Generate secure tokens to interact with Vivy's API externally.</p>
+                </div>
+
+                <div class="glass-card" style="max-width:600px;margin-bottom:20px;">
+                    <div class="form-section-title"><i class="fa-solid fa-plus"></i> Generate Token</div>
+                    <div class="form-group">
+                        <label class="form-label">Key Label</label>
+                        <input type="text" id="apiKeyLabel" class="form-control" placeholder="Production Service">
+                    </div>
+                    <button class="btn btn-primary" onclick="generateApiKey()"><i class="fa-solid fa-key"></i> Generate Token</button>
+                </div>
+
+                <div class="glass-card">
+                    <div class="form-section-title"><i class="fa-solid fa-list"></i> Active Tokens</div>
+                    <div id="apiKeysList" style="display:flex;flex-direction:column;gap:10px;">
+                        <div style="color:var(--text-2);font-size:14px;text-align:center;padding:20px;">No tokens generated yet.</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── PREMIUM TAB ── -->
+            <section class="dash-tab" id="tab-premium">
+                <div class="page-header">
+                    <h1>Premium <span class="gradient-text">Plan</span></h1>
+                    <p>Manage your server subscription and billing.</p>
+                </div>
+
+                <!-- Active View -->
+                <div class="premium-glow-card" id="premiumActiveCard" style="display:none">
+                    <div class="gem-icon"><i class="fa-solid fa-gem"></i></div>
+                    <h2 style="font-family:var(--font-display);font-size:26px;font-weight:800;margin-bottom:8px;">Premium Active</h2>
+                    <p style="color:var(--text-2);margin-bottom:8px;" id="premiumExpiryText">Lifetime Premium License Active</p>
+                    <div style="display:flex;gap:12px;justify-content:center;margin-top:24px;">
+                        <button class="btn btn-secondary" onclick="showToast('Billing portal opened.', 'info')">
+                            <i class="fa-solid fa-receipt"></i> Manage Invoices
+                        </button>
+                        <button class="btn btn-danger" onclick="showToast('Cancellation request sent.', 'error')">
+                            <i class="fa-solid fa-xmark"></i> Cancel Renewal
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Inactive View -->
+                <div class="premium-glow-card" id="premiumInactiveCard" style="display:none; border-color: rgba(255,255,255,0.05); background: rgba(255,255,255,0.01); filter: grayscale(1);">
+                    <div class="gem-icon" style="color:var(--text-3)"><i class="fa-solid fa-gem"></i></div>
+                    <h2 style="font-family:var(--font-display);font-size:26px;font-weight:800;margin-bottom:8px;color:var(--text-3)">Standard Plan</h2>
+                    <p style="color:var(--text-3);margin-bottom:8px;">This server does not have premium active.</p>
+                    <div style="display:flex;gap:12px;justify-content:center;margin-top:24px;">
+                        <a href="https://vivy.zerolab.best/pricing" target="_blank" class="btn btn-primary" style="text-decoration:none;">
+                            <i class="fa-solid fa-circle-arrow-up"></i> Upgrade to Premium
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── WARN SYSTEM TAB ── -->
+            <section class="dash-tab" id="tab-warn">
+                <div class="page-header">
+                    <h1>Warn <span class="gradient-text">System</span></h1>
+                    <p>Configure escalating warning punishments and authorized staff roles.</p>
+                </div>
+                <div class="glass-card" style="max-width:600px;">
+                    <div class="form-section-title"><i class="fa-solid fa-triangle-exclamation"></i> Warning Punishments</div>
+                    <div class="form-group">
+                        <label class="form-label">1st Warning Role</label>
+                        <select id="warnFirst" class="form-control"><option value="">Select role…</option></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">2nd Warning Role</label>
+                        <select id="warnSecond" class="form-control"><option value="">Select role…</option></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Final Warning Role</label>
+                        <select id="warnLast" class="form-control"><option value="">Select role…</option></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Warner Role (who can warn)</label>
+                        <select id="warnWarnerRole" class="form-control"><option value="">Select role…</option></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Warning Logs Channel</label>
+                        <select id="warnLogsChannel" class="form-control"><option value="">Select channel…</option></select>
+                    </div>
+                    <button class="btn btn-primary" onclick="saveWarn()"><i class="fa-solid fa-floppy-disk"></i> Save Warn Setup</button>
+                </div>
+            </section>
+
+            <!-- ── JAIL SYSTEM TAB ── -->
+            <section class="dash-tab" id="tab-jail">
+                <div class="page-header">
+                    <h1>Jail <span class="gradient-text">System</span></h1>
+                    <p>Configure the jail role and who has permission to jail members.</p>
+                </div>
+                <div class="glass-card" style="max-width:600px;">
+                    <div class="form-section-title"><i class="fa-solid fa-lock"></i> Jail Configuration</div>
+                    <div class="form-group">
+                        <label class="form-label">Jailed Role</label>
+                        <select id="jailJailedRole" class="form-control"><option value="">Select role…</option></select>
+                        <div class="form-hint">Role assigned to jailed members (removes all channel access)</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Jailer Role (who can jail)</label>
+                        <select id="jailJailerRole" class="form-control"><option value="">Select role…</option></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Jail Logs Channel</label>
+                        <select id="jailLogsChannel" class="form-control"><option value="">Select channel…</option></select>
+                    </div>
+                    <button class="btn btn-primary" onclick="saveJail()"><i class="fa-solid fa-floppy-disk"></i> Save Jail Setup</button>
+                </div>
+            </section>
+
+            <!-- ── MUTE SYSTEM TAB ── -->
+            <section class="dash-tab" id="tab-mute">
+                <div class="page-header">
+                    <h1>Mute <span class="gradient-text">System</span></h1>
+                    <p>Configure the mute role and authorized staff for muting members.</p>
+                </div>
+                <div class="glass-card" style="max-width:600px;">
+                    <div class="form-section-title"><i class="fa-solid fa-microphone-slash"></i> Mute Configuration</div>
+                    <div class="form-group">
+                        <label class="form-label">Mute Role</label>
+                        <select id="muteMuteRole" class="form-control"><option value="">Select role…</option></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Mute Logs Channel</label>
+                        <select id="muteMuteLogsChannel" class="form-control"><option value="">Select channel…</option></select>
+                    </div>
+                    <button class="btn btn-primary" onclick="saveMute()"><i class="fa-solid fa-floppy-disk"></i> Save Mute Setup</button>
+                </div>
+            </section>
+
+            <!-- ── VERIFICATION TAB ── -->
+            <section class="dash-tab" id="tab-verification">
+                <div class="page-header">
+                    <h1>Verification <span class="gradient-text">System</span></h1>
+                    <p>Configure roles assigned after member verification by staff.</p>
+                </div>
+                <div class="glass-card" style="max-width:640px;">
+                    <div class="form-section-title"><i class="fa-solid fa-user-check"></i> Verification Roles</div>
+                    <div class="form-group">
+                        <label class="form-label">Verificator Role (staff who verify)</label>
+                        <select id="verVerificatorRole" class="form-control"><option value="">Select role…</option></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Unverified Role (new members)</label>
+                        <select id="verUnverifiedRole" class="form-control"><option value="">Select role…</option></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Verified Role (male / default)</label>
+                        <select id="verVerifiedRole" class="form-control"><option value="">Select role…</option></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Verified Female Role</label>
+                        <select id="verVerifiedFemaleRole" class="form-control"><option value="">Select role…</option></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Verification Logs Channel</label>
+                        <select id="verLogsChannel" class="form-control"><option value="">Select channel…</option></select>
+                    </div>
+                    <button class="btn btn-primary" onclick="saveVerification()"><i class="fa-solid fa-floppy-disk"></i> Save Verification Setup</button>
+                </div>
+            </section>
+
+            <!-- ── ANTI-LINK TAB ── -->
+            <section class="dash-tab" id="tab-antilink">
+                <div class="page-header">
+                    <h1>Anti-Link <span class="gradient-text">Shield</span></h1>
+                    <p>Block links and Discord invites. Whitelist trusted channels and roles.</p>
+                </div>
+                <div class="editor-grid">
+                    <div class="glass-card">
+                        <div class="form-section-title"><i class="fa-solid fa-link-slash"></i> Protection Settings</div>
+                        <div class="toggle-row" style="padding:0 0 16px">
+                            <div class="toggle-info"><h4>Enable Anti-Link</h4><p>Block all links sent by non-whitelisted users</p></div>
+                            <label class="toggle-switch"><input type="checkbox" id="antilinkEnabled"><span class="toggle-track"></span></label>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Action on violation</label>
+                            <select id="antilinkAction" class="form-control">
+                                <option value="delete">🗑️ Delete Message</option>
+                                <option value="mute">🔇 Mute Member</option>
+                                <option value="kick">👢 Kick Member</option>
+                                <option value="ban">🔨 Ban Member</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" onclick="saveAntiLink()"><i class="fa-solid fa-floppy-disk"></i> Save Anti-Link</button>
+                    </div>
+                    <div class="glass-card">
+                        <div class="form-section-title"><i class="fa-solid fa-circle-check"></i> Whitelist</div>
+                        <div class="form-group">
+                            <label class="form-label">Whitelisted Channels</label>
+                            <select id="antilinkWlChannels" class="form-control" multiple style="height:100px;"><option>Loading…</option></select>
+                            <div class="form-hint">Select whitelisted channels from the list. You can type to filter.</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Whitelisted Roles</label>
+                            <select id="antilinkWlRoles" class="form-control" multiple style="height:100px;"><option>Loading…</option></select>
+                            <div class="form-hint">Select whitelisted roles from the list. You can type to filter.</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── APPLY PANEL TAB ── -->
+            <section class="dash-tab" id="tab-apply">
+                <style>
+                    .dept-card {
+                        background: rgba(255, 255, 255, 0.02);
+                        border: 1px solid rgba(255, 255, 255, 0.08);
+                        border-radius: 8px;
+                        overflow: hidden;
+                        transition: all 0.2s ease;
+                    }
+                    .dept-card:hover {
+                        border-color: rgba(255, 255, 255, 0.15);
+                        background: rgba(255, 255, 255, 0.03);
+                    }
+                    .dept-card-header {
+                        padding: 12px 16px;
+                        background: rgba(0, 0, 0, 0.2);
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        cursor: pointer;
+                        user-select: none;
+                    }
+                    .dept-card-header-title {
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+                        font-weight: 600;
+                        font-size: 13.5px;
+                        color: var(--text-1);
+                    }
+                    .dept-card-body {
+                        padding: 16px;
+                        display: flex;
+                        flex-direction: column;
+                        gap: 12px;
+                        border-top: 1px solid rgba(255, 255, 255, 0.06);
+                    }
+                    .question-row {
+                        display: flex;
+                        gap: 8px;
+                        align-items: center;
+                        margin-bottom: 8px;
+                    }
+                </style>
+
+                <div class="page-header">
+                    <h1>Apply <span class="gradient-text">Panel</span></h1>
+                    <p>Configure staff application systems with custom roles, questions, and review channels.</p>
+                </div>
+                
+                <div class="form-grid-2" style="grid-template-columns: 1fr 1.2fr; gap: 24px; align-items: start; max-width: 1300px; margin-bottom: 20px;">
+                    <!-- LEFT COLUMN: DISCORD LIVE PREVIEW -->
+                    <div style="display: flex; flex-direction: column; gap: 20px; position: sticky; top: 20px; z-index: 10;">
+                        <div class="glass-card" style="margin: 0; padding: 20px; display: flex; flex-direction: column; gap: 12px; max-width: 100%;">
+                            <div class="form-section-title"><i class="fa-brands fa-discord" style="color: #5865F2;"></i> Discord Live Preview</div>
+                            
+                            <div style="background-color: #313338; border-radius: 8px; padding: 16px; font-family: 'Inter', sans-serif; color: #dbdee1; font-size: 14px; line-height: 1.375; text-align: left; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+                                <div style="display: flex; gap: 14px; align-items: flex-start;">
+                                    <img src="/logo.png" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;" onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png'">
+                                    <div style="display: flex; flex-direction: column; width: 100%;">
+                                        <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+                                            <strong style="color: #f2f3f5; font-weight: 600;">Vivy</strong>
+                                            <span style="background-color: #5865f2; color: white; font-size: 9.5px; font-weight: 600; padding: 1px 4.5px; border-radius: 3px; text-transform: uppercase;">✓ APP</span>
+                                            <span style="color: #949ba4; font-size: 11px;">Today at 12:00 PM</span>
+                                        </div>
+                                        
+                                        <!-- Discord V2 Container Embed -->
+                                        <div style="background-color: #1e1f22; border-left: 4px solid #0099ff; border-radius: 4px; padding: 12px 16px; display: flex; flex-direction: column; gap: 12px; max-width: 520px; width: 100%; margin-top: 4px; box-sizing: border-box;">
+                                            <!-- Title -->
+                                            <div id="previewTitle" style="color: #f2f3f5; font-size: 18px; font-weight: 700; font-family: 'Outfit', sans-serif;">Recruitment Hub</div>
+                                            
+                                            <!-- Description -->
+                                            <div id="previewDescription" style="color: #dbdee1; font-size: 13px; white-space: pre-wrap; font-weight: 400; opacity: 0.95;">Welcome to our recruitment hub.</div>
+                                            
+                                            <!-- Inline Items -->
+                                            <div id="previewItems" style="display: flex; flex-direction: column; gap: 8px; font-size: 13px; border-left: 2px solid rgba(255,255,255,0.05); padding-left: 10px; margin: 4px 0;">
+                                                <!-- Dynamically populated bullet items -->
+                                            </div>
+                                            
+                                            <!-- Component Action Row (Buttons or Dropdown placeholder) -->
+                                            <div id="previewComponents" style="margin-top: 6px; width: 100%;">
+                                                <!-- Dynamically populated buttons/select -->
+                                            </div>
+                                            
+                                            <!-- Banner Image -->
+                                            <img id="previewBanner" src="" style="width: 100%; border-radius: 4px; margin-top: 8px; display: none; object-fit: cover;">
+                                            
+                                            <!-- Footer -->
+                                            <div id="previewFooter" style="color: #949ba4; font-size: 11px; margin-top: 4px; opacity: 0.8;">-# Powered by Zero Lab #LoadingToFuture • Staff Recruitment</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT COLUMN: CONFIGURATION FORMS -->
+                    <div style="display: flex; flex-direction: column; gap: 20px;">
+                        <!-- Setup and Routing -->
+                        <div class="glass-card" style="margin: 0; padding: 20px;">
+                            <div class="form-section-title"><i class="fa-solid fa-route"></i> General Setup & Channels</div>
+                            <div class="form-grid-2" style="gap: 16px;">
+                                <div class="form-group">
+                                    <label class="form-label">Apply Channel (posted panel)</label>
+                                    <select id="applyChannel" class="form-control"><option value="">Select channel…</option></select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Staff Review Channel</label>
+                                    <select id="applyStaffChannel" class="form-control"><option value="">Select channel…</option></select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Log Channel</label>
+                                    <select id="applyLogChannel" class="form-control"><option value="">Select channel…</option></select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Reviewer Staff Role</label>
+                                    <select id="applyStaffRole" class="form-control"><option value="">Select role…</option></select>
+                                </div>
+                            </div>
+                            <div class="form-group" style="margin-top: 12px;">
+                                <label class="form-label">Panel Component Style</label>
+                                <select id="applyPanelStyle" class="form-control" onchange="updateApplyPreview()">
+                                    <option value="menu">Dropdown Menu (Recommended for many roles)</option>
+                                    <option value="buttons">Individual Buttons (Classic)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Content Customizer -->
+                        <div class="glass-card" style="margin: 0; padding: 20px;">
+                            <div class="form-section-title"><i class="fa-solid fa-pen-fancy"></i> Panel Content & Appearance</div>
+                            <div class="form-group">
+                                <label class="form-label">Panel Title</label>
+                                <input type="text" id="applyPanelTitle" class="form-control" placeholder="e.g. Server • Staff Applications" oninput="updateApplyPreview()">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Panel Description</label>
+                                <textarea id="applyPanelDescription" class="form-control" rows="4" placeholder="Description markdown..." oninput="updateApplyPreview()" style="resize: vertical; min-height: 80px;"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Banner Image URL</label>
+                                <input type="url" id="applyBanner" class="form-control" placeholder="https://example.com/banner.png" oninput="updateApplyPreview()">
+                            </div>
+                        </div>
+
+                        <!-- Departments & Questions Editor -->
+                        <div class="glass-card" style="margin: 0; padding: 20px;">
+                            <div class="form-section-title" style="margin-bottom: 6px;"><i class="fa-solid fa-list-check"></i> Departments & Rewards</div>
+                            <p style="font-size: 12.5px; color: var(--text-3); margin-bottom: 16px;">Configure the departments members can apply for, along with their role rewards and application questions.</p>
+                            
+                            <!-- Departments List Container -->
+                            <div id="departmentsContainer" style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 20px;">
+                                <!-- Dynamic Department Cards will be inserted here -->
+                            </div>
+                            
+                            <button type="button" class="btn btn-secondary btn-sm" onclick="addDepartment()" style="width: 100%; border-style: dashed; border-width: 1.5px; background: rgba(255,255,255,0.02); margin-bottom: 20px;">
+                                <i class="fa-solid fa-plus"></i> Add New Department
+                            </button>
+
+                            <button class="btn btn-primary" onclick="saveApply()" style="width: 100%;"><i class="fa-solid fa-floppy-disk"></i> Save Apply Panel</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── AUTO ROLE TAB ── -->
+            <section class="dash-tab" id="tab-autorole">
+                <div class="page-header">
+                    <h1>Auto <span class="gradient-text">Role</span></h1>
+                    <p>Configure automatic role assignment for new members when they join the server.</p>
+                </div>
+                <div class="glass-card" style="max-width:600px;">
+                    <div class="form-section-title"><i class="fa-solid fa-user-plus"></i> Auto Role Configuration</div>
+                    <div class="form-group">
+                        <label class="form-label">Auto Roles</label>
+                        <select id="autoroleRoles" class="form-control" multiple style="height: 150px;"></select>
+                        <div class="form-hint">Select roles from the list. New members will automatically receive these roles. You can type to filter.</div>
+                    </div>
+                    <button class="btn btn-primary" onclick="saveAutoRole()"><i class="fa-solid fa-floppy-disk"></i> Save Auto Role</button>
+                </div>
+            </section>
+
+            <!-- ── SECURITY & PREFIX TAB ── -->
+            <section class="dash-tab" id="tab-security">
+                <div class="page-header">
+                    <h1>Security & <span class="gradient-text">Prefix</span></h1>
+                    <p>Manage server prefix, Anti-Bot and Anti-Webhook defense shields.</p>
+                </div>
+                <div class="glass-card" style="max-width:600px; margin-bottom:20px;">
+                    <div class="form-section-title"><i class="fa-solid fa-hashtag"></i> General Settings</div>
+                    <div class="form-group">
+                        <label class="form-label">Command Prefix</label>
+                        <input type="text" id="guildPrefix" class="form-control" maxLength="5" placeholder="e.g. &">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Security Owner Roles</label>
+                        <select id="guildOwnerRoles" class="form-control" multiple style="height: 120px;"></select>
+                        <div class="form-hint">Roles that bypass security checks and can manage security alerts. You can type to filter.</div>
+                    </div>
+                    <button class="btn btn-primary" onclick="saveGuildSettings()"><i class="fa-solid fa-floppy-disk"></i> Save General Settings</button>
+                </div>
+                <div class="glass-card" style="max-width:600px; margin-bottom:20px;">
+                    <div class="form-section-title"><i class="fa-solid fa-robot"></i> Anti-Bot Protection</div>
+                    <div class="form-group">
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="antibotEnabled">
+                            <span class="checkmark"></span>
+                            Enable Anti-Bot Shield (Automatically kicks unauthorized bots)
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Anti-Bot Logs Channel</label>
+                        <select id="antibotLogChannel" class="form-control"><option value="">Select channel…</option></select>
+                    </div>
+                    <button class="btn btn-primary" onclick="saveAntiBot()"><i class="fa-solid fa-floppy-disk"></i> Save Anti-Bot</button>
+                </div>
+                <div class="glass-card" style="max-width:600px;">
+                    <div class="form-section-title"><i class="fa-solid fa-code-branch"></i> Anti-Webhook Protection</div>
+                    <div class="form-group">
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="antiwebhookEnabled">
+                            <span class="checkmark"></span>
+                            Enable Anti-Webhook Shield (Automatically deletes unauthorized webhooks)
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Anti-Webhook Logs Channel</label>
+                        <select id="antiwebhookLogChannel" class="form-control"><option value="">Select channel…</option></select>
+                    </div>
+                    <button class="btn btn-primary" onclick="saveAntiWebhook()"><i class="fa-solid fa-floppy-disk"></i> Save Anti-Webhook</button>
+                </div>
+            </section>
+
+            <!-- ── SERVER LOGS TAB ── -->
+            <section class="dash-tab" id="tab-logs">
+                <div class="page-header">
+                    <h1>Server <span class="gradient-text">Logs</span></h1>
+                    <p>Assign separate log channels for different event types to stay updated on server activity.</p>
+                </div>
+                <div class="glass-card" style="max-width:700px;">
+                    <div class="form-section-title"><i class="fa-solid fa-list-ul"></i> Advanced Logging Channels</div>
+                    
+                    <div style="display:flex; flex-direction:column; gap:24px; margin-bottom:28px;">
+                        <!-- Group 1: Member & Invite Activity -->
+                        <div>
+                            <div style="font-size:14px; font-weight:600; color:var(--text-1); margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+                                <i class="fa-solid fa-users" style="color:var(--cyan);"></i> Member & Invite Activity
+                            </div>
+                            <div class="form-grid-2" style="gap:16px;">
+                                <div class="form-group">
+                                    <label class="form-label">Member Joins (Welcome)</label>
+                                    <select id="logChan_welcome" class="form-control"><option value="">Disable logging</option></select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Member Leaves</label>
+                                    <select id="logChan_leave" class="form-control"><option value="">Disable logging</option></select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Nickname Changes</label>
+                                    <select id="logChan_nickname" class="form-control"><option value="">Disable logging</option></select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Invite Updates (Create/Delete)</label>
+                                    <select id="logChan_invites" class="form-control"><option value="">Disable logging</option></select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr style="border:0; border-top:1px solid rgba(255,255,255,0.08); margin:0;">
+
+                        <!-- Group 2: Moderation Logs -->
+                        <div>
+                            <div style="font-size:14px; font-weight:600; color:var(--text-1); margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+                                <i class="fa-solid fa-gavel" style="color:#f0a020;"></i> Moderation Logs
+                            </div>
+                            <div class="form-grid-2" style="gap:16px;">
+                                <div class="form-group">
+                                    <label class="form-label">Member Banned</label>
+                                    <select id="logChan_ban" class="form-control"><option value="">Disable logging</option></select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Member Unbanned</label>
+                                    <select id="logChan_unban" class="form-control"><option value="">Disable logging</option></select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Member Kicked</label>
+                                    <select id="logChan_kick" class="form-control"><option value="">Disable logging</option></select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Member Timeout / Mute</label>
+                                    <select id="logChan_timeout" class="form-control"><option value="">Disable logging</option></select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr style="border:0; border-top:1px solid rgba(255,255,255,0.08); margin:0;">
+
+                        <!-- Group 3: Roles & Channels -->
+                        <div>
+                            <div style="font-size:14px; font-weight:600; color:var(--text-1); margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+                                <i class="fa-solid fa-shield-halved" style="color:#30a0ff;"></i> Roles & Channels
+                            </div>
+                            <div class="form-grid-2" style="gap:16px;">
+                                <div class="form-group">
+                                    <label class="form-label">Role Given to Member</label>
+                                    <select id="logChan_role-given" class="form-control"><option value="">Disable logging</option></select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Role Removed from Member</label>
+                                    <select id="logChan_role-remove" class="form-control"><option value="">Disable logging</option></select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Role Created</label>
+                                    <select id="logChan_role-create" class="form-control"><option value="">Disable logging</option></select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Role Deleted</label>
+                                    <select id="logChan_role-delete" class="form-control"><option value="">Disable logging</option></select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Role Updated</label>
+                                    <select id="logChan_role-update" class="form-control"><option value="">Disable logging</option></select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Channel Updates (Create/Delete/Update)</label>
+                                    <select id="logChan_channels" class="form-control"><option value="">Disable logging</option></select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr style="border:0; border-top:1px solid rgba(255,255,255,0.08); margin:0;">
+
+                        <!-- Group 4: Messages & Emojis -->
+                        <div>
+                            <div style="font-size:14px; font-weight:600; color:var(--text-1); margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+                                <i class="fa-solid fa-comment-dots" style="color:#40e0d0;"></i> Messages & Emojis
+                            </div>
+                            <div class="form-grid-2" style="gap:16px;">
+                                <div class="form-group">
+                                    <label class="form-label">Message Edits & Deletes</label>
+                                    <select id="logChan_messages" class="form-control"><option value="">Disable logging</option></select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Emoji Updates (Create/Delete/Update)</label>
+                                    <select id="logChan_emojis" class="form-control"><option value="">Disable logging</option></select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr style="border:0; border-top:1px solid rgba(255,255,255,0.08); margin:0;">
+
+                        <!-- Group 5: Voice Activity -->
+                        <div>
+                            <div style="font-size:14px; font-weight:600; color:var(--text-1); margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+                                <i class="fa-solid fa-volume-high" style="color:#a060ff;"></i> Voice Activity Logs
+                            </div>
+                            <div class="form-grid-2" style="gap:16px;">
+                                <div class="form-group">
+                                    <label class="form-label">Voice Joined</label>
+                                    <select id="logChan_voice-join" class="form-control"><option value="">Disable logging</option></select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Voice Left</label>
+                                    <select id="logChan_voice-leave" class="form-control"><option value="">Disable logging</option></select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Voice Moved</label>
+                                    <select id="logChan_voice-move" class="form-control"><option value="">Disable logging</option></select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Voice Muted / Unmuted</label>
+                                    <select id="logChan_voice-mute" class="form-control"><option value="">Disable logging</option></select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Voice Deafened / Undeafened</label>
+                                    <select id="logChan_voice-deafen" class="form-control"><option value="">Disable logging</option></select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Voice Disconnected (Mod)</label>
+                                    <select id="logChan_voice-disconnect" class="form-control"><option value="">Disable logging</option></select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="saveLogs()"><i class="fa-solid fa-floppy-disk"></i> Save Server Logs</button>
+                </div>
+            </section>
+
+            <!-- ── NEED HELP ROOMS TAB ── -->
+            <section class="dash-tab" id="tab-rooms">
+                <div class="page-header">
+                    <h1>Need Help <span class="gradient-text">Rooms</span></h1>
+                    <p>Configure the personal room creation system where users can join a voice channel to auto-generate a private support room.</p>
+                </div>
+                <div class="glass-card" style="max-width:600px;">
+                    <div class="form-section-title"><i class="fa-solid fa-comments"></i> Room Setup Configuration</div>
+                    <div class="form-group">
+                        <label class="form-label">Join Voice Channel (to create room)</label>
+                        <select id="roomJoinChannel" class="form-control"><option value="">Select channel…</option></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Room Category (where rooms are created)</label>
+                        <select id="roomCategory" class="form-control"><option value="">Select category…</option></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">System Logs Channel</label>
+                        <select id="roomLogChannel" class="form-control"><option value="">Select channel…</option></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Staff Role (to help users)</label>
+                        <select id="roomStaffRole" class="form-control"><option value="">Select role…</option></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Manager Role (notified in logs)</label>
+                        <select id="roomManagerRole" class="form-control"><option value="">Select role…</option></select>
+                    </div>
+                    <button class="btn btn-primary" onclick="saveRooms()"><i class="fa-solid fa-floppy-disk"></i> Save Room Setup</button>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Toast container -->
+    <div class="toast-wrap" id="toastWrap"></div>
+
+    <!-- JS -->
+    <script type="module" src="/dashboard.js"></script>
+    <script type="module" src="/leveling.js"></script>
+</body>
+</html>

@@ -1,5 +1,25 @@
-const { MessageFlags, SeparatorSpacingSize } = require('discord.js');
+const { MessageFlags, SeparatorSpacingSize, ContainerBuilder, SectionBuilder, ThumbnailBuilder } = require('discord.js');
 const UI = require('../../utils/ui');
+const axios = require('axios');
+
+async function resolveImageToBase64(imageSource) {
+    if (!imageSource) return null;
+    if (imageSource.startsWith('data:')) return imageSource;
+
+    try {
+        const response = await axios.get(imageSource, {
+            responseType: 'arraybuffer',
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+            }
+        });
+        const contentType = response.headers['content-type'] || 'image/png';
+        const base64 = Buffer.from(response.data).toString('base64');
+        return `data:${contentType};base64,${base64}`;
+    } catch (error) {
+        throw new Error(`Failed to download image from URL: ${error.message}`);
+    }
+}
 
 module.exports = {
     name: 'setup-profile',
@@ -13,42 +33,76 @@ module.exports = {
             });
         }
 
-        // &setup-profile view  (show current native profile)
+        // ?setup-profile view  (show current native profile)
         if (!args.length || args[0].toLowerCase() === 'view') {
             const me = message.guild.members.me;
 
-            const guildAvatarURL  = me.avatarURL({ size: 256 }) || null;
-            const guildBannerURL  = me.bannerURL?.({ size: 512 }) || null;
-            const guildNick       = me.nickname || null;
+            const guildAvatarURL = me.avatarURL({ size: 256 }) || null;
+            // FIX #2: GuildMember doesn't have bannerURL, use me.user.bannerURL()
+            const guildBannerURL = me.user?.bannerURL({ size: 512 }) || null;
+            const guildNick = me.nickname || null;
 
-            const container = UI.createContainer({
-                title: '🎭 Server Bot Profile (Native)',
-                description:
-                    `め 」 **Bot's real Discord profile in \`${message.guild.name}\`**\n\n` +
+            const container = new ContainerBuilder()
+                .setAccentColor(0x5865F2)
+                .addTextDisplayComponents(td => td.setContent(`# <:pic:1518430671922528256> Server Bot Profile`))
+                .addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small))
+                .addSectionComponents(
+                    new SectionBuilder()
+                        .setThumbnailAccessory(new ThumbnailBuilder().setURL(guildAvatarURL || message.client.user.displayAvatarURL({ size: 256 })))
+                        .addTextDisplayComponents(td => td.setContent(`<:wchydrangeaflower:1516951730745770025> **Bot's real Discord profile in \`${message.guild.name}\`**`))
+                )
+                .addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small))
+                .addTextDisplayComponents(td => td.setContent(
                     `> **Nickname:** ${guildNick ? `\`${guildNick}\`` : '`None (using global name)`'}\n` +
                     `> **Guild Avatar:** ${guildAvatarURL ? `[View ↗](${guildAvatarURL})` : '`None (using global avatar)`'}\n` +
-                    `> **Guild Banner:** ${guildBannerURL ? `[View ↗](${guildBannerURL})` : '`None (using global banner)`'}\n\n` +
-                    `-# This is the real Discord profile seen by members when they click the bot.\n\n` +
-                    `### Usage\n` +
+                    `> **Guild Banner:** ${guildBannerURL ? `[View ↗](${guildBannerURL})` : '`None (using global banner)`'}`
+                ))
+                .addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small))
+                .addTextDisplayComponents(td => td.setContent(
                     `\`\`\`\n` +
-                    `&setup-profile name <text>       — Set nickname\n` +
-                    `&setup-profile name reset        — Remove nickname\n` +
-                    `&setup-profile avatar <url>      — Set guild avatar (attach image too)\n` +
-                    `&setup-profile avatar reset      — Remove guild avatar\n` +
-                    `&setup-profile banner <url>      — Set guild profile banner (attach image too)\n` +
-                    `&setup-profile banner reset      — Remove guild banner\n` +
-                    `\`\`\``,
-                color: 0x5865F2,
-                thumbnail: guildAvatarURL || message.client.user.displayAvatarURL({ size: 256 })
-            });
+                    `?setup-profile name <text>       — Set nickname\n` +
+                    `?setup-profile name reset        — Remove nickname\n` +
+                    `?setup-profile avatar <url>      — Set guild avatar (attach image too)\n` +
+                    `?setup-profile avatar reset      — Remove guild avatar\n` +
+                    `?setup-profile banner <url>      — Set guild banner (attach image too)\n` +
+                    `?setup-profile banner reset      — Remove guild banner\n` +
+                    `\`\`\``
+                ));
 
-            return message.reply({
-                components: [container],
-                flags: MessageFlags.IsComponentsV2
-            });
+            try {
+                return await message.reply({
+                    components: [container],
+                    flags: MessageFlags.IsComponentsV2
+                });
+            } catch (err) {
+                console.error('[setup-profile] V2 components failed, falling back to embed. Error:', err.message);
+                if (err.rawError && err.rawError.errors) {
+                    console.error('[setup-profile] Validation errors:', JSON.stringify(err.rawError.errors, null, 2));
+                }
+                const fallbackEmbed = UI.createEmbed({
+                    title: '🎭 Server Bot Profile (Native)',
+                    description:
+                        `め 」 **Bot's real Discord profile in \`${message.guild.name}\`**\n\n` +
+                        `> **Nickname:** ${guildNick ? `\`${guildNick}\`` : '`None (using global name)`'}\n` +
+                        `> **Guild Avatar:** ${guildAvatarURL ? `[View ↗](${guildAvatarURL})` : '`None (using global avatar)`'}\n` +
+                        `> **Guild Banner:** ${guildBannerURL ? `[View ↗](${guildBannerURL})` : '`None (using global banner)`'}\n\n` +
+                        `\`\`\`\n` +
+                        `?setup-profile name <text>       — Set nickname\n` +
+                        `?setup-profile name reset        — Remove nickname\n` +
+                        `?setup-profile avatar <url>      — Set guild avatar (attach image too)\n` +
+                        `?setup-profile avatar reset      — Remove guild avatar\n` +
+                        `?setup-profile banner <url>      — Set guild banner (attach image too)\n` +
+                        `?setup-profile banner reset      — Remove guild banner\n` +
+                        `\`\`\``,
+                    color: 0x5865F2,
+                    thumbnail: guildAvatarURL || message.client.user.displayAvatarURL({ size: 256 })
+                });
+                // FIX #5: Added await
+                return await message.reply({ embeds: [fallbackEmbed] });
+            }
         }
 
-        const type  = args[0].toLowerCase();
+        const type = args[0].toLowerCase();
         const value = args.slice(1).join(' ').trim();
 
         if (!['name', 'avatar', 'banner'].includes(type)) {
@@ -62,7 +116,8 @@ module.exports = {
 
         // --- Handle name ---
         if (type === 'name') {
-            const isReset = value.toLowerCase() === 'reset' || value === '';
+            // FIX #1/#4: Handle empty value properly
+            const isReset = !value || value.toLowerCase() === 'reset';
             try {
                 await message.guild.members.editMe({
                     nick: isReset ? null : value
@@ -107,7 +162,8 @@ module.exports = {
             imageSource = value;
         }
 
-        const isReset = !imageSource && (value.toLowerCase() === 'reset' || value === '');
+        // FIX #1: Proper reset detection - check value exists before toLowerCase
+        const isReset = !imageSource && (!value || value.toLowerCase() === 'reset');
 
         if (!imageSource && !isReset) {
             return message.reply({
@@ -128,34 +184,51 @@ module.exports = {
         });
 
         try {
-            const editPayload = {};
+            let resultURL = null;
 
             if (type === 'avatar') {
-                editPayload.avatar = isReset ? null : imageSource;
+                const base64Data = isReset ? null : await resolveImageToBase64(imageSource);
+                await message.guild.members.editMe({ avatar: base64Data });
+
+                // FIX #6: Force fetch to bypass cache
+                const updatedMe = await message.guild.members.fetch({ 
+                    user: message.client.user.id, 
+                    force: true 
+                });
+                resultURL = updatedMe.avatarURL({ size: 512 });
             } else if (type === 'banner') {
-                editPayload.banner = isReset ? null : imageSource;
+                // FIX #3: Discord.js editMe() does NOT support banner for guild members
+                // You need to use the REST API directly. This is a limitation of Discord's API
+                // for bot guild profiles. Uncomment below if you want to try via REST:
+                
+                /*
+                const { REST } = require('@discordjs/rest');
+                const { Routes } = require('discord-api-types/v10');
+                const rest = new REST({ version: '10' }).setToken(message.client.token);
+                
+                const base64Data = isReset ? null : await resolveImageToBase64(imageSource);
+                await rest.patch(
+                    Routes.guildMember(message.guild.id, message.client.user.id),
+                    { body: { banner: base64Data } }
+                );
+                */
+               
+                // For now, throw informative error since standard Discord.js doesn't support this
+                throw new Error(
+                    'Guild banner editing for bots is not supported via Discord.js editMe(). ' +
+                    'You must use the Discord REST API directly (see commented code). ' +
+                    'Note: This feature may also require specific API permissions/whitelisting.'
+                );
             }
-
-            // discord.js resolveImage() downloads URL → base64 automatically
-            await message.guild.members.editMe(editPayload);
-
-            // Fetch the updated member to get the real CDN URL
-            const updatedMe = await message.guild.members.fetch(message.client.user.id);
-            const resultURL = type === 'avatar'
-                ? updatedMe.avatarURL({ size: 512 })
-                : updatedMe.bannerURL?.({ size: 512 });
 
             const container = UI.createContainer({
                 title: `✅ Guild ${type === 'avatar' ? 'Avatar' : 'Banner'} ${isReset ? 'Removed' : 'Updated'}`,
                 description: isReset
-                    ? `Guild ${type} removed. The bot now shows its global ${type} in **${message.guild.name}**.`
-                    : `Guild ${type} updated for **${message.guild.name}**. Members will see this when they click the bot.\n\n` +
-                      `-# The change is applied natively on Discord — no simulation.`,
+                    ? `Guild ${type} removed. The bot now shows its default/global appearance in **${message.guild.name}**.`
+                    : `Guild ${type} updated successfully. Members will see this when they click the bot.\n`,
                 color: 0x57F287,
-                image: (!isReset && resultURL) ? resultURL : undefined
             });
 
-            // Edit the processing message to show the result
             await processingMsg.edit({
                 components: [container],
                 flags: MessageFlags.IsComponentsV2
@@ -168,9 +241,7 @@ module.exports = {
                     description:
                         `- ❌ Failed to update guild ${type}.\n` +
                         `\`\`\`${err.message}\`\`\`\n\n` +
-                        (type === 'avatar'
-                            ? `-# Make sure the image is a valid PNG/JPG/GIF and under 8MB.`
-                            : `-# Guild banners require the image to be PNG/JPG/GIF and under 8MB.`),
+                        `-# Make sure the image is a valid PNG/JPG/GIF and under 8MB.`,
                     color: 0xED4245
                 })],
                 flags: MessageFlags.IsComponentsV2

@@ -7,11 +7,19 @@ const {
   ButtonStyle
 } = require("discord.js");
 const RoomSetupDB = require("../db/room-setup-db");
+const VoiceService = require("../services/voiceService");
+
+const LevelService = require("../services/levelService");
 
 module.exports = {
   name: "voiceStateUpdate",
   async execute(oldState, newState) {
     try {
+      // Leveling Voice Session update
+      await LevelService.handleVoiceStateUpdate(oldState, newState);
+
+      // Execute the general Temp Voice Service (Join to Create)
+      await VoiceService.handleVoiceStateUpdate(oldState, newState);
       // Fetch server settings
       const settings = await RoomSetupDB.getSettings(newState.guild.id);
       if (!settings || !settings.log_channel || !settings.room_category || !settings.join_channel) {

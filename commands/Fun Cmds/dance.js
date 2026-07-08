@@ -7,11 +7,11 @@ module.exports = {
     description: 'Dance time!',
     async execute(message, args) {
         try {
-            const { data } = await axios.get('https://api.waifu.pics/sfw/dance');
+            const { data } = await axios.get('https://nekos.best/api/v2/dance');
 
             const container = UI.createContainer({
                 description: `**${message.author.username}** is dancing! 💃🕺`,
-                image: data.url
+                image: data.results[0].url
             });
 
             message.reply({

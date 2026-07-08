@@ -34,7 +34,7 @@ module.exports = {
                         title: "Command: premove",
                         description: "Remove a member from your premium plan.",
                         fields: [
-                            { name: "Usage", value: `\`&premove <user_id/mention>\`` }
+                            { name: "Usage", value: `\`?premove <user_id/mention>\`` }
                         ]
                     })],
                     flags: MessageFlags.IsComponentsV2

@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vivy — The All-in-One Discord Bot for Growing Communities</title>
+    <meta name="description"
+        content="Level up your Discord server with Vivy — anti-spam protection, custom welcome cards, leveling rewards, voice support rooms, and a premium dashboard. Trusted by 100+ servers.">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="landing.css">
+</head>
+
+<body>
+
+    <!-- Grid lines overlay & background orbs -->
+    <div class="bg-grid-overlay"></div>
+    <div class="bg-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-inner">
+            <a href="#" class="logo">
+                <span class="logo-icon"><img src="logo.png" alt="Vivy"></span>
+                <span class="logo-text">Vivy</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#dashboard">Dashboard</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="#faq">FAQ</a></li>
+                <li><a href="/docs">Docs</a></li>
+            </ul>
+            <a href="/auth/discord/login" class="btn-discord" id="nav-login-btn">
+                <i class="fa-brands fa-discord"></i> Login with Discord
+            </a>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+        <!-- Mobile menu -->
+        <div class="mobile-menu" id="mobileMenu">
+            <a href="#features">Features</a>
+            <a href="#dashboard">Dashboard</a>
+            <a href="#pricing">Pricing</a>
+            <a href="#faq">FAQ</a>
+            <a href="/docs">Docs</a>
+            <a href="/auth/discord/login" class="btn-discord-mobile" id="mobile-login-btn">
+                <i class="fa-brands fa-discord"></i> Login with Discord
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <!-- Floating Discord UI elements -->
+        <div class="hero-floater hero-floater-left">
+            <div class="discord-msg-mock">
+                <div class="discord-msg-header">
+                    <div class="discord-msg-avatar" style="background: var(--cyan);"></div>
+                    <span class="discord-msg-user">Vivy</span>
+                    <span class="discord-msg-bot-tag">BOT</span>
+                </div>
+                <div class="discord-msg-content">
+                    Blocked potential malicious link from <span style="color: #00b0f4;">@spambot</span>.
+                    <div class="discord-automod-alert">
+                        <i class="fa-solid fa-shield-halved" style="color: #f23f43; margin-right: 6px;"></i>
+                        <strong>AutoMod Alert:</strong> Phishing URL detected and quarantined.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero-floater hero-floater-right">
+            <div class="discord-welcome-mock">
+                <div class="welcome-banner-img">
+                    <div class="welcome-avatar-wrap">
+                        <svg width="100%" height="100%" viewBox="0 0 100 100" style="background:#a855f7;">
+                            <circle cx="50" cy="35" r="20" fill="#fff" />
+                            <path d="M15 85 C15 60, 85 60, 85 85" fill="#fff" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="welcome-content">
+                    <div class="welcome-title">Welcome @Loki!</div>
+                    <div class="welcome-desc">You are member #12,408 of the community</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hero Content -->
+        <div class="hero-badge-wrap">
+            <div class="hero-badge">
+                <div class="badge-pulse-dot"></div>
+                <span>Vivy</span> Manage, Protect, and Grow Your Discord Community with Ease
+            </div>
+        </div>
+
+        <h1 class="hero-title">
+            The All-in-One Discord Bot for <span class="gradient-text">Growing Communities</span>
+        </h1>
+
+        <p class="hero-sub">
+            Anti-raid security, welcome banners, leveled roles, ticketing, Moderation, Automations, and more. Set up in seconds,
+            managed through a premium visual dashboard.
+        </p>
+
+        <div class="hero-cta">
+            <a href="/auth/discord/login" class="btn-primary" id="hero-cta-btn">
+                <i class="fa-brands fa-discord"></i> Get Started Free
+            </a>
+            <a href="#features" class="btn-ghost">
+                Explore Features <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        </div>
+
+        <!-- Social Proof Metrics -->
+        <div class="hero-social-proof">
+            <div class="social-avatars">
+                <!-- Custom SVG Avatars to prevent missing images -->
+                <svg width="40" height="40"
+                    style="background:#5865F2;border-radius:50%;border:2px solid var(--bg-dark);margin-right:-10px;">
+                    <circle cx="20" cy="15" r="8" fill="#fff" />
+                    <path d="M5 35 C5 25, 35 25, 35 35" fill="#fff" />
+                </svg>
+                <svg width="40" height="40"
+                    style="background:#10b981;border-radius:50%;border:2px solid var(--bg-dark);margin-right:-10px;">
+                    <circle cx="20" cy="15" r="8" fill="#fff" />
+                    <path d="M5 35 C5 25, 35 25, 35 35" fill="#fff" />
+                </svg>
+                <svg width="40" height="40"
+                    style="background:#f59e0b;border-radius:50%;border:2px solid var(--bg-dark);margin-right:-10px;">
+                    <circle cx="20" cy="15" r="8" fill="#fff" />
+                    <path d="M5 35 C5 25, 35 25, 35 35" fill="#fff" />
+                </svg>
+                <svg width="40" height="40"
+                    style="background:#ec4899;border-radius:50%;border:2px solid var(--bg-dark);margin-right:-10px;">
+                    <circle cx="20" cy="15" r="8" fill="#fff" />
+                    <path d="M5 35 C5 25, 35 25, 35 35" fill="#fff" />
+                </svg>
+            </div>
+            <div class="social-text">
+                <i class="fa-solid fa-star"></i>
+                <span>Trusted by <strong>100+</strong> communities</span>
+                <span style="color: var(--text-muted);">|</span>
+                <span><strong>50000+</strong> members protected</span>
+                <span style="color: var(--text-muted);">|</span>
+                <span><strong>18M+</strong> events processed</span>
+            </div>
+        </div>
+
+        <!-- Live Ticker Dashboard Console -->
+        <div class="hero-ticker-container">
+            <div class="ticker-header">
+                <div class="ticker-dots">
+                    <span class="ticker-dot ticker-dot-red"></span>
+                    <span class="ticker-dot ticker-dot-yellow"></span>
+                    <span class="ticker-dot ticker-dot-green"></span>
+                </div>
+                <div class="ticker-title">vivy-live-events.log</div>
+                <div style="width: 32px;"></div>
+            </div>
+            <div class="ticker-console" id="ticker-console">
+                <!-- Log lines will be appended here via JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Trust / Infrastructure Section -->
+    <section class="trust-section">
+        <div class="container">
+            <h2 class="trust-title">Built on industry-leading infrastructure</h2>
+            <div class="trust-logos">
+                <div class="trust-logo logo-discord"><i class="fa-brands fa-discord"></i> Discord</div>
+                <div class="trust-logo logo-github"><i class="fa-brands fa-github"></i> GitHub</div>
+                <div class="trust-logo logo-cloudflare"><i class="fa-brands fa-cloudflare"></i> Cloudflare</div>
+                <div class="trust-logo logo-mongodb"><i class="fa-solid fa-database"></i> MongoDB</div>
+                <div class="trust-logo logo-node"><i class="fa-brands fa-node-js"></i> Node.js</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bento Features Section -->
+    <section id="features" class="features-section fade-in-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Feature Suite</span>
+                <h2 class="section-title">Automate Everything.<br><span class="gradient-text">Keep Control.</span></h2>
+                <p class="section-sub">Ditch multiple bots. Vivy does everything to scale and maintain your community.
+                </p>
+            </div>
+
+            <div class="features-grid">
+                <!-- AutoMod Feature -->
+                <div class="feature-card glass-card">
+                    <div class="card-glow"></div>
+                    <div class="feature-info">
+                        <div class="feature-top">
+                            <div class="feature-icon-wrap"
+                                style="background: rgba(0, 242, 254, 0.1); color: var(--cyan);">
+                                <i class="fa-solid fa-shield-halved"></i>
+                            </div>
+                            <span class="feature-outcome">10ms Response</span>
+                        </div>
+                        <h3>Advanced AutoMod</h3>
+                        <p>Stop spam and malicious raids before they reach your members. Rule sets trigger warnings,
+                            mutes, and bans instantly.</p>
+                    </div>
+                    <div class="feature-preview">
+                        <div class="automod-demo">
+                            <div class="automod-msg">
+                                <div class="avatar" style="background:#5865f2;"></div>
+                                <div class="content">Check out this link: http://phishing-site.xyz</div>
+                            </div>
+                            <div class="automod-msg flagged">
+                                <div class="avatar" style="background:#00f2fe;"></div>
+                                <div class="content">Warning: Phishing content flagged. Message deleted.</div>
+                            </div>
+                            <div class="automod-block-action">
+                                <i class="fa-solid fa-check-double"></i> Event logged & sender muted.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Welcome Banners Feature (col-span-2) -->
+                <div class="feature-card col-span-2 glass-card">
+                    <div class="card-glow"></div>
+                    <div class="feature-info">
+                        <div class="feature-top">
+                            <div class="feature-icon-wrap"
+                                style="background: rgba(157, 78, 221, 0.1); color: var(--purple);">
+                                <i class="fa-solid fa-image"></i>
+                            </div>
+                            <span class="feature-outcome">Engage Immediately</span>
+                        </div>
+                        <h3>Custom Welcome Cards</h3>
+                        <p>Automatically draw welcome banners inside your channels. Customize layout, colors, avatars,
+                            and text parameters directly from the web dashboard.</p>
+                    </div>
+                    <div class="feature-preview">
+                        <div class="welcome-demo">
+                            <div class="welcome-demo-card">
+                                <div class="welcome-demo-avatar">
+                                    <svg width="100%" height="100%" viewBox="0 0 100 100" style="background:#9d4edd;">
+                                        <circle cx="50" cy="35" r="20" fill="#fff" />
+                                        <path d="M15 85 C15 60, 85 60, 85 85" fill="#fff" />
+                                    </svg>
+                                </div>
+                                <div class="welcome-demo-text">
+                                    <div class="welcome-demo-title">Welcome, Developer!</div>
+                                    <div class="welcome-demo-subtitle">You are our 5,200th member. Customize this text
+                                        in the dashboard.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Leveling & Rewards (col-span-2) -->
+                <div class="feature-card col-span-2 glass-card">
+                    <div class="card-glow"></div>
+                    <div class="feature-info">
+                        <div class="feature-top">
+                            <div class="feature-icon-wrap"
+                                style="background: rgba(247, 37, 133, 0.1); color: var(--pink);">
+                                <i class="fa-solid fa-ranking-star"></i>
+                            </div>
+                            <span class="feature-outcome">Gamify Community</span>
+                        </div>
+                        <h3>Leveling & Rewards</h3>
+                        <p>Keep your community active. Members earn XP by chatting. Award special roles, unlock
+                            permissions, and show off beautifully designed rank cards.</p>
+                    </div>
+                    <div class="feature-preview">
+                        <div class="leveling-demo">
+                            <div class="leveling-row">
+                                <span style="font-weight:700;">Level Up! @Aria reached Level 15</span>
+                                <span class="leveling-badge">Role Unlocked: Elder Elite</span>
+                            </div>
+                            <div class="leveling-progress-container">
+                                <div class="leveling-progress-bar"></div>
+                            </div>
+                            <div class="leveling-row" style="font-size:11px;color:var(--text-muted);">
+                                <span>XP: 4,890 / 5,000</span>
+                                <span>Next Level: 110 XP remaining</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ticketing System -->
+                <div class="feature-card glass-card">
+                    <div class="card-glow"></div>
+                    <div class="feature-info">
+                        <div class="feature-top">
+                            <div class="feature-icon-wrap"
+                                style="background: rgba(59, 130, 246, 0.1); color: var(--blue);">
+                                <i class="fa-solid fa-headset"></i>
+                            </div>
+                            <span class="feature-outcome">Streamline Support</span>
+                        </div>
+                        <h3>Ticketing System</h3>
+                        <p>Support queues built with buttons. Generate claim alerts, transcript logs, and auto-delete
+                            completed ticket channels instantly.</p>
+                    </div>
+                    <div class="feature-preview">
+                        <div class="tickets-demo">
+                            <div class="ticket-bubble">
+                                <span>Ticket #0409 (Support Query)</span>
+                                <span class="ticket-status open"></span>
+                            </div>
+                            <div class="ticket-bubble">
+                                <span>Ticket #0408 (Billing Issue)</span>
+                                <span class="ticket-status closed"></span>
+                            </div>
+                            <div class="ticket-bubble">
+                                <span>Ticket #0407 (Partner Application)</span>
+                                <span class="ticket-status closed"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Smart Verification -->
+                <div class="feature-card glass-card">
+                    <div class="card-glow"></div>
+                    <div class="feature-info">
+                        <div class="feature-top">
+                            <div class="feature-icon-wrap"
+                                style="background: rgba(0, 242, 254, 0.1); color: var(--cyan);">
+                                <i class="fa-solid fa-user-check"></i>
+                            </div>
+                            <span class="feature-outcome">Staff Gateway</span>
+                        </div>
+                        <h3>Smart Verification</h3>
+                        <p>Secure your server with staff-approved verification gates. Automatically assign unverified roles and manage appeals cleanly.</p>
+                    </div>
+                    <div class="feature-preview">
+                        <div class="verify-demo">
+                            <div class="verify-badge"><i class="fa-solid fa-user-check"></i> Pending Approval</div>
+                            <div class="verify-member-card">
+                                <div class="verify-avatar"></div>
+                                <div class="verify-user-info">
+                                    <div class="verify-name">Aiden#0001</div>
+                                    <div class="verify-time">Joined 2 min ago</div>
+                                </div>
+                                <div class="verify-actions">
+                                    <span class="verify-btn accept"><i class="fa-solid fa-check"></i></span>
+                                    <span class="verify-btn decline"><i class="fa-solid fa-xmark"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Visual Command Builder (col-span-2) -->
+                <div class="feature-card col-span-2 glass-card">
+                    <div class="card-glow"></div>
+                    <div class="feature-info">
+                        <div class="feature-top">
+                            <div class="feature-icon-wrap"
+                                style="background: rgba(16, 185, 129, 0.1); color: var(--green);">
+                                <i class="fa-solid fa-code"></i>
+                            </div>
+                            <span class="feature-outcome">Zero-Code API</span>
+                        </div>
+                        <h3>Visual Custom Commands</h3>
+                        <p>Create server automation and embeds without programming. Drag and drop triggers, check
+                            conditional permissions, and format custom bot responses.</p>
+                    </div>
+                    <div class="feature-preview">
+                        <div class="builder-demo">
+                            <div class="builder-block event">
+                                <i class="fa-regular fa-clock" style="color:var(--cyan);"></i> When member joins server
+                            </div>
+                            <div class="builder-block action">
+                                <i class="fa-solid fa-arrow-turn-down"
+                                    style="color:var(--purple);transform:rotate(90deg);"></i> Assign role @Newcomer
+                            </div>
+                            <div class="builder-block action">
+                                <i class="fa-solid fa-envelope" style="color:var(--purple);"></i> Send direct message
+                                welcome
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Live Dashboard Showcase -->
+    <section id="dashboard" class="dashboard-showcase-section fade-in-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Control Room</span>
+                <h2 class="section-title">The Interface Your Community<br><span class="gradient-text">Deserves</span>
+                </h2>
+                <p class="section-sub">Ditch complex slash command configs. Manage welcome cards, anti-raid limits, and
+                    audio pools visually.</p>
+            </div>
+
+            <!-- Full-width Dashboard Mockup -->
+            <div class="dashboard-mockup">
+                <!-- Sidebar -->
+                <div class="dash-sidebar">
+                    <div class="dash-sidebar-header">
+                        <div class="logo-mini"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                        <span>Vivy Dashboard</span>
+                    </div>
+                    <div class="dash-menu">
+                        <div class="dash-menu-item active"><i class="fa-solid fa-chart-line"></i> Analytics</div>
+                        <div class="dash-menu-item"><i class="fa-solid fa-shield-halved"></i> AutoMod</div>
+                        <div class="dash-menu-item"><i class="fa-solid fa-image"></i> Welcome Cards</div>
+                        <div class="dash-menu-item"><i class="fa-solid fa-ranking-star"></i> Levels & XP</div>
+                        <div class="dash-menu-item"><i class="fa-solid fa-user-check"></i> Verification</div>
+                        <div class="dash-menu-item"><i class="fa-solid fa-gear"></i> Settings</div>
+                    </div>
+                </div>
+                <!-- Content Area -->
+                <div class="dash-content">
+                    <div class="dash-header">
+                        <div class="dash-server-select">
+                            <i class="fa-brands fa-discord" style="color:#5865F2;"></i>
+                            <span>Developer Hub</span>
+                            <i class="fa-solid fa-chevron-down" style="font-size:10px;color:var(--text-muted);"></i>
+                        </div>
+                        <div class="dash-status">
+                            <span class="status-dot"></span>
+                            <span>Bot Status: <strong>Online</strong></span>
+                        </div>
+                    </div>
+                    <div class="dash-body">
+                        <!-- Stats Grid -->
+                        <div class="dash-stats-grid">
+                            <div class="dash-stat-card">
+                                <div class="dash-stat-title">Members</div>
+                                <div class="dash-stat-val">12,408</div>
+                                <div class="dash-stat-change pos"><i class="fa-solid fa-arrow-up"></i> +12% this week
+                                </div>
+                            </div>
+                            <div class="dash-stat-card">
+                                <div class="dash-stat-title">Active AutoMod Cases</div>
+                                <div class="dash-stat-val">1,402</div>
+                                <div class="dash-stat-change neg"><i class="fa-solid fa-arrow-down"></i> -8% spam alerts
+                                </div>
+                            </div>
+                            <div class="dash-stat-card">
+                                <div class="dash-stat-title">Tickets Resolved</div>
+                                <div class="dash-stat-val">412</div>
+                                <div class="dash-stat-change pos"><i class="fa-solid fa-arrow-up"></i> +4% resolution
+                                    rate</div>
+                            </div>
+                            <div class="dash-stat-card">
+                                <div class="dash-stat-title">Uptime SLA</div>
+                                <div class="dash-stat-val">99.99%</div>
+                                <div class="dash-stat-change pos"><i class="fa-solid fa-bolt"></i> Healthy latency</div>
+                            </div>
+                        </div>
+
+                        <!-- Panels Row -->
+                        <div class="dash-panels-grid">
+                            <!-- Chart Panel -->
+                            <div class="dash-panel">
+                                <div class="dash-panel-header">
+                                    <div class="dash-panel-title">Server Growth Analytics</div>
+                                    <span style="font-size:12px;color:var(--text-muted);">Last 7 Days</span>
+                                </div>
+                                <div class="chart-container">
+                                    <svg class="chart-svg" viewBox="0 0 500 150">
+                                        <defs>
+                                            <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+                                                <stop offset="0%" stop-color="#00f2fe" stop-opacity="0.3" />
+                                                <stop offset="100%" stop-color="#00f2fe" stop-opacity="0" />
+                                            </linearGradient>
+                                        </defs>
+                                        <!-- Self Drawing path -->
+                                        <path class="chart-area-path"
+                                            d="M 0 150 L 50 120 L 100 130 L 150 90 L 200 80 L 250 60 L 300 70 L 350 40 L 400 45 L 450 10 L 500 15 L 500 150 Z"
+                                            fill="url(#chartGrad)"></path>
+                                        <path class="chart-path"
+                                            d="M 0 150 L 50 120 L 100 130 L 150 90 L 200 80 L 250 60 L 300 70 L 350 40 L 400 45 L 450 10 L 500 15"
+                                            fill="none" stroke="#00f2fe" stroke-width="3"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <!-- Live Logs Panel -->
+                            <div class="dash-panel">
+                                <div class="dash-panel-header">
+                                    <div class="dash-panel-title">Live Audit Log</div>
+                                </div>
+                                <div class="live-logs-feed">
+                                    <div class="log-item info">
+                                        <div class="log-icon-mini"><i class="fa-solid fa-shield-halved"></i></div>
+                                        <div class="log-desc">AutoMod quarantined spammer #490</div>
+                                        <div class="log-time-stamp">1m ago</div>
+                                    </div>
+                                    <div class="log-item success">
+                                        <div class="log-icon-mini"><i class="fa-solid fa-plus"></i></div>
+                                        <div class="log-desc">Welcomed member @Aiden</div>
+                                        <div class="log-time-stamp">4m ago</div>
+                                    </div>
+                                    <div class="log-item warning">
+                                        <div class="log-icon-mini"><i class="fa-solid fa-microphone"></i></div>
+                                        <div class="log-desc">Dynamic Support Room #004 created</div>
+                                        <div class="log-time-stamp">9m ago</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Communities Showcase -->
+    <section class="community-section fade-in-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Proven Scaling</span>
+                <h2 class="section-title">Used by thriving communities</h2>
+                <p class="section-sub">Vivy powers active guilds across multiple niches, keeping engagement high and
+                    moderation low.</p>
+            </div>
+
+            <div class="communities-grid">
+                <!-- Community Card 1 -->
+                <div class="community-card glass-card">
+                    <div class="community-card-top gaming">
+                        <div class="community-icon">G</div>
+                        <div>
+                            <div class="community-name">Gamer Haven</div>
+                            <span style="font-size:12px;color:var(--text-muted);">Gaming League</span>
+                        </div>
+                    </div>
+                    <p style="font-size:13px;color:var(--text-secondary);">Using AutoMod to secure league applications
+                        and handle ticketing workflows.</p>
+                    <div class="community-meta">
+                        <span class="community-members">48,400 members</span>
+                        <span class="community-growth"><i class="fa-solid fa-arrow-trend-up"></i> +14.2%</span>
+                    </div>
+                </div>
+
+                <!-- Community Card 2 -->
+                <div class="community-card glass-card">
+                    <div class="community-card-top dev">
+                        <div class="community-icon">D</div>
+                        <div>
+                            <div class="community-name">Code Sandbox</div>
+                            <span style="font-size:12px;color:var(--text-muted);">Programming</span>
+                        </div>
+                    </div>
+                    <p style="font-size:13px;color:var(--text-secondary);">Using levels & automated roles to award
+                        contributors based on server help posts.</p>
+                    <div class="community-meta">
+                        <span class="community-members">18,202 members</span>
+                        <span class="community-growth"><i class="fa-solid fa-arrow-trend-up"></i> +8.5%</span>
+                    </div>
+                </div>
+
+                <!-- Community Card 3 -->
+                <div class="community-card glass-card">
+                    <div class="community-card-top crypto">
+                        <div class="community-icon">W</div>
+                        <div>
+                            <div class="community-name">Web3 Devs</div>
+                            <span style="font-size:12px;color:var(--text-muted);">Crypto Hub</span>
+                        </div>
+                    </div>
+                    <p style="font-size:13px;color:var(--text-secondary);">Quarantines malicious links and filters
+                        wallet addresses automatically.</p>
+                    <div class="community-meta">
+                        <span class="community-members">92,408 members</span>
+                        <span class="community-growth"><i class="fa-solid fa-arrow-trend-up"></i> +21.4%</span>
+                    </div>
+                </div>
+
+                <!-- Community Card 4 -->
+                <div class="community-card glass-card">
+                    <div class="community-card-top support">
+                        <div class="community-icon">S</div>
+                        <div>
+                            <div class="community-name">Support Central</div>
+                            <span style="font-size:12px;color:var(--text-muted);">Tech Support</span>
+                        </div>
+                    </div>
+                    <p style="font-size:13px;color:var(--text-secondary);">Using Need Help Rooms to automatically generate private support channels for their clients.</p>
+                    <div class="community-meta">
+                        <span class="community-members">34,102 members</span>
+                        <span class="community-growth"><i class="fa-solid fa-arrow-trend-up"></i> +11.8%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing-section fade-in-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Pricing</span>
+                <h2 class="section-title">Elevate Your Guild Today</h2>
+                <p class="section-sub">Start with our complete free tier. Upgrade anytime to unlock custom assets,
+                    anti-raid protections, and smart tools.</p>
+            </div>
+
+            <!-- Pricing Monthly/Yearly toggle -->
+            <div class="pricing-switch-container">
+                <span class="pricing-switch-label active" id="label-monthly">Monthly</span>
+                <button class="pricing-switch" id="pricingToggleBtn" aria-label="Toggle pricing structure"></button>
+                <span class="pricing-switch-label" id="label-yearly">Yearly</span>
+                <span class="discount-badge">Save 20%</span>
+            </div>
+
+            <div class="pricing-grid">
+                <!-- Starter Tier -->
+                <div class="pricing-card glass-card">
+                    <div>
+                        <div class="plan-name">Starter</div>
+                        <div class="plan-price-wrap">
+                            <span class="plan-price">$0</span>
+                            <span class="plan-period">/month</span>
+                        </div>
+                        <p class="plan-desc">For exploring Vivy features with small servers.</p>
+                        <ul class="plan-features-list">
+                            <li class="plan-feature-item included"><i class="fa-solid fa-check"></i> Standard welcome
+                                templates</li>
+                            <li class="plan-feature-item included"><i class="fa-solid fa-check"></i> Basic AutoMod
+                                filters</li>
+                            <li class="plan-feature-item included"><i class="fa-solid fa-check"></i> Need Help voice channels</li>
+                            <li class="plan-feature-item included"><i class="fa-solid fa-check"></i> Leveling XP system
+                            </li>
+                            <li class="plan-feature-item excluded"><i class="fa-solid fa-xmark"></i> Custom graphic
+                                canvas generator</li>
+                            <li class="plan-feature-item excluded"><i class="fa-solid fa-xmark"></i> AI Smart mod &
+                                anti-raid</li>
+                        </ul>
+                    </div>
+                    <a href="/auth/discord/login" class="btn-plan btn-plan-ghost">Get Started Free</a>
+                </div>
+
+                <!-- Pro Tier -->
+                <div class="pricing-card glass-card featured">
+                    <span class="pricing-popular-badge">Most Popular</span>
+                    <div>
+                        <div class="plan-name">Premium Pro</div>
+                        <div class="plan-price-wrap">
+                            <span class="plan-price" id="pro-price-amount">$4.99</span>
+                            <span class="plan-period" id="pro-price-period">/month</span>
+                        </div>
+                        <p class="plan-desc">Unlocks full visual customization and enterprise anti-raid tools.</p>
+                        <ul class="plan-features-list">
+                            <li class="plan-feature-item included"><i class="fa-solid fa-check"></i> Everything in
+                                Starter</li>
+                            <li class="plan-feature-item included"><i class="fa-solid fa-check"></i> Canvas Welcome
+                                Builder</li>
+                            <li class="plan-feature-item included"><i class="fa-solid fa-check"></i> Advanced AutoMod &
+                                Anti-Raid</li>
+                            <li class="plan-feature-item included"><i class="fa-solid fa-check"></i> Custom embeds &
+                                slash builder</li>
+                            <li class="plan-feature-item included"><i class="fa-solid fa-check"></i> Developer REST API access</li>
+                            <li class="plan-feature-item included"><i class="fa-solid fa-check"></i> Dedicated support
+                                queue logs</li>
+                        </ul>
+                    </div>
+                    <a href="/auth/discord/login" class="btn-plan btn-plan-gradient">Upgrade to Pro</a>
+                </div>
+            </div>
+
+            <!-- Pricing Comparison Table -->
+            <div class="comparison-container">
+                <div class="comparison-table-title">Full Feature Comparison</div>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Starter</th>
+                            <th>Premium Pro</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="feature-name">Core Moderation Filters</td>
+                            <td class="val-check"><i class="fa-solid fa-check"></i></td>
+                            <td class="val-check"><i class="fa-solid fa-check"></i></td>
+                        </tr>
+                        <tr>
+                            <td class="feature-name">Need Help Voice Rooms</td>
+                            <td class="val-check"><i class="fa-solid fa-check"></i></td>
+                            <td class="val-check"><i class="fa-solid fa-check"></i></td>
+                        </tr>
+                        <tr>
+                            <td class="feature-name">Welcome Cards Customization</td>
+                            <td class="val-dash"><i class="fa-solid fa-minus"></i> Standard templates only</td>
+                            <td class="val-check"><i class="fa-solid fa-check"></i> Full graphical builder</td>
+                        </tr>
+                        <tr>
+                            <td class="feature-name">Anti-Raid Spam Shield</td>
+                            <td class="val-dash"><i class="fa-solid fa-minus"></i></td>
+                            <td class="val-check"><i class="fa-solid fa-check"></i> Dynamic spam quarantine</td>
+                        </tr>
+                        <tr>
+                            <td class="feature-name">Visual Embed Architect</td>
+                            <td class="val-dash"><i class="fa-solid fa-minus"></i></td>
+                            <td class="val-check"><i class="fa-solid fa-check"></i></td>
+                        </tr>
+                        <tr>
+                            <td class="feature-name">Developer API Integration</td>
+                            <td class="val-dash"><i class="fa-solid fa-minus"></i></td>
+                            <td class="val-check"><i class="fa-solid fa-check"></i></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="faq-section fade-in-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Questions</span>
+                <h2 class="section-title">Frequently Asked Questions</h2>
+                <p class="section-sub">Got questions about permissions, payments, or setting up? We've got answers.</p>
+            </div>
+
+            <div class="faq-list">
+                <!-- FAQ Item 1 -->
+                <div class="faq-item">
+                    <button class="faq-q" aria-expanded="false">
+                        How does dashboard sync work?
+                        <i class="fa-solid fa-chevron-down faq-icon"></i>
+                    </button>
+                    <div class="faq-a-wrapper">
+                        <div class="faq-a-inner">
+                            <div class="faq-a">
+                                Any configurations changed in the dashboard are instantly written to our database cache
+                                and pushed to your active bot session. No bot server restart is ever required.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 2 -->
+                <div class="faq-item">
+                    <button class="faq-q" aria-expanded="false">
+                        Is my server database safe?
+                        <i class="fa-solid fa-chevron-down faq-icon"></i>
+                    </button>
+                    <div class="faq-a-wrapper">
+                        <div class="faq-a-inner">
+                            <div class="faq-a">
+                                Absolutely. We utilize OAuth2 tokens provided directly by Discord for all authentication
+                                parameters. We never store discord passwords or personal identity credentials, and all
+                                logs are safely quarantined.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 3 -->
+                <div class="faq-item">
+                    <button class="faq-q" aria-expanded="false">
+                        Can I manage multiple servers at once?
+                        <i class="fa-solid fa-chevron-down faq-icon"></i>
+                    </button>
+                    <div class="faq-a-wrapper">
+                        <div class="faq-a-inner">
+                            <div class="faq-a">
+                                Yes. Logging in displays a server selector layout matching all guilds you have admin
+                                privileges in. Clicking a server switches your dashboard controls seamlessly.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 4 -->
+                <div class="faq-item">
+                    <button class="faq-q" aria-expanded="false">
+                        How can I request support or submit queries?
+                        <i class="fa-solid fa-chevron-down faq-icon"></i>
+                    </button>
+                    <div class="faq-a-wrapper">
+                        <div class="faq-a-inner">
+                            <div class="faq-a">
+                                You can join our support community server or launch an interactive support ticket
+                                directly within your server dashboard panels.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA Banner -->
+    <section class="cta-banner fade-in-section">
+        <div class="container">
+            <div class="cta-inner">
+                <div class="cta-glow-rings">
+                    <div class="cta-ring cta-ring-1"></div>
+                    <div class="cta-ring cta-ring-2"></div>
+                    <div class="cta-ring cta-ring-3"></div>
+                </div>
+                <h2>Build the Discord Community Members Never Want to Leave</h2>
+                <p>Add Vivy to your server in 2 clicks. Upgrade your moderation, levels, and engagement logs today.</p>
+                <a href="/auth/discord/login" class="btn-primary" id="bottom-cta-btn"
+                    style="position:relative; z-index:5;">
+                    <i class="fa-brands fa-discord"></i> Get Started Free
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-inner">
+                <div class="footer-brand">
+                    <span class="logo-icon"><img src="logo.png" alt="Vivy"></span>
+                    <span class="logo-text">Vivy</span>
+                </div>
+                <p class="footer-copy">© 2026 Vivy. Designed for modern communities. Powered by ZeroLab.</p>
+                <div class="footer-links">
+                    <a href="#features">Features</a>
+                    <a href="#pricing">Pricing</a>
+                    <a href="#faq">FAQ</a>
+                    <a href="/docs">Docs</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script type="module" src="/index.js"></script>
+</body>
+
+</html>

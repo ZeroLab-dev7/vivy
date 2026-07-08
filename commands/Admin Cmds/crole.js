@@ -37,8 +37,8 @@ module.exports = {
                 footer: `Requested by ${message.author.tag}`,
                 fields: [
                     { name: "Aliases:", value: "- newrole, rolecreate" },
-                    { name: "Usage:", value: "- &crole <roleName>" },
-                    { name: "Examples:", value: "- &crole <rolename>\n- &crole Zero Lab" }
+                    { name: "Usage:", value: "- ?crole <roleName>" },
+                    { name: "Examples:", value: "- ?crole <rolename>\n- ?crole Zero Lab" }
                 ]
             });
 

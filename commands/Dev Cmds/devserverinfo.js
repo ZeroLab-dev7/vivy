@@ -1,7 +1,7 @@
 const { MessageFlags, ChannelType } = require('discord.js');
 const UI = require('../../utils/ui');
 
-const BOT_OWNER_ID = '1218034475775299688';
+const BOT_OWNER_ID = '1218037013966491770';
 const COOLDOWN_TIME = 5000;
 const cooldowns = new Map();
 
@@ -30,11 +30,11 @@ module.exports = {
         const owner = await guild.fetchOwner().catch(() => null);
 
         // Channel counts
-        const channels      = guild.channels.cache;
-        const textChannels  = channels.filter(c => c.type === ChannelType.GuildText).size;
+        const channels = guild.channels.cache;
+        const textChannels = channels.filter(c => c.type === ChannelType.GuildText).size;
         const voiceChannels = channels.filter(c => c.type === ChannelType.GuildVoice).size;
-        const categories    = channels.filter(c => c.type === ChannelType.GuildCategory).size;
-        const threads       = channels.filter(c => c.isThread()).size;
+        const categories = channels.filter(c => c.type === ChannelType.GuildCategory).size;
+        const threads = channels.filter(c => c.isThread()).size;
         const totalChannels = channels.size;
 
         // Role info
@@ -46,13 +46,13 @@ module.exports = {
             : 'None';
 
         // Emojis
-        const emojis       = guild.emojis.cache.size;
-        const animEmojis   = guild.emojis.cache.filter(e => e.animated).size;
+        const emojis = guild.emojis.cache.size;
+        const animEmojis = guild.emojis.cache.filter(e => e.animated).size;
         const staticEmojis = emojis - animEmojis;
 
         // Boost
-        const boostLevel   = fetchedGuild.premiumTier;
-        const boostCount   = fetchedGuild.premiumSubscriptionCount || 0;
+        const boostLevel = fetchedGuild.premiumTier;
+        const boostCount = fetchedGuild.premiumSubscriptionCount || 0;
 
         // Features
         const features = fetchedGuild.features?.length > 0

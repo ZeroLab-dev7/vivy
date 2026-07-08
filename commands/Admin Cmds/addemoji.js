@@ -36,8 +36,8 @@ module.exports = {
                 footer: `Requested by ${message.author.tag}`,
                 fields: [
                     { name: "Aliases:", value: "- ae, addemojis" },
-                    { name: "Usage:", value: "- +addemoji <emoji> <name>" },
-                    { name: "Examples:", value: "- +addemoji Hpsy" }
+                    { name: "Usage:", value: "- ?addemoji <emoji> <name>" },
+                    { name: "Examples:", value: "- ?addemoji Hpsy" }
                 ]
             });
 

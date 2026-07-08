@@ -35,7 +35,7 @@ module.exports = {
                         title: "Command: padd",
                         description: "Add a member to your premium plan.",
                         fields: [
-                            { name: "Usage", value: `\`&padd <user_id/mention>\`` }
+                            { name: "Usage", value: `\`?padd <user_id/mention>\`` }
                         ]
                     })],
                     flags: MessageFlags.IsComponentsV2

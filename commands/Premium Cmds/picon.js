@@ -28,8 +28,8 @@ module.exports = {
                         title: "Command: picon",
                         description: "Update your premium role icon.",
                         fields: [
-                            { name: "Usage", value: `\`&picon <image_url_or_attachment>\`` },
-                            { name: "To Remove", value: `\`&picon remove\`` }
+                            { name: "Usage", value: `\`?picon <image_url_or_attachment>\`` },
+                            { name: "To Remove", value: `\`?picon remove\`` }
                         ]
                     })],
                     flags: MessageFlags.IsComponentsV2

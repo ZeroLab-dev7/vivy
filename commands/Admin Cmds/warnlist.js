@@ -25,8 +25,8 @@ module.exports = {
                         description: "View a user's warning history.",
                         footer: `Requested by ${message.author.tag}`,
                         fields: [
-                            { name: "Usage:", value: "- &warnlist @user/id" },
-                            { name: "Examples:", value: `- &warnlist <@${message.author.id}>\n- &warnlist ${message.author.id}` }
+                            { name: "Usage:", value: "- ?warnlist @user/id" },
+                            { name: "Examples:", value: `- ?warnlist <@${message.author.id}>\n- ?warnlist ${message.author.id}` }
                         ]
                     })],
                     flags: MessageFlags.IsComponentsV2

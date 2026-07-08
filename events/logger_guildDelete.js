@@ -4,6 +4,7 @@ const { LogSettings } = require('../db/models');
 module.exports = {
     name: Events.GuildDelete,
     async execute(guild) {
+        if (!guild.available) return; // Ignore if the guild is unavailable (e.g. outage or startup caching)
         try {
             // Find global leave_log channel setup by Bot Owner
             const settings = await LogSettings.findAll();
@@ -31,9 +32,9 @@ module.exports = {
                 .setThumbnail(guild.iconURL({ dynamic: true }) || null)
                 .setColor('Red')
                 .addFields(
-                    { name: '🏠 Server Name', value: guild.name, inline: true },
-                    { name: '🆔 Server ID', value: `\`${guild.id}\``, inline: true },
-                    { name: '👥 Member Count', value: `\`${guild.memberCount}\` members`, inline: true }
+                    { name: '🏠 Server Name', value: guild.name || 'Unknown Server', inline: true },
+                    { name: '🆔 Server ID', value: guild.id ? `\`${guild.id}\`` : 'Unknown', inline: true },
+                    { name: '👥 Member Count', value: guild.memberCount ? `\`${guild.memberCount}\` members` : 'Unknown', inline: true }
                 )
                 .setFooter({ text: `Guild Delete Event | Server ID: ${guild.id}`, iconURL: guild.client.user.displayAvatarURL() })
                 .setTimestamp();

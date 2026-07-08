@@ -1,5 +1,6 @@
 const { Events } = require('discord.js');
 const { InviteData } = require('../db/models');
+const WelcomeService = require('../services/welcomeService');
 
 module.exports = {
     name: Events.GuildMemberRemove,
@@ -18,6 +19,10 @@ module.exports = {
                 await inviteRecord.update({ has_left: true });
                 console.log(`Updated invite record for ${member.user.tag}: has_left = true`);
             }
+
+            // Call WelcomeService leave handler
+            // Getting 
+            await WelcomeService.handleLeave(member);
         } catch (error) {
             console.error('Error updating invite record on member remove:', error);
         }

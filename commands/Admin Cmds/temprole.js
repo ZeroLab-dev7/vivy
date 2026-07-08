@@ -13,8 +13,8 @@ module.exports = {
                 footer: `Requested by ${message.author.tag}`,
                 fields: [
                     { name: "Aliases:", value: "- temprole, setrolefor" },
-                    { name: "Usage:", value: "- &temprole (user/id) (role/id) (time)" },
-                    { name: "Examples:", value: `- &temprole @user/id @role/id 24h` }
+                    { name: "Usage:", value: "- ?temprole (user/id) (role/id) (time)" },
+                    { name: "Examples:", value: `- ?temprole @user/id @role/id 24h` }
                 ]
             });
             return message.reply({

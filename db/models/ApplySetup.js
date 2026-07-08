@@ -14,7 +14,10 @@ const ApplySetup = sequelize.define('ApplySetup', {
     role_designer_id: { type: DataTypes.STRING },
     role_event_id: { type: DataTypes.STRING },
     role_partnership_id: { type: DataTypes.STRING },
-    panel_style: { type: DataTypes.STRING, defaultValue: 'menu' }
+    panel_style: { type: DataTypes.STRING, defaultValue: 'menu' },
+    panel_title: { type: DataTypes.STRING, defaultValue: '' },
+    panel_description: { type: DataTypes.TEXT, defaultValue: '' },
+    departments: { type: DataTypes.JSON, defaultValue: [] }
 });
 
 module.exports = ApplySetup;

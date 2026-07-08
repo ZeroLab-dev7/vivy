@@ -36,8 +36,8 @@ module.exports = {
                     footer: `Requested by ${message.author.tag}`,
                     fields: [
                         { name: "Aliases:", value: "- nick, nickname" },
-                        { name: "Usage:", value: "- &nick (user)  [new nickname]" },
-                        { name: "Examples:", value: `- &nick @user NewNickname` }
+                        { name: "Usage:", value: "- ?nick (user)  [new nickname]" },
+                        { name: "Examples:", value: `- ?nick @user NewNickname` }
                     ]
                 })],
                 flags: MessageFlags.IsComponentsV2

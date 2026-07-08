@@ -45,6 +45,21 @@ module.exports = {
                 await targetUser.send({ embeds: [welcomeEmbed], components: [buttons] })
                     .catch(err => console.log(`❌ Unable to send a message to ${targetUser.tag}:`, err));
             }
+            // Sync/create native AutoMod rules on guild join
+            try {
+                const AutoModService = require('../services/autoModService');
+                const config = await AutoModService.getOrCreateConfig(guild.id);
+                await AutoModService.syncToDiscord(guild.client, guild.id, config);
+            } catch (e) {
+                console.error("❌ Error syncing AutoMod rules on guild join:", e);
+            }
+            // Sync/register all slash commands for this guild on join
+            try {
+                const CustomCommandService = require('../services/customCommandService');
+                await CustomCommandService.syncGuildSlashCommands(guild.client, guild.id);
+            } catch (e) {
+                console.error("❌ Error syncing slash commands on guild join:", e);
+            }
         } catch (error) {
             console.error("❌ Error sending message:", error);
         }

@@ -48,8 +48,8 @@ module.exports = {
           footer: `Requested by ${message.author.tag}`,
           fields: [
             { name: "Aliases:", value: "- kick, expluser" },
-            { name: "Usage:", value: "- &kick @user/id (reason)" },
-            { name: "Examples:", value: `- &kick  <@${message.author.id}> Ads` }
+            { name: "Usage:", value: "- ?kick @user/id (reason)" },
+            { name: "Examples:", value: `- ?kick  <@${message.author.id}> Ads` }
           ]
         })],
         flags: MessageFlags.IsComponentsV2

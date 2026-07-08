@@ -10,11 +10,11 @@ module.exports = {
         if (!target) return message.reply("You need to mention someone to hug!");
 
         try {
-            const { data } = await axios.get('https://api.waifu.pics/sfw/hug');
+            const { data } = await axios.get('https://nekos.best/api/v2/hug');
 
             const container = UI.createContainer({
                 description: `**${message.author.username}** hugs **${target.username}**! 🤗`,
-                image: data.url
+                image: data.results[0].url
             });
 
             message.reply({ 

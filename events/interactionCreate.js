@@ -8,27 +8,70 @@ module.exports = {
       // 1. Slash Commands
       if (interaction.isChatInputCommand()) {
         const command = interaction.client.slashCommands.get(interaction.commandName);
-        if (!command) return;
-
-        try {
-          await command.execute(interaction);
-        } catch (error) {
-          if (error.code === 10062 || error.code === 40060) {
-            // Ignore Unknown interaction and Interaction has already been acknowledged errors 
-            // because retrying will only spawn more errors.
-            return;
+        if (command) {
+          const devHelper = require('../utils/developerHelper');
+          const check = await devHelper.checkMaintenanceAndDisabled(interaction.commandName, interaction.user.id, interaction.client);
+          if (check.blocked) {
+            const embed = UI.createEmbed({
+              color: check.reason === 'maintenance' ? 'Orange' : 'Red',
+              title: check.reason === 'maintenance' ? '🚧 Maintenance Mode Enabled' : '❌ Command Disabled',
+              description: check.reason === 'maintenance' 
+                ? check.message
+                : `The \`${interaction.commandName}\` command has been disabled globally by the developers.`
+            });
+            return interaction.reply({ embeds: [embed], ephemeral: true }).catch(() => {});
           }
-          console.error(error);
-          const errorEmbed = UI.createEmbed({
-            description: "❌ An error occurred while executing this command.",
-            color: "Red",
-            footer: "Please report this to the developer."
-          });
 
-          if (interaction.replied || interaction.deferred) {
-            await interaction.followUp({ embeds: [errorEmbed], ephemeral: true }).catch(() => { });
-          } else {
-            await interaction.reply({ embeds: [errorEmbed], ephemeral: true }).catch(() => { });
+          try {
+            await command.execute(interaction);
+            await devHelper.logCommand(interaction.commandName, interaction.user.id, interaction.guild?.id, 'slash');
+          } catch (error) {
+            if (error.code === 10062 || error.code === 40060) {
+              return;
+            }
+            console.error(error);
+            const errorEmbed = UI.createEmbed({
+              description: "❌ An error occurred while executing this command.",
+              color: "Red",
+              footer: "Please report this to the developer."
+            });
+
+            if (interaction.replied || interaction.deferred) {
+              await interaction.followUp({ embeds: [errorEmbed], ephemeral: true }).catch(() => { });
+            } else {
+              await interaction.reply({ embeds: [errorEmbed], ephemeral: true }).catch(() => { });
+            }
+          }
+        } else {
+          // Check for custom slash command from database
+          try {
+            const { CustomCommand } = require('../db/models');
+            const customCmd = await CustomCommand.findOne({
+              where: {
+                guild_id: interaction.guild.id,
+                name: interaction.commandName.toLowerCase(),
+                type: 'slash'
+              }
+            });
+            if (customCmd) {
+              const devHelper = require('../utils/developerHelper');
+              const check = await devHelper.checkMaintenanceAndDisabled(interaction.commandName, interaction.user.id, interaction.client);
+              if (check.blocked) {
+                const embed = UI.createEmbed({
+                  color: check.reason === 'maintenance' ? 'Orange' : 'Red',
+                  title: check.reason === 'maintenance' ? '🚧 Maintenance Mode Enabled' : '❌ Command Disabled',
+                  description: check.reason === 'maintenance' 
+                    ? check.message
+                    : `The \`${interaction.commandName}\` command has been disabled globally by the developers.`
+                });
+                return interaction.reply({ embeds: [embed], ephemeral: true }).catch(() => {});
+              }
+              const CustomCommandService = require('../services/customCommandService');
+              await CustomCommandService.executeInteraction(customCmd, interaction);
+              await devHelper.logCommand(interaction.commandName, interaction.user.id, interaction.guild?.id, 'slash');
+            }
+          } catch (err) {
+            console.error('Error handling custom slash command:', err);
           }
         }
       }
@@ -41,6 +84,31 @@ module.exports = {
 
         if (interaction.customId === 'close_embed') {
           await interaction.message.delete().catch(() => { });
+        }
+
+        if (interaction.customId.startsWith('ticket_claim_')) {
+          const parts = interaction.customId.split('_');
+          const channelId = parts[2];
+          const TicketService = require('../services/ticketService');
+          return TicketService.claimTicket(interaction, channelId);
+        }
+
+        if (interaction.customId.startsWith('ticket_close_')) {
+          const parts = interaction.customId.split('_');
+          const channelId = parts[2];
+          const TicketService = require('../services/ticketService');
+          return TicketService.closeTicket(interaction, channelId);
+        }
+
+        if (interaction.customId === 'btn_verify_member') {
+          const VerificationService = require('../services/verificationService');
+          await interaction.deferReply({ ephemeral: true });
+          const res = await VerificationService.verifyMember(interaction.member);
+          if (res.success) {
+            return interaction.editReply({ content: '✅ Verification successful! You have been granted the verified role.' });
+          } else {
+            return interaction.editReply({ content: `❌ Verification failed: ${res.reason}` });
+          }
         }
 
         // --- Setup Hub Pagination Handler (4 Pages) ---
@@ -216,9 +284,137 @@ module.exports = {
           ));
 
           container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+          container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
           container.addActionRowComponents(setupBackRow);
 
           return interaction.update({ components: [container], flags: MessageFlags.IsComponentsV2 });
+        }
+
+        if (interaction.customId === 'btn_setup_mute') {
+          const { RoleSelectMenuBuilder, ChannelSelectMenuBuilder, ChannelType } = require('discord.js');
+          const container = UI.createContainer({
+            title: '🔇 Mute System Configuration',
+            description: 'め 」 **Select role and log channel for the mute system.**',
+            color: 0x0099ff
+          });
+
+          container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+          container.addTextDisplayComponents(td => td.setContent('• ⌄ **Muted Role** : `Assigned to muted members`'));
+          container.addActionRowComponents(new ActionRowBuilder().addComponents(
+            new RoleSelectMenuBuilder().setCustomId('select_mute_role').setPlaceholder('Choose muted role')
+          ));
+
+          container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+          container.addTextDisplayComponents(td => td.setContent('• ⌄ **Mute Logs** : `Logs channel`'));
+          container.addActionRowComponents(new ActionRowBuilder().addComponents(
+            new ChannelSelectMenuBuilder().setCustomId('select_mute_logs').setPlaceholder('Choose mute logs channel').setChannelTypes([ChannelType.GuildText])
+          ));
+
+          container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+          container.addActionRowComponents(setupBackRow);
+
+          return interaction.update({ components: [container], flags: MessageFlags.IsComponentsV2 });
+        }
+
+        if (interaction.customId === 'btn_setup_needhelp') {
+          const { ChannelSelectMenuBuilder, ChannelType, RoleSelectMenuBuilder } = require('discord.js');
+          const container = UI.createContainer({
+            title: '🔊 Support Room (Need Help) Configuration',
+            description: 'め 」 **Configure the automatic support room creation system.**',
+            color: 0x0099ff
+          });
+
+          container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+          container.addTextDisplayComponents(td => td.setContent('• ⌄ **Join Voice Channel** : `Channel that users join to create a support room`'));
+          container.addActionRowComponents(new ActionRowBuilder().addComponents(
+            new ChannelSelectMenuBuilder().setCustomId('select_room_join').setPlaceholder('Choose join voice channel').setChannelTypes([ChannelType.GuildVoice])
+          ));
+
+          container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+          container.addTextDisplayComponents(td => td.setContent('• ⌄ **Room Category** : `Category where private support rooms are spawned`'));
+          container.addActionRowComponents(new ActionRowBuilder().addComponents(
+            new ChannelSelectMenuBuilder().setCustomId('select_room_category').setPlaceholder('Choose rooms category').setChannelTypes([ChannelType.GuildCategory])
+          ));
+
+          container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+          container.addTextDisplayComponents(td => td.setContent('• ⌄ **Logs Channel** : `Logs channel for room creation activity`'));
+          container.addActionRowComponents(new ActionRowBuilder().addComponents(
+            new ChannelSelectMenuBuilder().setCustomId('select_room_logs').setPlaceholder('Choose logs channel').setChannelTypes([ChannelType.GuildText])
+          ));
+
+          container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+          container.addTextDisplayComponents(td => td.setContent('• ⌄ **Staff Role** : `Staff role that will assist the users`'));
+          container.addActionRowComponents(new ActionRowBuilder().addComponents(
+            new RoleSelectMenuBuilder().setCustomId('select_room_staff').setPlaceholder('Choose staff role')
+          ));
+
+          container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+          container.addActionRowComponents(setupBackRow);
+
+          return interaction.update({ components: [container], flags: MessageFlags.IsComponentsV2 });
+        }
+
+        if (interaction.customId === 'btn_setup_verify') {
+          const { RoleSelectMenuBuilder, ChannelSelectMenuBuilder, ChannelType } = require('discord.js');
+          const container = UI.createContainer({
+            title: '🛡️ Member Verification Configuration',
+            description: 'め 」 **Select roles and logs channel for verification system.**',
+            color: 0x0099ff
+          });
+
+          container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+          container.addTextDisplayComponents(td => td.setContent('• ⌄ **Verified Male Role** : `Given on male verification`'));
+          container.addActionRowComponents(new ActionRowBuilder().addComponents(
+            new RoleSelectMenuBuilder().setCustomId('select_ver_role_male').setPlaceholder('Choose verified male role')
+          ));
+
+          container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+          container.addTextDisplayComponents(td => td.setContent('• ⌄ **Verified Female Role** : `Given on female verification`'));
+          container.addActionRowComponents(new ActionRowBuilder().addComponents(
+            new RoleSelectMenuBuilder().setCustomId('select_ver_role_female').setPlaceholder('Choose verified female role')
+          ));
+
+          container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+          container.addTextDisplayComponents(td => td.setContent('• ⌄ **Unverified Role** : `Removed after verification`'));
+          container.addActionRowComponents(new ActionRowBuilder().addComponents(
+            new RoleSelectMenuBuilder().setCustomId('select_ver_role_unverified').setPlaceholder('Choose unverified role')
+          ));
+
+          container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+          container.addTextDisplayComponents(td => td.setContent('• ⌄ **Verification Logs** : `Logs channel`'));
+          container.addActionRowComponents(new ActionRowBuilder().addComponents(
+            new ChannelSelectMenuBuilder().setCustomId('select_ver_logs').setPlaceholder('Choose logs channel').setChannelTypes([ChannelType.GuildText])
+          ));
+
+          container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+          container.addActionRowComponents(setupBackRow);
+
+          return interaction.update({ components: [container], flags: MessageFlags.IsComponentsV2 });
+        }
+
+        const redirectDashboard = (title) => {
+          const embed = UI.createEmbed({
+            title: title,
+            description: `め 」 **This system can be easily configured via the Web Panel.**\n\n🔗 [Open Dashboard](https://vivy.zerolab.best/servers/${interaction.guild.id})`,
+            color: 0x0099ff
+          });
+          return interaction.reply({ embeds: [embed], ephemeral: true });
+        };
+
+        if (interaction.customId === 'btn_setup_apply') {
+          return redirectDashboard('Staff Applications Setup');
+        }
+        if (interaction.customId === 'btn_setup_premium') {
+          return redirectDashboard('Premium Features Hub');
+        }
+        if (interaction.customId === 'btn_setup_owner') {
+          return redirectDashboard('Security Owners Setup');
+        }
+        if (interaction.customId === 'btn_setup_profile') {
+          return redirectDashboard('User Profile Customizer');
+        }
+        if (interaction.customId === 'btn_setup_jl') {
+          return redirectDashboard('Welcome & Leave Messages');
         }
 
         // --- Recruitment Hub Select Menu Handler (Direct Modal Style) ---
@@ -228,13 +424,12 @@ module.exports = {
         }
 
         // --- Apply System Button Handlers ---
-        if (interaction.customId.startsWith('apply_')) {
-          const clickedDept = interaction.customId.split('_')[1];
-          const departmentIds = ['staff', 'designer', 'event', 'partnership'];
-
-          if (departmentIds.includes(clickedDept)) {
-            return openApplyModal(interaction, clickedDept);
-          }
+        if (interaction.customId.startsWith('apply_') && 
+            !interaction.customId.startsWith('apply_approve_') && 
+            !interaction.customId.startsWith('apply_deny_') && 
+            !interaction.customId.startsWith('apply_modal_')) {
+          const clickedDept = interaction.customId.replace('apply_', '');
+          return openApplyModal(interaction, clickedDept);
         }
 
         async function openApplyModal(interaction, clickedDept) {
@@ -247,51 +442,108 @@ module.exports = {
 
           const { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } = require('discord.js');
 
-          const deptData = {
-            staff: {
-              title: 'Staff Team Application',
-              questions: [
-                'Why do you want to join our staff team?',
-                'What experience do you have in moderation?',
-                'How active can you be on a weekly basis?',
-                'How would you handle a conflict between members?'
-              ]
-            },
-            designer: {
-              title: 'Designer Application',
-              questions: [
-                'What design software do you use?',
-                'Link to your portfolio or examples of work.',
-                'Describe your design style (Minimalist, etc.)',
-                'Are you comfortable working with deadlines?'
-              ]
-            },
-            event: {
-              title: 'Event Hoster Application',
-              questions: [
-                'What kind of events would you like to host?',
-                'Experience managing large groups/events?',
-                'What makes a successful community event?',
-                'What is your availability for hosting events?'
-              ]
-            },
-            partnership: {
-              title: 'Partnership Application',
-              questions: [
-                'Previous experience in server partnerships?',
-                'How do you find potential partners?',
-                'What are your methods for growing relationships?',
-                'How many partnerships can you handle weekly?'
-              ]
-            }
+          const getDepartments = (settings) => {
+              let depts = [];
+              if (settings && settings.departments) {
+                  try {
+                      depts = typeof settings.departments === 'string'
+                          ? JSON.parse(settings.departments)
+                          : settings.departments;
+                  } catch {}
+              }
+              if (!Array.isArray(depts) || depts.length === 0) {
+                  depts = [
+                      {
+                          key: 'staff',
+                          label: 'Staff Team',
+                          emoji: '<:staff:1369870831383220225>',
+                          description: 'Moderate and assist members',
+                          role_id: settings?.role_staff_id,
+                          questions: [
+                              'Why do you want to join our staff team?',
+                              'What experience do you have in moderation?',
+                              'How active can you be on a weekly basis?',
+                              'How would you handle a conflict between members?'
+                          ]
+                      },
+                      {
+                          key: 'designer',
+                          label: 'Designer',
+                          emoji: '<:designer:1492427141374152714>',
+                          description: 'Create visuals & graphics',
+                          role_id: settings?.role_designer_id,
+                          questions: [
+                              'What design software do you use?',
+                              'Link to your portfolio or examples of work.',
+                              'Describe your design style (Minimalist, etc.)',
+                              'Are you comfortable working with deadlines?'
+                          ]
+                      },
+                      {
+                          key: 'event',
+                          label: 'Event Hoster',
+                          emoji: '<:event:1492427991429677167>',
+                          description: 'Organize fun community events',
+                          role_id: settings?.role_event_id,
+                          questions: [
+                              'What kind of events would you like to host?',
+                              'Experience managing large groups/events?',
+                              'What makes a successful community event?',
+                              'What is your availability for hosting events?'
+                          ]
+                      },
+                      {
+                          key: 'partnership',
+                          label: 'Partnership',
+                          emoji: '<:partner:1492427938950545498>',
+                          description: 'Build server relationships',
+                          role_id: settings?.role_partnership_id,
+                          questions: [
+                              'Previous experience in server partnerships?',
+                              'How do you find potential partners?',
+                              'What are your methods for growing relationships?',
+                              'How many partnerships can you handle weekly?'
+                          ]
+                      }
+                  ];
+              }
+              return depts;
           };
 
-          const data = deptData[clickedDept];
-          const modal = new ModalBuilder()
-            .setCustomId(`apply_modal_${clickedDept}`)
-            .setTitle(data.title);
+          const departments = getDepartments(settings);
+          let dept = null;
+          let deptIndex = -1;
 
-          const rows = data.questions.map((q, index) => {
+          if (clickedDept.startsWith('dept_')) {
+              deptIndex = parseInt(clickedDept.replace('dept_', ''), 10);
+              dept = departments[deptIndex];
+          } else if (/^\d+$/.test(clickedDept)) {
+              deptIndex = parseInt(clickedDept, 10);
+              dept = departments[deptIndex];
+          } else {
+              // Backward compatibility string match
+              deptIndex = departments.findIndex(d => d.key === clickedDept);
+              if (deptIndex !== -1) {
+                  dept = departments[deptIndex];
+              } else {
+                  // Fallback match label
+                  deptIndex = departments.findIndex(d => d.label.toLowerCase() === clickedDept.toLowerCase());
+                  if (deptIndex !== -1) {
+                      dept = departments[deptIndex];
+                  }
+              }
+          }
+
+          if (!dept) {
+              return interaction.reply({ content: '❌ Selected department configuration not found.', ephemeral: true });
+          }
+
+          const modal = new ModalBuilder()
+            .setCustomId(`apply_modal_${deptIndex}`)
+            .setTitle(dept.label.substring(0, 45));
+
+          const questions = dept.questions || [];
+          const rows = questions.map((q, index) => {
             const input = new TextInputBuilder()
               .setCustomId(`q_${index}`)
               .setLabel(q.length > 45 ? q.substring(0, 42) + '...' : q)
@@ -302,6 +554,10 @@ module.exports = {
             return new ActionRowBuilder().addComponents(input);
           });
 
+          if (rows.length === 0) {
+              return interaction.reply({ content: '❌ No questions configured for this department.', ephemeral: true });
+          }
+
           modal.addComponents(...rows);
           return interaction.showModal(modal);
         }
@@ -310,7 +566,7 @@ module.exports = {
           const { ApplySetup } = require('../db/models');
           const settings = await ApplySetup.findOne({ where: { guild_id: interaction.guild.id } });
 
-          const parsedStaffRoles = JSON.parse(settings?.staff_role_id || '[]');
+          const parsedStaffRoles = settings?.staff_role_id ? settings.staff_role_id.split(',').filter(Boolean) : [];
           const hasStaffRole = parsedStaffRoles.some(roleId => interaction.member.roles.cache.has(roleId));
 
           if (!hasStaffRole && !interaction.member.permissions.has(PermissionFlagsBits.Administrator)) {
@@ -323,22 +579,56 @@ module.exports = {
           const userId = parts[3];
           const user = await interaction.guild.members.fetch(userId).catch(() => null);
 
-          const embed = new EmbedBuilder()
-            .setTitle(`Application ${action}`)
-            .setDescription(`The application for **${user?.user.tag || 'Unknown User'}** has been **${action.toLowerCase()}**.`)
-            .addFields(
-              { name: 'Department', value: `\`${clickedDept}\``, inline: true },
-              { name: 'Reviewer', value: `${interaction.user} (${interaction.user.tag})`, inline: true }
-            )
-            .setColor(action === 'Approved' ? 'Green' : 'Red')
-            .setTimestamp();
+          // Get departments to find dynamic role and label
+          const getDepartments = (settings) => {
+              let depts = [];
+              if (settings && settings.departments) {
+                  try {
+                      depts = typeof settings.departments === 'string'
+                          ? JSON.parse(settings.departments)
+                          : settings.departments;
+                  } catch {}
+              }
+              if (!Array.isArray(depts) || depts.length === 0) {
+                  depts = [
+                      { key: 'staff', label: 'Staff Team', role_id: settings?.role_staff_id },
+                      { key: 'designer', label: 'Designer', role_id: settings?.role_designer_id },
+                      { key: 'event', label: 'Event Hoster', role_id: settings?.role_event_id },
+                      { key: 'partnership', label: 'Partnership', role_id: settings?.role_partnership_id }
+                  ];
+              }
+              return depts;
+          };
 
-          await interaction.update({ embeds: [embed], components: [] });
+          const departments = getDepartments(settings);
+          let dept = null;
+          let deptIndex = parseInt(clickedDept, 10);
+          if (isNaN(deptIndex)) {
+              dept = departments.find(d => d.key === clickedDept);
+          } else {
+              dept = departments[deptIndex];
+          }
+
+          if (!dept) {
+              return interaction.reply({ content: '❌ Department configuration not found.', ephemeral: true });
+          }
+
+          const container = UI.createContainer({
+            title: `Application ${action}`,
+            description: `The application for **${user?.user.tag || 'Unknown User'}** has been **${action.toLowerCase()}**.`,
+            color: action === 'Approved' ? 0x00FF00 : 0xFF0000,
+            fields: [
+              { name: 'Department', value: `\`${dept.label}\`` },
+              { name: 'Reviewer', value: `${interaction.user} (${interaction.user.tag})` }
+            ],
+            thumbnail: user ? user.displayAvatarURL({ dynamic: true }) : undefined
+          });
+
+          await interaction.update({ components: [container] });
 
           // Role assignment logic
           if (action === 'Approved' && user && settings) {
-            const roleKey = `role_${clickedDept}_id`;
-            const roleId = settings[roleKey];
+            const roleId = dept.role_id;
             if (roleId) {
               await user.roles.add(roleId).catch(err => console.error("Failed to add role:", err));
             }
@@ -350,7 +640,7 @@ module.exports = {
             if (logChannel) {
               const logEmbed = new EmbedBuilder()
                 .setTitle(`Application ${action}`)
-                .setDescription(`**User:** ${user || 'Unknown'}\n**Department:** \`${clickedDept}\`\n**Reviewer:** ${interaction.user}`)
+                .setDescription(`**User:** ${user || 'Unknown'}\n**Department:** \`${dept.label}\`\n**Reviewer:** ${interaction.user}`)
                 .setColor(action === 'Approved' ? 'Green' : 'Red')
                 .setTimestamp();
               await logChannel.send({ embeds: [logEmbed] });
@@ -360,7 +650,7 @@ module.exports = {
           // Notify User
           if (user) {
             await user.send({
-              content: `Hello! Your application in **${interaction.guild.name}** for **${clickedDept}** has been **${action.toLowerCase()}**.`
+              content: `Hello! Your application in **${interaction.guild.name}** for **${dept.label}** has been **${action.toLowerCase()}**.`
             }).catch(() => { });
           }
         }
@@ -469,31 +759,32 @@ module.exports = {
 
         // --- Setup Hub Live Selection Handlers (Direct Save) ---
         if (interaction.isRoleSelectMenu() || interaction.isChannelSelectMenu()) {
-          const { JailSetup, AutoRoleSetup, LogSettings, WarnSetup } = require('../db/models');
+          const { JailSetup, AutoRoleSetup, WarnSetup, MuteSetup } = require('../db/models');
 
           // 1. Jail System Handlers
           if (interaction.customId === 'select_jailers') {
             const roles = interaction.values;
-            await JailSetup.upsert({ guild_id: interaction.guild.id, jailer_role: JSON.stringify(roles) });
+            await JailSetup.upsert({ guild_id: interaction.guild.id, jailer_role_id: JSON.stringify(roles) });
             return interaction.reply({ content: `✅ **Jailer Roles** updated: ${roles.map(id => `<@&${id}>`).join(', ')}`, ephemeral: true });
           }
           if (interaction.customId === 'select_jailed') {
             const roleId = interaction.values[0];
-            await JailSetup.upsert({ guild_id: interaction.guild.id, jail_role: roleId });
+            await JailSetup.upsert({ guild_id: interaction.guild.id, jailed_role_id: roleId });
             return interaction.reply({ content: `✅ **Jailed Role** updated: <@&${roleId}>`, ephemeral: true });
           }
 
           // 2. Auto Role Handlers
           if (interaction.customId === 'select_autoroles') {
             const roles = interaction.values;
-            await AutoRoleSetup.upsert({ guild_id: interaction.guild.id, role_ids: JSON.stringify(roles) });
+            await AutoRoleSetup.upsert({ guild_id: interaction.guild.id, auto_role_id: roles.join(',') });
             return interaction.reply({ content: `✅ **Auto Roles** updated: ${roles.map(id => `<@&${id}>`).join(', ')}`, ephemeral: true });
           }
 
           // 3. Logging Handlers
           if (interaction.customId === 'select_logs') {
+            const { GuildSettings } = require('../db/models');
             const channelId = interaction.values[0];
-            await LogSettings.upsert({ guild_id: interaction.guild.id, log_channel_id: channelId });
+            await GuildSettings.upsert({ guild_id: interaction.guild.id, log_channel: channelId });
             return interaction.reply({ content: `✅ **Log Channel** updated: <#${channelId}>`, ephemeral: true });
           }
 
@@ -512,6 +803,70 @@ module.exports = {
             const channelId = interaction.values[0];
             await WarnSetup.upsert({ guild_id: interaction.guild.id, warning_logs: channelId });
             return interaction.reply({ content: `✅ **Warn Logs** updated: <#${channelId}>`, ephemeral: true });
+          }
+
+          // 5. Mute System Handlers
+          if (interaction.customId === 'select_mute_role') {
+            const roleId = interaction.values[0];
+            await MuteSetup.upsert({ guild_id: interaction.guild.id, mute_role_id: roleId });
+            return interaction.reply({ content: `✅ **Muted Role** updated: <@&${roleId}>`, ephemeral: true });
+          }
+          if (interaction.customId === 'select_mute_logs') {
+            const channelId = interaction.values[0];
+            await MuteSetup.upsert({ guild_id: interaction.guild.id, mute_logs_channel: channelId });
+            return interaction.reply({ content: `✅ **Mute Logs** updated: <#${channelId}>`, ephemeral: true });
+          }
+
+          // 6. Room Setup Handlers
+          if (interaction.customId === 'select_room_join') {
+            const { RoomSettings } = require('../db/models');
+            const channelId = interaction.values[0];
+            await RoomSettings.upsert({ guild_id: interaction.guild.id, join_channel: channelId });
+            return interaction.reply({ content: `✅ **Join Voice Channel** updated: <#${channelId}>`, ephemeral: true });
+          }
+          if (interaction.customId === 'select_room_category') {
+            const { RoomSettings } = require('../db/models');
+            const channelId = interaction.values[0];
+            await RoomSettings.upsert({ guild_id: interaction.guild.id, room_category: channelId });
+            return interaction.reply({ content: `✅ **Room Category** updated: Category ID \`${channelId}\``, ephemeral: true });
+          }
+          if (interaction.customId === 'select_room_logs') {
+            const { RoomSettings } = require('../db/models');
+            const channelId = interaction.values[0];
+            await RoomSettings.upsert({ guild_id: interaction.guild.id, log_channel: channelId });
+            return interaction.reply({ content: `✅ **Room System Logs Channel** updated: <#${channelId}>`, ephemeral: true });
+          }
+          if (interaction.customId === 'select_room_staff') {
+            const { RoomSettings } = require('../db/models');
+            const roleId = interaction.values[0];
+            await RoomSettings.upsert({ guild_id: interaction.guild.id, staff_role: JSON.stringify([roleId]) });
+            return interaction.reply({ content: `✅ **Staff Role** updated: <@&${roleId}>`, ephemeral: true });
+          }
+
+          // 7. Verification Setup Handlers
+          if (interaction.customId === 'select_ver_role_male') {
+            const { VerificationRoles } = require('../db/models');
+            const roleId = interaction.values[0];
+            await VerificationRoles.upsert({ guild_id: interaction.guild.id, verified_role: roleId });
+            return interaction.reply({ content: `✅ **Verified Male Role** updated: <@&${roleId}>`, ephemeral: true });
+          }
+          if (interaction.customId === 'select_ver_role_female') {
+            const { VerificationRoles } = require('../db/models');
+            const roleId = interaction.values[0];
+            await VerificationRoles.upsert({ guild_id: interaction.guild.id, verified_female_role: roleId });
+            return interaction.reply({ content: `✅ **Verified Female Role** updated: <@&${roleId}>`, ephemeral: true });
+          }
+          if (interaction.customId === 'select_ver_role_unverified') {
+            const { VerificationRoles } = require('../db/models');
+            const roleId = interaction.values[0];
+            await VerificationRoles.upsert({ guild_id: interaction.guild.id, unverified_role: roleId });
+            return interaction.reply({ content: `✅ **Unverified Role** updated: <@&${roleId}>`, ephemeral: true });
+          }
+          if (interaction.customId === 'select_ver_logs') {
+            const { VerificationRoles } = require('../db/models');
+            const channelId = interaction.values[0];
+            await VerificationRoles.upsert({ guild_id: interaction.guild.id, verification_logs: channelId });
+            return interaction.reply({ content: `✅ **Verification Logs** updated: <#${channelId}>`, ephemeral: true });
           }
         }
       }
@@ -572,8 +927,8 @@ module.exports = {
           try {
             await JailSetup.upsert({
               guild_id: interaction.guild.id,
-              jail_role: jailedId,
-              jailer_role: JSON.stringify(jailerIds)
+              jailed_role_id: jailedId,
+              jailer_role_id: JSON.stringify(jailerIds)
             });
 
             const embed = UI.createEmbed({
@@ -605,7 +960,7 @@ module.exports = {
           try {
             await AutoRoleSetup.upsert({
               guild_id: interaction.guild.id,
-              role_ids: JSON.stringify(roleIds)
+              auto_role_id: roleIds.join(',')
             });
 
             const embed = UI.createEmbed({
@@ -626,7 +981,7 @@ module.exports = {
 
         // --- Logging Modal Submit Handler ---
         if (interaction.customId === 'modal_setup_logs') {
-          const { LogSettings } = require('../db/models');
+          const { GuildSettings } = require('../db/models');
           const logId = interaction.fields.getChannelSelectMenuValues('log_channel')?.[0];
 
           if (!logId) {
@@ -634,9 +989,9 @@ module.exports = {
           }
 
           try {
-            await LogSettings.upsert({
+            await GuildSettings.upsert({
               guild_id: interaction.guild.id,
-              log_channel_id: logId
+              log_channel: logId
             });
 
             const embed = UI.createEmbed({
@@ -671,61 +1026,99 @@ module.exports = {
             return interaction.reply({ content: '❌ Staff channel not found or inaccessible.', ephemeral: true });
           }
 
-          const deptNames = {
-            staff: 'Staff Team',
-            designer: 'Designer',
-            event: 'Event Hoster',
-            partnership: 'Partnership'
+          const getDepartments = (settings) => {
+              let depts = [];
+              if (settings && settings.departments) {
+                  try {
+                      depts = typeof settings.departments === 'string'
+                          ? JSON.parse(settings.departments)
+                          : settings.departments;
+                  } catch {}
+              }
+              if (!Array.isArray(depts) || depts.length === 0) {
+                  depts = [
+                      {
+                          key: 'staff',
+                          label: 'Staff Team',
+                          questions: [
+                              'Why do you want to join our staff team?',
+                              'What experience do you have in moderation?',
+                              'How active can you be on a weekly basis?',
+                              'How would you handle a conflict between members?'
+                          ]
+                      },
+                      {
+                          key: 'designer',
+                          label: 'Designer',
+                          questions: [
+                              'What design software do you use?',
+                              'Link to your portfolio or examples of work.',
+                              'Describe your design style (Minimalist, etc.)',
+                              'Are you comfortable working with deadlines?'
+                          ]
+                      },
+                      {
+                          key: 'event',
+                          label: 'Event Hoster',
+                          questions: [
+                              'What kind of events would you like to host?',
+                              'Experience managing large groups/events?',
+                              'What makes a successful community event?',
+                              'What is your availability for hosting events?'
+                          ]
+                      },
+                      {
+                          key: 'partnership',
+                          label: 'Partnership',
+                          questions: [
+                              'Previous experience in server partnerships?',
+                              'How do you find potential partners?',
+                              'What are your methods for growing relationships?',
+                              'How many partnerships can you handle weekly?'
+                          ]
+                      }
+                  ];
+              }
+              return depts;
           };
 
-          const deptQuestions = {
-            staff: [
-              'Why do you want to join our staff team?',
-              'What experience do you have in moderation?',
-              'How active can you be on a weekly basis?',
-              'How would you handle a conflict between members?'
-            ],
-            designer: [
-              'What design software do you use?',
-              'Link to your portfolio or examples of work.',
-              'Describe your design style (Minimalist, etc.)',
-              'Are you comfortable working with deadlines?'
-            ],
-            event: [
-              'What kind of events would you like to host?',
-              'Experience managing large groups/events?',
-              'What makes a successful community event?',
-              'What is your availability for hosting events?'
-            ],
-            partnership: [
-              'Previous experience in server partnerships?',
-              'How do you find potential partners?',
-              'What are your methods for growing relationships?',
-              'How many partnerships can you handle weekly?'
-            ]
-          };
+          const departments = getDepartments(settings);
+          let dept = null;
+          let deptIndex = parseInt(clickedDept, 10);
+          if (isNaN(deptIndex)) {
+              dept = departments.find(d => d.key === clickedDept);
+              deptIndex = departments.indexOf(dept);
+          } else {
+              dept = departments[deptIndex];
+          }
+
+          if (!dept) {
+              return interaction.reply({ content: '❌ Department configuration not found.', ephemeral: true });
+          }
 
           const { ActionRowBuilder, ButtonBuilder, ButtonStyle, SeparatorBuilder, SeparatorSpacingSize } = require('discord.js');
 
+          const btnVal = !isNaN(deptIndex) ? `${deptIndex}` : clickedDept;
           const row = new ActionRowBuilder().addComponents(
             new ButtonBuilder()
-              .setCustomId(`apply_approve_${clickedDept}_${interaction.user.id}`)
+              .setCustomId(`apply_approve_${btnVal}_${interaction.user.id}`)
               .setLabel('Approve')
               .setStyle(ButtonStyle.Success),
             new ButtonBuilder()
-              .setCustomId(`apply_deny_${clickedDept}_${interaction.user.id}`)
+              .setCustomId(`apply_deny_${btnVal}_${interaction.user.id}`)
               .setLabel('Deny')
               .setStyle(ButtonStyle.Danger)
           );
 
           const container = UI.createContainer({
-            title: `New ${deptNames[clickedDept]} Application`,
-            description: `**User:** ${interaction.user} (\`${interaction.user.id}\`)\n**Department:** \`${deptNames[clickedDept]}\``,
+            title: `New ${dept.label} Application`,
+            description: `**User:** ${interaction.user} (\`${interaction.user.id}\`)\n**Department:** \`${dept.label}\``,
             color: 0xFFFF00,
             thumbnail: interaction.user.displayAvatarURL({ dynamic: true })
           });
 
-          deptQuestions[clickedDept].forEach((q, i) => {
+          const questions = dept.questions || [];
+          questions.forEach((q, i) => {
             container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
             container.addTextDisplayComponents(td => td.setContent(`### ${q}\n${interaction.fields.getTextInputValue(`q_${i}`) || 'No answer'}`));
           });

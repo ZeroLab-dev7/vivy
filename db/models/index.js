@@ -70,6 +70,7 @@ const InviteBonus = require('./InviteBonus');
 const SupportTicket = require('./SupportTicket');
 const LifeBan = require('./LifeBan');
 const PubSetup = require('./PubSetup');
+const DashboardModels = require('./DashboardModels');
 
 module.exports = {
     GuildSettings,
@@ -98,5 +99,6 @@ module.exports = {
     InviteBonus,
     SupportTicket,
     LifeBan,
-    PubSetup
+    PubSetup,
+    ...DashboardModels
 };

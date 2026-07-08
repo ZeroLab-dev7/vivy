@@ -25,8 +25,8 @@ module.exports = {
                         description: "Warn a user from the server.",
                         footer: `Requested by ${message.author.tag}`,
                         fields: [
-                            { name: "Usage:", value: "- &warn @user/id [reason]" },
-                            { name: "Examples:", value: `- &warn <@${message.author.id}> [reason]\n- &warn ${message.author.id} [reason] ` }
+                            { name: "Usage:", value: "- ?warn @user/id [reason]" },
+                            { name: "Examples:", value: `- ?warn <@${message.author.id}> [reason]\n- ?warn ${message.author.id} [reason] ` }
                         ]
                     })],
                     flags: MessageFlags.IsComponentsV2

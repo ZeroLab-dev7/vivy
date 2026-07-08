@@ -1,7 +1,0 @@
-nohup: ignoring input
-🚀 Starting API Server...
-🚀 API Server running on http://localhost:3000
-   - GET  /api/stats
-   - POST /api/stats
-✅ Connected to SQLite database.
-📦 Database initialized via API

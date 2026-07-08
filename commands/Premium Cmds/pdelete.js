@@ -48,7 +48,7 @@ module.exports = {
                 }
             } else {
                 return message.reply({
-                    components: [UI.createContainer({ color: 0xFF0000, description: "❌ **Specify a user.**\nUsage: `&pdelete <user_id/mention>`" })],
+                    components: [UI.createContainer({ color: 0xFF0000, description: "❌ **Specify a user.**\nUsage: `?pdelete <user_id/mention>`" })],
                     flags: MessageFlags.IsComponentsV2
                 });
             }

@@ -55,6 +55,18 @@ module.exports = {
     container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
     container.addTextDisplayComponents(td => td.setContent(`-# Powered by Zero Lab #LoadingToFuture • Setup Hub`));
 
+    // Sync/create native AutoMod rules on setup command execution
+    try {
+      const AutoModService = require('../../services/autoModService');
+      AutoModService.getOrCreateConfig(interaction.guild.id).then(config => {
+        AutoModService.syncToDiscord(interaction.client, interaction.guild.id, config).catch(err => {
+          console.error("❌ Error syncing AutoMod rules on setup command:", err);
+        });
+      });
+    } catch (e) {
+      console.error("❌ Error initiating AutoMod sync on setup command:", e);
+    }
+
     try {
       await interaction.editReply({ 
         components: [container],

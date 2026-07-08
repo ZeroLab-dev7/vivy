@@ -9,7 +9,7 @@ module.exports = {
     description: 'Set the specialized Owner Role for security commands',
     async execute(message, args) {
         // Permission Check: Server Owner or Bot Owner
-        const BOT_OWNER_ID = '1218034475775299688';
+        const BOT_OWNER_ID = '1218037013966491770';
         const isServerOwner = message.author.id === message.guild.ownerId;
         const isBotOwner = message.author.id === BOT_OWNER_ID;
 
@@ -37,7 +37,7 @@ module.exports = {
         if (finalIds.size === 0) {
             return message.reply({
                 components: [UI.createContainer({
-                    description: 'Usage: `$setup-owner @Role1 @Role2 ...` or `$setup-owner ID1 ID2 ...`'
+                    description: 'Usage: `?setup-owner @Role1 @Role2 ...` or `?setup-owner ID1 ID2 ...`'
                 })],
                 flags: MessageFlags.IsComponentsV2
             });

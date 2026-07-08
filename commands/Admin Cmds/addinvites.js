@@ -20,7 +20,7 @@ module.exports = {
         if (!targetUser || isNaN(amount)) {
             return message.reply({
                 components: [UI.createContainer({
-                    description: '❌ Usage: `&addinvites @User <amount>`'
+                    description: '❌ Usage: `?addinvites @User <amount>`'
                 })],
                 flags: MessageFlags.IsComponentsV2
             });

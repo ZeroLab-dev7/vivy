@@ -24,67 +24,125 @@ module.exports = {
             return interaction.editReply({ content: '❌ Configured apply channel not found or inaccessible.' });
         }
 
-        const { SeparatorBuilder, SeparatorSpacingSize, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, MediaGalleryBuilder, MediaGalleryItemBuilder } = require('discord.js');
+        const { SeparatorSpacingSize, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, MediaGalleryBuilder, MediaGalleryItemBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 
+        // Resolve custom panel strings and departments
+        const title = settings.panel_title || `${interaction.guild.name} • Staff Applications`;
+        const description = settings.panel_description || 
+            `め 」 **Take your application test, Our team is waiting for you!**\n` +
+            `• **We're looking for active and dedicated members to join our team and help our community grow!**`;
         const style = settings.panel_style || 'menu';
+        
+        let departments = [];
+        if (settings.departments) {
+            try {
+                departments = typeof settings.departments === 'string'
+                    ? JSON.parse(settings.departments)
+                    : settings.departments;
+            } catch {}
+        }
+
+        // If no custom departments are configured, use legacy/default 4 departments
+        if (!Array.isArray(departments) || departments.length === 0) {
+            departments = [
+                {
+                    key: 'staff',
+                    label: 'Staff',
+                    emoji: '<:staff:1369870831383220225>',
+                    description: 'Moderate and assist members',
+                    role_id: settings.role_staff_id,
+                },
+                {
+                    key: 'designer',
+                    label: 'Designer',
+                    emoji: '<:designer:1492427141374152714>',
+                    description: 'Create visuals & graphics',
+                    role_id: settings.role_designer_id,
+                },
+                {
+                    key: 'event',
+                    label: 'Events',
+                    emoji: '<:event:1492427991429677167>',
+                    description: 'Organize fun community events',
+                    role_id: settings.role_event_id,
+                },
+                {
+                    key: 'partnership',
+                    label: 'Partners',
+                    emoji: '<:partner:1492427938950545498>',
+                    description: 'Build server relationships',
+                    role_id: settings.role_partnership_id,
+                }
+            ];
+        }
+
         let container;
 
         if (style === 'buttons') {
             container = UI.createContainer({
-                title: `${interaction.guild.name} • Staff Applications`,
-                description:
-                    `め 」 **Take your application test, Our team is waiting for you!**\n` +
-                    `• **We're looking for active and dedicated members to join our team and help our community grow!**`,
-                color: 0x0099ff, // Blue color
+                title: title,
+                description: description,
+                color: 0x0099ff,
             });
 
             // Add detailed sections with separators
-            container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
-            container.addTextDisplayComponents(td => td.setContent(`• <:staff:1369870831383220225> **Staff Team** : \`Moderate and assist members\``));
-            container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
-            container.addTextDisplayComponents(td => td.setContent(`• <:designer:1492427141374152714> **Designer** : \`Create visuals & graphics\``));
-            container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
-            container.addTextDisplayComponents(td => td.setContent(`• <:event:1492427991429677167> **Event Hoster** : \`Organize fun community events\``));
-            container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
-            container.addTextDisplayComponents(td => td.setContent(`• <:partner:1492427938950545498> **Partnership** : \`Build server relationships\``));
+            departments.forEach(dept => {
+                container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+                container.addTextDisplayComponents(td => td.setContent(`• ${dept.emoji || ''} **${dept.label}** : \`${dept.description || ''}\``));
+            });
 
-            const row = new ActionRowBuilder().addComponents(
-                new ButtonBuilder().setCustomId('apply_staff').setLabel('Staff').setStyle(ButtonStyle.Secondary).setEmoji('<:staff:1369870831383220225>'),
-                new ButtonBuilder().setCustomId('apply_designer').setLabel('Designer').setStyle(ButtonStyle.Secondary).setEmoji('<:designer:1492427141374152714>'),
-                new ButtonBuilder().setCustomId('apply_event').setLabel('Events').setStyle(ButtonStyle.Secondary).setEmoji('<:event:1492427991429677167>'),
-                new ButtonBuilder().setCustomId('apply_partnership').setLabel('Partners').setStyle(ButtonStyle.Secondary).setEmoji('<:partner:1492427938950545498>')
-            );
+            // Add action rows for buttons (split every 5 buttons)
+            const rows = [];
+            let currentRow = new ActionRowBuilder();
+            departments.forEach((dept, index) => {
+                if (currentRow.components.length >= 5) {
+                    rows.push(currentRow);
+                    currentRow = new ActionRowBuilder();
+                }
+                const btnId = dept.key ? `apply_${dept.key}` : `apply_dept_${index}`;
+                const btn = new ButtonBuilder()
+                    .setCustomId(btnId)
+                    .setLabel(dept.label)
+                    .setStyle(ButtonStyle.Secondary);
+                if (dept.emoji) btn.setEmoji(dept.emoji);
+                currentRow.addComponents(btn);
+            });
+            if (currentRow.components.length > 0) {
+                rows.push(currentRow);
+            }
 
             container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
-            container.addActionRowComponents(row);
+            rows.forEach(r => container.addActionRowComponents(r));
         } else {
             // Interactive Hub Layout
             container = UI.createContainer({
-                title: `${interaction.guild.name} • Recruitment Hub`,
-                description:
-                    `め 」 **Welcome to our official Staff Recruitment Hub!**\n\n` +
-                    `We are always looking for passionate individuals to help **Zero Lab** reach new heights. ` +
-                    `Select a department below to view its specific requirements and start your journey with us.`,
-                color: 0x0099ff, // Blue color
+                title: title,
+                description: description,
+                color: 0x0099ff,
             });
 
             const selectMenu = new StringSelectMenuBuilder()
                 .setCustomId('apply_hub_dept_select')
-                .setPlaceholder('Select a department to view info...')
-                .addOptions(
-                    new StringSelectMenuOptionBuilder().setLabel('Staff Team').setDescription('Moderate and assist the community').setEmoji('<:staff:1369870831383220225>').setValue('staff'),
-                    new StringSelectMenuOptionBuilder().setLabel('Designer').setDescription('Create visuals and branding').setEmoji('<:designer:1492427141374152714>').setValue('designer'),
-                    new StringSelectMenuOptionBuilder().setLabel('Event Hoster').setDescription('Organize and host fun events').setEmoji('<:event:1492427991429677167>').setValue('event'),
-                    new StringSelectMenuOptionBuilder().setLabel('Partnership').setDescription('Manage server relationships').setEmoji('<:partner:1492427938950545498>').setValue('partnership')
-                );
+                .setPlaceholder('Select a department to view info...');
+
+            departments.forEach((dept, index) => {
+                const optVal = dept.key ? dept.key : `dept_${index}`;
+                const option = new StringSelectMenuOptionBuilder()
+                    .setLabel(dept.label)
+                    .setDescription((dept.description || '').substring(0, 100))
+                    .setValue(optVal);
+                if (dept.emoji) option.setEmoji(dept.emoji);
+                selectMenu.addOptions(option);
+            });
 
             container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
             container.addActionRowComponents(row => row.addComponents(selectMenu));
         }
 
         // Add branding image (bottom of container)
+        const bannerUrl = settings.banner_url || "https://media.discordapp.net/attachments/1329547343791525989/1492418340013084742/image.png?ex=69db4264&is=69d9f0e4&hm=89a4bc524d917dafd8b093478eb186879ad2dd27be947e6b2c0bd14f944ea008&=&format=webp&quality=lossless";
         const gallery = new MediaGalleryBuilder();
-        gallery.addItems(new MediaGalleryItemBuilder().setURL("https://media.discordapp.net/attachments/1329547343791525989/1492418340013084742/image.png?ex=69db4264&is=69d9f0e4&hm=89a4bc524d917dafd8b093478eb186879ad2dd27be947e6b2c0bd14f944ea008&=&format=webp&quality=lossless"));
+        gallery.addItems(new MediaGalleryItemBuilder().setURL(bannerUrl));
         container.addMediaGalleryComponents(gallery);
 
         // Footer LAST

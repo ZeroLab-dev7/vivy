@@ -91,7 +91,7 @@ module.exports = {
         } else {
             message.reply({
                 components: [UI.createContainer({
-                    description: 'Usage: `$antilink-whitelist <add|remove|list> [role]`'
+                    description: 'Usage: `?antilink-whitelist <add|remove|list> [role]`'
                 })],
                 flags: MessageFlags.IsComponentsV2
             });

@@ -39,7 +39,7 @@ module.exports = {
       // ─── Target Member ───
       if (!args[0]) {
         return message.reply({
-          components: [UI.createContainer({ description: 'Usage: `&move <member> [channel]`' })],
+          components: [UI.createContainer({ description: 'Usage: `?move <member> [channel]`' })],
           flags: MessageFlags.IsComponentsV2
         });
       }

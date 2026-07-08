@@ -24,7 +24,7 @@ module.exports = {
                         title: "Command: pmremove",
                         description: "Remove a manager from your premium plan.",
                         fields: [
-                            { name: "Usage", value: `\`&pmremove <user_id/mention>\`` }
+                            { name: "Usage", value: `\`?pmremove <user_id/mention>\`` }
                         ]
                     })],
                     flags: MessageFlags.IsComponentsV2

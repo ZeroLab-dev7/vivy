@@ -39,16 +39,26 @@ module.exports = {
                 });
             }
 
-            // Get avatar URL with higher quality
-            const avatarURL = target.displayAvatarURL({
+            // Get avatar URLs (global and server-specific if set)
+            const member = message.guild ? await message.guild.members.fetch(target.id).catch(() => null) : null;
+            const globalAvatarURL = target.displayAvatarURL({
                 dynamic: true,
                 size: 1024,
             });
+            const serverAvatarURL = member ? member.avatarURL({
+                dynamic: true,
+                size: 1024,
+            }) : null;
 
-            // Send simple message with avatar as clickable link
-            // Send simple message with avatar as clickable link
+            // Build links array
+            const links = [`[Global Avatar](${globalAvatarURL})`];
+            if (serverAvatarURL) {
+                links.push(`[Server Avatar](${serverAvatarURL})`);
+            }
+
+            // Send message with avatars as clickable links
             await message.reply({
-                content: `Here Is **${target.username}'s** Avatar:\n 🔗 [Global Avatar](${avatarURL})`
+                content: `Here Is **${target.username}'s** Avatar:\n 🔗 ${links.join(' | ')}`
             });
         } catch (error) {
             console.error("Error in avatar command:", error);

@@ -2,13 +2,13 @@ const { PermissionsBitField, MessageFlags, ChannelType } = require('discord.js')
 const { LogSettings } = require('../../db/models');
 const UI = require('../../utils/ui');
 
-const BOT_OWNER_ID = '1218034475775299688';
+const BOT_OWNER_ID = '1218037013966491770';
 const COOLDOWN_TIME = 4000;
 const cooldowns = new Map();
 
 const CHANNEL_TYPES = {
-    join:   'join_log',
-    leave:  'leave_log',
+    join: 'join_log',
+    leave: 'leave_log',
     botlog: 'bot_log',
 };
 
@@ -39,12 +39,12 @@ module.exports = {
         const sub = args[0]?.toLowerCase();
 
         switch (sub) {
-            case 'set':   return handleSet(message, args);
+            case 'set': return handleSet(message, args);
             case 'remove':
             case 'clear': return handleRemove(message, args);
             case 'view':
-            case 'info':  return handleView(message);
-            default:      return sendHelp(message);
+            case 'info': return handleView(message);
+            default: return sendHelp(message);
         }
     }
 };

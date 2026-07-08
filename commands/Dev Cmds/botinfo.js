@@ -2,7 +2,7 @@ const { MessageFlags } = require('discord.js');
 const UI = require('../../utils/ui');
 const os = require('os');
 
-const BOT_OWNER_ID = '1218034475775299688';
+const BOT_OWNER_ID = '1218037013966491770';
 const COOLDOWN_TIME = 5000;
 const cooldowns = new Map();
 
@@ -96,14 +96,14 @@ module.exports = {
 };
 
 function formatUptime(ms) {
-    const days    = Math.floor(ms / 86_400_000);
-    const hours   = Math.floor((ms % 86_400_000) / 3_600_000);
+    const days = Math.floor(ms / 86_400_000);
+    const hours = Math.floor((ms % 86_400_000) / 3_600_000);
     const minutes = Math.floor((ms % 3_600_000) / 60_000);
     const seconds = Math.floor((ms % 60_000) / 1000);
 
     const parts = [];
-    if (days)    parts.push(`${days}d`);
-    if (hours)   parts.push(`${hours}h`);
+    if (days) parts.push(`${days}d`);
+    if (hours) parts.push(`${hours}h`);
     if (minutes) parts.push(`${minutes}m`);
     parts.push(`${seconds}s`);
     return parts.join(' ');

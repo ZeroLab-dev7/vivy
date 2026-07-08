@@ -34,8 +34,8 @@ module.exports = {
         footer: `Requested by ${message.author.tag}`,
         fields: [
           { name: "Aliases:", value: "removerole, roleremove" },
-          { name: "Usage:", value: "+removerole @user/id <role name/id/mention>" },
-          { name: "Examples:", value: `- +removerole @user @Member\n- +removerole 123456789 Admin` }
+          { name: "Usage:", value: "?removerole @user/id <role name/id/mention>" },
+          { name: "Examples:", value: `- ?removerole @user @Member\n- ?removerole 123456789 Admin` }
         ]
       });
       return message.reply({

@@ -38,7 +38,28 @@ async function getLogChannel(guild, logType) {
         const settings = await LogSettings.findOne({ where: { guild_id: guild.id } });
         if (!settings || !settings.channels) return null;
 
-        const channelId = settings.channels[logType];
+        // Safely handle channels JSON string or object
+        let channels = settings.channels;
+        if (typeof channels === 'string') {
+            try {
+                channels = JSON.parse(channels);
+            } catch {}
+        }
+        if (!channels) return null;
+
+        let channelId = channels[logType];
+
+        // Group-based fallbacks for missing individual log channel configurations
+        if (!channelId) {
+            if (['unban', 'kick', 'timeout'].includes(logType)) {
+                channelId = channels['ban'];
+            } else if (['voice-leave', 'voice-move', 'voice-mute', 'voice-deafen', 'voice-disconnect'].includes(logType)) {
+                channelId = channels['voice-join'];
+            } else if (['role-create', 'role-delete'].includes(logType)) {
+                channelId = channels['role-update'];
+            }
+        }
+
         if (!channelId) return null;
 
         const channel = guild.channels.cache.get(channelId);
@@ -88,7 +109,16 @@ async function sendLog(guild, logType, embedData) {
     if (embedData.title) embed.setTitle(embedData.title);
     if (embedData.description) embed.setDescription(embedData.description);
     if (embedData.author) embed.setAuthor(embedData.author);
-    if (embedData.fields) embed.setFields(embedData.fields);
+    if (embedData.fields) {
+        const safeFields = embedData.fields.map(field => {
+            let value = field.value;
+            if (typeof value === 'string' && value.length > 1024) {
+                value = value.substring(0, 1011) + '...[truncated]';
+            }
+            return { ...field, value };
+        });
+        embed.setFields(safeFields);
+    }
     if (embedData.thumbnail) embed.setThumbnail(embedData.thumbnail);
     if (embedData.image) embed.setImage(embedData.image);
 

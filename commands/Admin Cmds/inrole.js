@@ -38,8 +38,8 @@ module.exports = {
                 footer: `Requested by ${message.author.tag}`,
                 fields: [
                     { name: "Aliases:", value: "- rolelist, membersinrole" },
-                    { name: "Usage:", value: "- &inrole @role/id" },
-                    { name: "Examples:", value: `- &inrole @role/id` }
+                    { name: "Usage:", value: "- ?inrole @role/id" },
+                    { name: "Examples:", value: `- ?inrole @role/id` }
                 ]
             });
             return message.reply({

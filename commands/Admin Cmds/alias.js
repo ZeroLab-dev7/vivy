@@ -18,13 +18,13 @@ module.exports = {
         const sub = args[0]?.toLowerCase();
 
         if (sub === 'add') {
-            // Usage: $alias add <command> <trigger> [noprefix]
+            // Usage: ?alias add <command> <trigger> [noprefix]
             const commandName = args[1];
             const trigger = args[2];
             const noPrefix = args[3] === 'noprefix';
 
             if (!commandName || !trigger) {
-                return message.reply("Usage: `$alias add <command> <alias_trigger> [noprefix]`");
+                return message.reply("Usage: `?alias add <command> <alias_trigger> [noprefix]`");
             }
 
             // Verify command exists
@@ -68,7 +68,7 @@ module.exports = {
 
         } else if (sub === 'remove') {
             const trigger = args[1];
-            if (!trigger) return message.reply("Usage: `$alias remove <alias_trigger>`");
+            if (!trigger) return message.reply("Usage: `?alias remove <alias_trigger>`");
 
             const deleted = await CustomAlias.destroy({
                 where: { guild_id: message.guild.id, alias: trigger.toLowerCase() }
@@ -99,7 +99,7 @@ module.exports = {
 
         } else {
             message.reply({
-                embeds: [UI.createEmbed({ type: 'info', description: 'Usage: `$alias <add|remove|list>`' })]
+                embeds: [UI.createEmbed({ type: 'info', description: 'Usage: `?alias <add|remove|list>`' })]
             });
         }
     },

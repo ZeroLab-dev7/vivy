@@ -23,7 +23,7 @@ module.exports = {
                         title: "Command: pname",
                         description: "Rename your premium role and voice channel.",
                         fields: [
-                            { name: "Usage", value: `\`&pname <new name>\`` }
+                            { name: "Usage", value: `\`?pname <new name>\`` }
                         ]
                     })],
                     flags: MessageFlags.IsComponentsV2

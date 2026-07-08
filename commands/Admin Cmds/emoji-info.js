@@ -25,8 +25,8 @@ module.exports = {
                 footer: `Requested by ${message.author.tag}`,
                 fields: [
                     { name: "Aliases:", value: "- einfo, emoji-info, emojiinfo" },
-                    { name: "Usage:", value: "- &emojiinfo emoji/id" },
-                    { name: "Examples:", value: `- &emojiinfo <:hpsy:1363633042672848916>\n- &emojiinfo 1363633042672848916` }
+                    { name: "Usage:", value: "- ?emojiinfo emoji/id" },
+                    { name: "Examples:", value: `- ?emojiinfo <:hpsy:1363633042672848916>\n- ?emojiinfo 1363633042672848916` }
                 ]
             });
             return message.reply({

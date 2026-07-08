@@ -13,8 +13,8 @@ module.exports = {
                 footer: `Requested by ${message.author.tag}`,
                 fields: [
                     { name: "Aliases:", value: "- rinfo, role-info" },
-                    { name: "Usage:", value: "- &roleinfo @role/id" },
-                    { name: "Examples:", value: `- &roleinfo @Role\n- &roleinfo 123456789012345678` }
+                    { name: "Usage:", value: "- ?roleinfo @role/id" },
+                    { name: "Examples:", value: `- ?roleinfo @Role\n- ?roleinfo 123456789012345678` }
                 ]
             });
             return message.reply({

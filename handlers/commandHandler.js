@@ -27,7 +27,7 @@ module.exports = async (client) => {
     }
 
     // Load Slash Commands
-    const slashPath = path.join(__dirname, '../slashCommands'); // Assumed new location or reusing old
+    const slashPath = path.join(__dirname, '../slashCommands');
     if (fs.existsSync(slashPath)) {
         const slashFolders = fs.readdirSync(slashPath);
         for (const folder of slashFolders) {
@@ -45,30 +45,20 @@ module.exports = async (client) => {
         }
     }
 
-console.log('Loaded commands:', Array.from(client.commands.keys()));
+    console.log('Loaded commands:', Array.from(client.commands.keys()));
     console.log(`✅ Loaded ${client.commands.size} legacy commands.`);
     console.log(`✅ Loaded ${client.slashCommands.size} slash commands.`);
 
-    // Register Slash Commands
+    // Register Slash Commands GLOBALLY
     const rest = new REST({ version: '10' }).setToken(config.token);
     try {
-        console.log('Started refreshing application (/) commands.');
-
-        if (config.guildId) {
-            await rest.put(
-                Routes.applicationGuildCommands(config.clientId, config.guildId),
-                { body: slashCommandsArray },
-            );
-            console.log(`✅ Successfully reloaded application (/) commands for Guild ${config.guildId}.`);
-        } else {
-            console.warn('⚠️ GUILD_ID not found in config. Registering GLOBAL commands instead (might take up to 1 hour to cache).');
-            await rest.put(
-                Routes.applicationCommands(config.clientId),
-                { body: slashCommandsArray },
-            );
-            console.log('✅ Successfully reloaded application (/) commands GLOBALLY.');
-        }
+        console.log('Started refreshing global application (/) commands.');
+        await rest.put(
+            Routes.applicationCommands(config.clientId),
+            { body: slashCommandsArray },
+        );
+        console.log('✅ Successfully reloaded application (/) commands GLOBALLY.');
     } catch (error) {
-        console.error('❌ Error registering commands:', error);
+        console.error('❌ Error registering global commands:', error);
     }
 };

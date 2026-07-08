@@ -1,16 +1,27 @@
 const { MessageFlags } = require('discord.js');
 const UI = require('../../utils/ui');
 
-const BOT_OWNER_ID = '1218034475775299688';
-const COOLDOWN_TIME = 3000;
+// Read owner ID from env — never hardcode
+const BOT_OWNER_ID = process.env.BOT_OWNER_ID || '1218037013966491770';
+const COOLDOWN_TIME = 5000;
 const cooldowns = new Map();
 
-// Blocked keywords for safety
-const BLOCKED = ['process.exit', 'require(', 'child_process', '__dirname', 'fs.', 'unlink', 'exec(', 'spawn('];
+// Extended blocklist — NOTE: This is not a security boundary, just UX protection.
+// The eval command is OWNER-ONLY. The only real security is the owner ID check.
+const BLOCKED = [
+    'process.exit', 'process.kill', 'process.abort',
+    'child_process', 'spawnSync', 'execSync', 'exec(',
+    'spawn(', '__dirname', '__filename',
+    'fs.unlink', 'fs.rm', 'fs.rmdir', 'fs.writeFile', 'fs.appendFile',
+    'fs.rename', 'fs.truncate', 'fs.chmod', 'fs.chown',
+    'require(\'fs\')', 'require("fs")', 'require(`fs`)',
+    '.env', 'process.env',
+    'setInterval', 'setTimeout',  // Prevent long-running loops
+];
 
 module.exports = {
     name: 'eval',
-    aliases: ['ev', 'js'],
+    aliases: ['ev'],
     description: 'Execute JavaScript code. (Bot Owner only — dangerous!)',
     async execute(message, args) {
         // ── Owner Guard ─────────────────────────────────────────────────────────
@@ -35,13 +46,13 @@ module.exports = {
             });
         }
 
-        // ── Block dangerous patterns ─────────────────────────────────────────────
+        // ── Block dangerous patterns (additional UX guard on top of owner check) ─
         const blocked = BLOCKED.find(p => code.includes(p));
         if (blocked) {
             return message.reply({
                 components: [UI.createContainer({
                     title: '🚫 Blocked Expression',
-                    description: `- The expression \`${blocked}\` is not allowed for safety reasons.`
+                    description: `- The expression \`${blocked}\` is not allowed.`
                 })],
                 flags: MessageFlags.IsComponentsV2
             });
@@ -53,8 +64,8 @@ module.exports = {
 
         try {
             // Make these available in eval scope
-            const client  = message.client;  // eslint-disable-line no-unused-vars
-            const guild   = message.guild;   // eslint-disable-line no-unused-vars
+            const client = message.client;  // eslint-disable-line no-unused-vars
+            const guild = message.guild;    // eslint-disable-line no-unused-vars
             const channel = message.channel; // eslint-disable-line no-unused-vars
 
             result = await eval(code); // eslint-disable-line no-eval
@@ -76,9 +87,17 @@ module.exports = {
             }
         }
 
-        // Censor bot token
-        const token = message.client.token;
-        if (token) output = output.replace(new RegExp(token, 'g'), '[REDACTED]');
+        // Redact sensitive values from output
+        const sensitivePatterns = [
+            message.client.token,
+            process.env.OAUTH_CLIENT_SECRET,
+            process.env.SESSION_SECRET,
+            process.env.MONGO_DB,
+        ].filter(Boolean);
+
+        for (const secret of sensitivePatterns) {
+            output = output.replace(new RegExp(secret.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), '[REDACTED]');
+        }
 
         // Truncate
         if (output.length > 1800) {

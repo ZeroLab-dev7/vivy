@@ -1,6 +1,26 @@
 const { Events, AuditLogEvent } = require('discord.js');
 const { sendLog, getAuditLogEntry, getExecutor } = require('../utils/logManager');
 
+function formatRoles(rolesCollection) {
+    const rolesArray = rolesCollection.map(r => r.toString());
+    const joined = rolesArray.join(', ');
+    if (joined.length <= 1024) return joined;
+
+    let result = rolesArray[0];
+    for (let i = 1; i < rolesArray.length; i++) {
+        const roleStr = rolesArray[i];
+        const potentialNext = `${result}, ${roleStr}`;
+        const remaining = rolesArray.length - (i + 1);
+        const suffix = remaining > 0 ? `, ... and ${remaining} more` : '';
+        
+        if (potentialNext.length + suffix.length > 1024) {
+            return result + `, ... and ${rolesArray.length - i} more`;
+        }
+        result = potentialNext;
+    }
+    return result;
+}
+
 module.exports = {
     name: Events.GuildMemberUpdate,
     async execute(oldMember, newMember) {
@@ -49,7 +69,7 @@ module.exports = {
                     { name: '<:userinfo:1492408642803204096> User id:', value: `\`${newMember.id}\``, inline: true },
                     { name: '<:timee:1492407654256218142> Given at:', value: `<t:${Math.floor(Date.now() / 1000)}:R>`, inline: true },
                     { name: '<:timee:1492407654256218142> Given by:', value: executorInfo, inline: true },
-                    { name: '🎭 Added Roles:', value: addedRoles.map(r => r.toString()).join(', '), inline: false }
+                    { name: '🎭 Added Roles:', value: formatRoles(addedRoles), inline: false }
                 ],
                 color: 'Green'
             });
@@ -64,7 +84,7 @@ module.exports = {
                     { name: '<:userinfo:1492408642803204096> User id:', value: `\`${newMember.id}\``, inline: true },
                     { name: '<:timee:1492407654256218142> Removed at:', value: `<t:${Math.floor(Date.now() / 1000)}:R>`, inline: true },
                     { name: '<:timee:1492407654256218142> Removed by:', value: executorInfo, inline: true },
-                    { name: '🎭 Removed Roles:', value: removedRoles.map(r => r.toString()).join(', '), inline: false }
+                    { name: '🎭 Removed Roles:', value: formatRoles(removedRoles), inline: false }
                 ],
                 color: 'Red'
             });

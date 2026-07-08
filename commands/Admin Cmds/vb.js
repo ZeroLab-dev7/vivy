@@ -18,8 +18,8 @@ module.exports = {
             footer: `Requested by ${message.author.tag}`,
             fields: [
               { name: "Aliases:", value: "- verify-boy, verifyboy" },
-              { name: "Usage:", value: "- &vb @user/id" },
-              { name: "Examples:", value: `- &vb ${message.author.username}` }
+              { name: "Usage:", value: "- ?vb @user/id" },
+              { name: "Examples:", value: `- ?vb ${message.author.username}` }
             ]
           })],
           flags: MessageFlags.IsComponentsV2

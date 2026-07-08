@@ -29,13 +29,18 @@ module.exports = {
                 target = await client.users.fetch(message.author.id, { force: true });
             }
 
-            // Get banner URL
-            const bannerURL = target.bannerURL({
+            // Get banner URLs (global and server-specific if set)
+            const member = message.guild ? await message.guild.members.fetch(target.id).catch(() => null) : null;
+            const globalBannerURL = target.bannerURL({
                 dynamic: true,
                 size: 1024,
             });
+            const serverBannerURL = member ? member.bannerURL({
+                dynamic: true,
+                size: 1024,
+            }) : null;
 
-            if (!bannerURL) {
+            if (!globalBannerURL && !serverBannerURL) {
                 return message.reply({
                     components: [UI.createContainer({
                         description: "❌ This user does not have a banner set."
@@ -44,9 +49,18 @@ module.exports = {
                 });
             }
 
-            // Send simple message with banner as clickable link
+            // Build links array
+            const links = [];
+            if (globalBannerURL) {
+                links.push(`[Global Banner](${globalBannerURL})`);
+            }
+            if (serverBannerURL) {
+                links.push(`[Server Banner](${serverBannerURL})`);
+            }
+
+            // Send message with banners as clickable links
             await message.reply({
-                content: `Here Is **${target.username}'s** Banner:\n 🔗 [Global Banner](${bannerURL})`
+                content: `Here Is **${target.username}'s** Banner:\n 🔗 ${links.join(' | ')}`
             });
         } catch (error) {
             console.error("Error in banner command:", error);

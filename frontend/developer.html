@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Developer Portal — Vivy</title>
+    <meta name="description" content="Vivy Bot Developer Management Console.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="/developer.css">
+</head>
+<body>
+
+    <!-- Background overlays -->
+    <div class="bg-grid-overlay"></div>
+    <div class="bg-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+    </div>
+
+    <!-- Topbar -->
+    <nav class="dev-nav">
+        <div class="dev-nav-logo">
+            <div class="logo-icon"><img src="/logo.png" alt="Vivy"></div>
+            <span class="logo-text">Vivy <span class="badge badge-dev">DEV</span></span>
+        </div>
+        <div class="dev-nav-center">
+            <div class="nav-breadcrumb">
+                <span>Developer Console</span>
+                <i class="fa-solid fa-chevron-right" style="font-size:10px;color:var(--text-3)"></i>
+                <strong id="activeTabName">Dashboard</strong>
+            </div>
+        </div>
+        <div class="dev-nav-right">
+            <div class="maintenance-banner" id="maintenanceBanner" style="display:none">
+                <i class="fa-solid fa-triangle-exclamation"></i> MAINTENANCE ACTIVE
+            </div>
+            <div class="user-chip" id="userChip">
+                <img src="https://cdn.discordapp.com/embed/avatars/0.png" alt="Avatar" id="userAvatar">
+                <span id="username">Developer</span>
+            </div>
+            <a href="/servers" class="btn btn-secondary btn-sm">
+                <i class="fa-solid fa-home"></i> Dashboard
+            </a>
+        </div>
+    </nav>
+
+    <!-- Shell -->
+    <div class="dev-shell">
+
+        <!-- Sidebar -->
+        <aside class="dev-sidebar">
+            <span class="sidebar-section-label">Monitoring</span>
+            <div class="sidebar-item active" id="nav-dashboard" onclick="switchTab('dashboard')">
+                <i class="fa-solid fa-chart-pie"></i> Dashboard
+            </div>
+            <div class="sidebar-item" id="nav-analytics" onclick="switchTab('analytics')">
+                <i class="fa-solid fa-chart-line"></i> Analytics
+            </div>
+            <div class="sidebar-item" id="nav-status" onclick="switchTab('status')">
+                <i class="fa-solid fa-heart-pulse"></i> System Status
+            </div>
+
+            <span class="sidebar-section-label">Management</span>
+            <div class="sidebar-item" id="nav-servers" onclick="switchTab('servers')">
+                <i class="fa-solid fa-server"></i> Server Manager
+            </div>
+            <div class="sidebar-item" id="nav-users" onclick="switchTab('users')">
+                <i class="fa-solid fa-users-gear"></i> User Manager
+            </div>
+            <div class="sidebar-item" id="nav-premium" onclick="switchTab('premium')">
+                <i class="fa-solid fa-gem"></i> Premium
+            </div>
+            <div class="sidebar-item" id="nav-notes" onclick="switchTab('notes')">
+                <i class="fa-solid fa-pen-to-square"></i> Developer Notes
+            </div>
+
+            <span class="sidebar-section-label">Administration</span>
+            <div class="sidebar-item" id="nav-commands" onclick="switchTab('commands')">
+                <i class="fa-solid fa-terminal"></i> Commands
+            </div>
+            <div class="sidebar-item" id="nav-broadcasts" onclick="switchTab('broadcasts')">
+                <i class="fa-solid fa-bullhorn"></i> Broadcasts
+            </div>
+            <div class="sidebar-item" id="nav-audit" onclick="switchTab('audit')">
+                <i class="fa-solid fa-receipt"></i> Audit Logs
+            </div>
+            <div class="sidebar-item" id="nav-errors" onclick="switchTab('errors')">
+                <i class="fa-solid fa-bug"></i> Error Tracking
+            </div>
+
+            <span class="sidebar-section-label">Operations</span>
+            <div class="sidebar-item" id="nav-controls" onclick="switchTab('controls')">
+                <i class="fa-solid fa-sliders"></i> Bot Controls
+            </div>
+            <div class="sidebar-item" id="nav-settings" onclick="switchTab('settings')">
+                <i class="fa-solid fa-gear"></i> Settings
+            </div>
+        </aside>
+
+        <!-- Main Content Pane -->
+        <main class="dev-main">
+
+            <!-- ── DASHBOARD TAB ── -->
+            <section class="dev-tab active" id="tab-dashboard">
+                <div class="page-header">
+                    <h1>Developer <span class="gradient-text">Dashboard</span></h1>
+                    <p>Overview of the Vivy Bot ecosystem metrics and system integrity.</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="dev-stat-card">
+                        <div class="stat-icon purple"><i class="fa-solid fa-server"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="statServers">—</div>
+                            <div class="stat-label">Total Servers</div>
+                        </div>
+                    </div>
+                    <div class="dev-stat-card">
+                        <div class="stat-icon cyan"><i class="fa-solid fa-users"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="statMembers">—</div>
+                            <div class="stat-label">Total Members</div>
+                        </div>
+                    </div>
+                    <div class="dev-stat-card">
+                        <div class="stat-icon pink"><i class="fa-solid fa-gem"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="statPremiumServers">—</div>
+                            <div class="stat-label">Premium Servers</div>
+                        </div>
+                    </div>
+                    <div class="dev-stat-card">
+                        <div class="stat-icon blue"><i class="fa-solid fa-bolt"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="statCmdsToday">—</div>
+                            <div class="stat-label">Commands Run Today</div>
+                        </div>
+                    </div>
+                    <div class="dev-stat-card">
+                        <div class="stat-icon green"><i class="fa-solid fa-calendar-days"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="statCmdsMonth">—</div>
+                            <div class="stat-label">Commands This Month</div>
+                        </div>
+                    </div>
+                    <div class="dev-stat-card">
+                        <div class="stat-icon yellow"><i class="fa-solid fa-clock"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="statUptime">—</div>
+                            <div class="stat-label">Bot Uptime</div>
+                        </div>
+                    </div>
+                    <div class="dev-stat-card">
+                        <div class="stat-icon red"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="statPunishments">—</div>
+                            <div class="stat-label">Active Punishments</div>
+                        </div>
+                    </div>
+                    <div class="dev-stat-card">
+                        <div class="stat-icon green"><i class="fa-solid fa-ticket"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="statActiveTickets">—</div>
+                            <div class="stat-label">Open Tickets</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layout-split" style="margin-top:24px">
+                    <div class="dev-panel flex-1" style="min-width: 450px;">
+                        <div class="panel-header">
+                            <h2>Quick Activity Snapshot</h2>
+                        </div>
+                        <div style="height: 280px; position: relative; margin-top:16px;">
+                            <canvas id="quickActivityChart" style="width:100%; height:100%"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="dev-panel flex-1" style="min-width: 400px; display: flex; flex-direction: column;">
+                        <div class="panel-header">
+                            <h2>Developer Activity Feed</h2>
+                        </div>
+                        <div class="activity-feed-container" id="activityFeedContainer">
+                            <div class="empty-state">
+                                <div class="empty-state-icon"><i class="fa-solid fa-clock-rotate-left"></i></div>
+                                <h3>No activity logged</h3>
+                                <p>Waiting for developer events...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── ANALYTICS TAB ── -->
+            <section class="dev-tab" id="tab-analytics">
+                <div class="page-header">
+                    <h1>Usage & Growth <span class="gradient-text">Analytics</span></h1>
+                    <p>Granular logs of commands usage and top bot operations.</p>
+                </div>
+
+                <div class="layout-split">
+                    <div class="dev-panel flex-1">
+                        <div class="panel-header">
+                            <h2>Most Active Commands</h2>
+                        </div>
+                        <div class="chart-container" style="height:300px; margin-top:16px">
+                            <canvas id="mostUsedCommandsChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="dev-panel flex-1">
+                        <div class="panel-header">
+                            <h2>Top Servers by Command Activity</h2>
+                        </div>
+                        <div class="chart-container" style="height:300px; margin-top:16px">
+                            <canvas id="mostActiveServersChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── SYSTEM STATUS TAB ── -->
+            <section class="dev-tab" id="tab-status">
+                <div class="page-header">
+                    <h1>System <span class="gradient-text">Status</span></h1>
+                    <p>Real-time bot system and engine diagnostics. Auto-refreshes every 15 seconds.</p>
+                </div>
+
+                <div class="status-grid">
+                    <div class="status-card" id="status-database">
+                        <div style="display:flex; justify-content:space-between; align-items:center">
+                            <span class="status-label">SQLite Database</span>
+                            <div class="status-indicator online"></div>
+                        </div>
+                        <strong class="status-value">ONLINE</strong>
+                    </div>
+                    <div class="status-card" id="status-api">
+                        <div style="display:flex; justify-content:space-between; align-items:center">
+                            <span class="status-label">Internal API Gateway</span>
+                            <div class="status-indicator online"></div>
+                        </div>
+                        <strong class="status-value">ONLINE</strong>
+                    </div>
+                    <div class="status-card" id="status-discord">
+                        <div style="display:flex; justify-content:space-between; align-items:center">
+                            <span class="status-label">Discord Gateway API</span>
+                            <div class="status-indicator online"></div>
+                        </div>
+                        <strong class="status-value">ONLINE</strong>
+                    </div>
+                </div>
+
+                <div class="stats-grid" style="margin-top:24px">
+                    <div class="dev-stat-card status-metric-card" id="card-cpu">
+                        <div class="stat-icon purple"><i class="fa-solid fa-microchip"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="status-cpu">—</div>
+                            <div class="stat-label">CPU Usage</div>
+                        </div>
+                        <div class="metric-indicator"></div>
+                    </div>
+                    <div class="dev-stat-card status-metric-card" id="card-ram">
+                        <div class="stat-icon cyan"><i class="fa-solid fa-memory"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="status-ram">—</div>
+                            <div class="stat-label">RAM Usage</div>
+                        </div>
+                        <div class="metric-indicator"></div>
+                    </div>
+                    <div class="dev-stat-card status-metric-card" id="card-disk">
+                        <div class="stat-icon yellow"><i class="fa-solid fa-hard-drive"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="status-disk">—</div>
+                            <div class="stat-label">Disk Usage</div>
+                        </div>
+                        <div class="metric-indicator"></div>
+                    </div>
+                    <div class="dev-stat-card status-metric-card" id="card-ping">
+                        <div class="stat-icon blue"><i class="fa-solid fa-network-wired"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="status-ping">—</div>
+                            <div class="stat-label">Gateway Ping</div>
+                        </div>
+                        <div class="metric-indicator"></div>
+                    </div>
+                    <div class="dev-stat-card status-metric-card" id="card-node">
+                        <div class="stat-icon green"><i class="fa-brands fa-node-js"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="status-node">—</div>
+                            <div class="stat-label">Node.js Version</div>
+                        </div>
+                        <div class="metric-indicator"></div>
+                    </div>
+                    <div class="dev-stat-card status-metric-card" id="card-process-uptime">
+                        <div class="stat-icon pink"><i class="fa-solid fa-clock"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="status-process-uptime">—</div>
+                            <div class="stat-label">Process Uptime</div>
+                        </div>
+                        <div class="metric-indicator"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── SERVER MANAGER TAB ── -->
+            <section class="dev-tab" id="tab-servers">
+                <div class="page-header">
+                    <h1>Server <span class="gradient-text">Manager</span></h1>
+                    <p>Search, scan, and manage active Discord servers Vivy is in.</p>
+                </div>
+
+                <div class="dev-panel">
+                    <div class="panel-header-search">
+                        <div class="search-input-wrapper">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" id="serverSearch" placeholder="Search servers by name or ID..." onkeyup="loadServersList()">
+                        </div>
+                    </div>
+
+                    <div class="table-container">
+                        <table class="dev-table">
+                            <thead>
+                                <tr>
+                                    <th>Server</th>
+                                    <th>Guild ID</th>
+                                    <th>Members</th>
+                                    <th>Owner ID</th>
+                                    <th>Premium</th>
+                                    <th style="text-align:right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="serversListBody">
+                                <tr><td colspan="6" style="text-align:center">Loading servers list...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── USER MANAGER TAB ── -->
+            <section class="dev-tab" id="tab-users">
+                <div class="page-header">
+                    <h1>User <span class="gradient-text">Manager</span></h1>
+                    <p>Lookup Discord users, moderate logs, and inspect details.</p>
+                </div>
+
+                <div class="dev-panel">
+                    <div class="user-search-box">
+                        <div class="search-input-wrapper" style="flex:1">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" id="userSearchId" placeholder="Enter Discord User ID to search (e.g. 396729124464492565)">
+                        </div>
+                        <button class="btn btn-primary" onclick="lookupUser()">Search User</button>
+                    </div>
+
+                    <div id="userDataContainer" style="display:none; margin-top:24px;">
+                        <div class="user-profile-header">
+                            <img src="https://cdn.discordapp.com/embed/avatars/0.png" alt="Avatar" id="userLookupAvatar">
+                            <div>
+                                <h2 id="userLookupName">Username</h2>
+                                <p id="userLookupId" style="color:var(--text-3)"></p>
+                            </div>
+                        </div>
+
+                        <div class="layout-split" style="margin-top:24px">
+                            <div class="dev-panel flex-1">
+                                <h3>Mutual Guilds</h3>
+                                <div class="list-container" id="userMutualGuilds" style="margin-top:12px"></div>
+                            </div>
+                            <div class="dev-panel flex-1">
+                                <h3>Moderation History</h3>
+                                <div class="list-container" id="userModHistory" style="margin-top:12px"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── PREMIUM TAB ── -->
+            <section class="dev-tab" id="tab-premium">
+                <div class="page-header">
+                    <h1>Premium <span class="gradient-text">Management</span></h1>
+                    <p>Grant, extend, and manage bot premium licenses globally.</p>
+                </div>
+
+                <div class="dev-panel">
+                    <div class="form-row">
+                        <div class="form-group flex-1">
+                            <label>Target Guild ID</label>
+                            <input type="text" id="premiumGuildId" placeholder="Server Guild ID">
+                        </div>
+                        <div class="form-group flex-1">
+                            <label>Duration / Expiration</label>
+                            <input type="date" id="premiumExpiryDate">
+                            <span class="help-text">Leave blank for lifetime/unlimited premium.</span>
+                        </div>
+                        <div style="display:flex; align-items:flex-end">
+                            <button class="btn btn-primary" onclick="grantPremium()">Grant Premium</button>
+                        </div>
+                    </div>
+
+                    <div class="table-container" style="margin-top:24px">
+                        <table class="dev-table">
+                            <thead>
+                                <tr>
+                                    <th>Guild ID</th>
+                                    <th>Granted By</th>
+                                    <th>Expiration</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="premiumListBody">
+                                <tr><td colspan="4" style="text-align:center">Loading premium list...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── COMMANDS TAB ── -->
+            <section class="dev-tab" id="tab-commands">
+                <div class="page-header">
+                    <h1>Commands <span class="gradient-text">Manager</span></h1>
+                    <p>Toggle commands globally or trigger hot-reloading.</p>
+                </div>
+
+                <div class="dev-panel">
+                    <div class="panel-header">
+                        <h2>Global Command Control</h2>
+                    </div>
+                    <div class="table-container" style="margin-top:16px">
+                        <table class="dev-table">
+                            <thead>
+                                <tr>
+                                    <th>Command Name</th>
+                                    <th>Status</th>
+                                    <th style="text-align:right">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="commandsToggleBody">
+                                <tr><td colspan="3" style="text-align:center">Loading commands list...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── BROADCASTS TAB ── -->
+            <section class="dev-tab" id="tab-broadcasts">
+                <div class="page-header">
+                    <h1>Global <span class="gradient-text">Broadcasts</span></h1>
+                    <p>Broadcast messaging campaigns or alerts directly to all guilds.</p>
+                </div>
+
+                <div class="layout-split">
+                    <div class="dev-panel flex-1">
+                        <div class="panel-header">
+                            <h2>Draft Global Announcement</h2>
+                        </div>
+                        <div class="form-group" style="margin-top:16px">
+                            <label>Announcement Type</label>
+                            <select id="broadcastType">
+                                <option value="text">Plain Text Message</option>
+                                <option value="embed">Rich Styled Embed</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Title (Embed only)</label>
+                            <input type="text" id="broadcastTitle" placeholder="Enter broadcast title...">
+                        </div>
+                        <div class="form-group">
+                            <label>Content Text</label>
+                            <textarea id="broadcastContent" rows="6" placeholder="Enter message markdown content here..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Schedule Delivery Time (Optional)</label>
+                            <input type="datetime-local" id="broadcastSchedule">
+                            <span class="help-text">Leave blank to broadcast instantly.</span>
+                        </div>
+                        <button class="btn btn-primary" onclick="sendBroadcast()">Send Broadcast</button>
+                    </div>
+
+                    <div class="dev-panel flex-1">
+                        <div class="panel-header">
+                            <h2>Broadcast Log History</h2>
+                        </div>
+                        <div class="list-container" id="broadcastHistoryContainer" style="margin-top:16px">
+                            Loading broadcast logs...
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── AUDIT LOGS TAB ── -->
+            <section class="dev-tab" id="tab-audit">
+                <div class="page-header">
+                    <h1>Developer <span class="gradient-text">Audit Logs</span></h1>
+                    <p>Historical audit logging for dev console commands.</p>
+                </div>
+
+                <div class="dev-panel">
+                    <div class="table-container">
+                        <table class="dev-table">
+                            <thead>
+                                <tr>
+                                    <th>Developer</th>
+                                    <th>Action Logged</th>
+                                    <th>IP Address</th>
+                                    <th>Timestamp</th>
+                                </tr>
+                            </thead>
+                            <tbody id="auditLogsBody">
+                                <tr><td colspan="4" style="text-align:center">Loading audit logs...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── ERROR TRACKING TAB ── -->
+            <section class="dev-tab" id="tab-errors">
+                <div class="page-header">
+                    <h1>Error <span class="gradient-text">Tracking</span></h1>
+                    <p>Centralized exception reporting stack trace monitor.</p>
+                </div>
+
+                <div class="dev-panel">
+                    <div class="panel-header" style="justify-content: space-between; display: flex; align-items: center;">
+                        <h2>Caught Exceptions</h2>
+                        <button class="btn btn-danger btn-sm" onclick="clearErrorLogs()">Clear Error Logs</button>
+                    </div>
+
+                    <div class="list-container" id="errorsContainer" style="margin-top:16px">
+                        Loading errors list...
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── BOT CONTROLS TAB ── -->
+            <section class="dev-tab" id="tab-controls">
+                <div class="page-header">
+                    <h1>Bot Console <span class="gradient-text">Controls</span></h1>
+                    <p>Trigger operations on the active Node.js server.</p>
+                </div>
+
+                <div class="controls-layout">
+                    <div class="control-row">
+                        <div class="control-text">
+                            <h3>Reload Bot Commands</h3>
+                            <p>Clears require memory cache and loads prefix and slash command handlers instantly.</p>
+                        </div>
+                        <button class="btn btn-warning" onclick="confirmBotAction('reload-commands', 'Reload all bot commands? This hot-reloads all prefix & slash command modules.')">Reload Commands</button>
+                    </div>
+
+                    <div class="control-row">
+                        <div class="control-text">
+                            <h3>Reload Bot Events</h3>
+                            <p>Unregisters active client listeners and triggers event handlers loading from disk.</p>
+                        </div>
+                        <button class="btn btn-warning" onclick="confirmBotAction('reload-events', 'Reload all bot events? This clears and re-registers listeners.')">Reload Events</button>
+                    </div>
+
+                    <div class="control-row">
+                        <div class="control-text">
+                            <h3>Clear Client cache</h3>
+                            <p>Flushes internal maps (Guilds, Users, Channels) and re-fetches active instances from Discord.</p>
+                        </div>
+                        <button class="btn btn-warning" onclick="confirmBotAction('clear-cache', 'Clear bot caches? This flushes memory cache and re-caches active states.')">Clear Cache</button>
+                    </div>
+
+                    <div class="control-row">
+                        <div class="control-text">
+                            <h3>Sync Slash Commands Globally</h3>
+                            <p>Syncs slash command array to the global Discord Application endpoint.</p>
+                        </div>
+                        <button class="btn btn-warning" onclick="confirmBotAction('sync-slash', 'Sync slash commands globally? This sends command manifests to Discord.')">Sync Slash Commands</button>
+                    </div>
+
+                    <div class="control-row">
+                        <div class="control-text">
+                            <h3>Toggle Global Maintenance Mode</h3>
+                            <p>Stops normal bot interactions. Only developers can continue to execute instructions.</p>
+                        </div>
+                        <button class="btn id-maintenance-btn btn-danger" onclick="toggleMaintenance()">Toggle Maintenance</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── SETTINGS TAB ── -->
+            <section class="dev-tab" id="tab-settings">
+                <div class="page-header">
+                    <h1>Developer <span class="gradient-text">Settings</span></h1>
+                    <p>Developer options for Vivy Discord bot console.</p>
+                </div>
+
+                <div class="dev-panel">
+                    <h3>Maintenance Configurations</h3>
+                    <p style="margin-top:8px; color:var(--text-2)">Configure maintenance messages and settings here.</p>
+                    <div class="form-group" style="margin-top:16px">
+                        <label>Maintenance Mode State</label>
+                        <strong id="settingsMaintenanceState" style="color:var(--yellow)">Disabled</strong>
+                    </div>
+                    <div class="form-group" style="margin-top:20px">
+                        <label>Custom Maintenance Message</label>
+                        <textarea id="maintenanceMessageInput" rows="4" placeholder="Enter custom message to show when maintenance mode is active..."></textarea>
+                    </div>
+                    <button class="btn btn-primary" onclick="saveSettings()">
+                        <i class="fa-solid fa-save"></i> Save Configurations
+                    </button>
+                </div>
+            </section>
+
+            <!-- ── NOTES TAB ── -->
+            <section class="dev-tab" id="tab-notes">
+                <div class="page-header">
+                    <h1>Developer <span class="gradient-text">Notes</span></h1>
+                    <p>Private workspace for bug tracking, task lists, and team wiki documentation.</p>
+                </div>
+
+                <div class="dev-panel" style="position: sticky; top: 16px; z-index: 10;">
+                    <div class="panel-header-search" style="display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 0;">
+                        <div class="search-input-wrapper" style="flex: 2; min-width: 250px;">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" id="noteSearchInput" placeholder="Search title or content..." onkeyup="filterNotes()">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0; min-width: 200px; flex: 1;">
+                            <select id="noteAuthorFilter" onchange="filterNotes()" style="padding: 14px 16px; background: rgba(0, 0, 0, 0.45); border: 1px solid var(--border-hover); border-radius: var(--radius-sm); color: var(--text);">
+                                <option value="">All Authors</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" onclick="openCreateNoteModal()">
+                            <i class="fa-solid fa-plus"></i> New Note
+                        </button>
+                    </div>
+                </div>
+
+                <div class="notes-grid" id="notesGridContainer">
+                    <!-- Loading skeleton / Notes cards will render here -->
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Confirm Modal -->
+    <div class="modal-backdrop" id="confirmModal">
+        <div class="modal-box">
+            <h3 class="modal-title">Confirm Action</h3>
+            <p class="modal-message" id="confirmModalMsg">Are you sure you want to perform this developer action?</p>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeConfirmModal()">Cancel</button>
+                <button class="btn btn-primary" id="confirmModalBtn">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Note Compose Modal -->
+    <div class="modal-backdrop" id="noteModal">
+        <div class="modal-box" style="text-align: left; max-width: 600px;">
+            <h3 class="modal-title" id="noteModalTitle">Create Developer Note</h3>
+            <div class="form-group" style="margin-top: 16px;">
+                <label>Note Title</label>
+                <input type="text" id="noteTitleInput" placeholder="Enter title (e.g. Bug with slash commands)...">
+            </div>
+            <div class="form-group">
+                <label>Content</label>
+                <textarea id="noteContentInput" rows="8" placeholder="Type note details here..."></textarea>
+            </div>
+            <div class="modal-actions" style="justify-content: flex-end; margin-top: 24px;">
+                <button class="btn btn-secondary" onclick="closeNoteModal()">Cancel</button>
+                <button class="btn btn-primary" id="noteModalSaveBtn" onclick="saveNote()">Save Note</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Messages -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script type="module" src="/developer.js"></script>
+</body>
+</html>
