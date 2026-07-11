@@ -10,7 +10,7 @@ const {
     PermissionFlagsBits,
     ChannelType
 } = require('discord.js');
-const emoji = require('../../../zeromusic/src/emojis');
+const emoji = require('../../../zero-lab-bots/zeromusic/src/emojis');
 
 module.exports = {
     name: 'voice',

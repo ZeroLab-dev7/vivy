@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, ButtonBuilder, ButtonStyle, ContainerBuilder, SectionBuilder, TextDisplayBuilder, ThumbnailBuilder, PermissionFlagsBits, MessageFlags } = require('discord.js');
+const { SlashCommandBuilder, ButtonBuilder, ButtonStyle, ContainerBuilder, SectionBuilder, SeparatorBuilder, TextDisplayBuilder, ThumbnailBuilder, PermissionFlagsBits, MessageFlags } = require('discord.js');
 const UI = require('../../utils/ui');
 
 module.exports = {
@@ -12,13 +12,13 @@ module.exports = {
       await interaction.deferReply(); // No ephemeral, so the reply will be visible to everyone
 
       const guild = interaction.guild;
-      const members = guild.members.cache;
-      const membersInVoice = members.filter(member => member.voice.channelId).size;
+      const membersInVoice = guild.voiceStates.cache.size;
       const boostCount = guild.premiumSubscriptionCount || 0;
       const guildIconURL = guild.iconURL({ dynamic: true });
 
       // Create the container manually to support specific layout
       const container = new ContainerBuilder();
+      container.setAccentColor(0x00FFFF);
 
       // Section 1: Members (with guild icon as thumbnail accessory)
       // This matches the "header" feel while keeping the list structure
@@ -30,33 +30,49 @@ module.exports = {
 
       // Add Title and Members count to the first section
       membersSection.addTextDisplayComponents(td => td.setContent(`# ${guild.name} Stats!`));
-      membersSection.addTextDisplayComponents(td => td.setContent(`### <a:member:1366766051626582050>  Members: \n<a:arrow:1366894100917391471>\`${members.size}\``));
+      membersSection.addTextDisplayComponents(td => td.setContent(`### <a:member:1366766051626582050>  Members: \`${guild.memberCount}\``));
+
+      const membersButton = new ButtonBuilder()
+        .setCustomId('stats_member_count')
+        .setLabel(`${guild.memberCount}`)
+        .setDisabled(true)
+        .setStyle(ButtonStyle.Secondary);
+
+      membersSection.setButtonAccessory(membersButton);
 
       container.addSectionComponents(membersSection);
+      container.addSeparatorComponents(new SeparatorBuilder());
 
       // Section 2: Voice Stats (With Button Accessory)
       const voiceButton = new ButtonBuilder()
         .setCustomId('stats_voice_count')
-        .setLabel(`Voice: ${membersInVoice}`)
+        .setLabel(`${membersInVoice}`)
         .setDisabled(true)
         .setStyle(ButtonStyle.Secondary);
 
       const voiceSection = new SectionBuilder()
-        //.setButtonAccessory(voiceButton) // Attach button to the right of this section
-        .addTextDisplayComponents(td => td.setContent(`### <a:voice:1366765217761071134>  In Voice: \n<a:arrow:1366894100917391471>\`${membersInVoice}\``));
+        .addTextDisplayComponents(td => td.setContent(`### <a:voice:1366765217761071134>  In Voice: \`${membersInVoice}\``));
 
       // Use setAccessory if available (older versions) or setButtonAccessory (newer)
       // Based on previous errors and index.d.ts, setButtonAccessory is the correct one for Buttons.
       voiceSection.setButtonAccessory(voiceButton);
 
       container.addSectionComponents(voiceSection);
+      container.addSeparatorComponents(new SeparatorBuilder());
 
-      // Section 3: Boosts
+      // Section 3: Boosts (With Button Accessory)
+      const boostButton = new ButtonBuilder()
+        .setCustomId('stats_boost_level')
+        .setLabel(`Level: ${guild.premiumTier}`)
+        .setDisabled(true)
+        .setStyle(ButtonStyle.Secondary);
+
       const boostSection = new SectionBuilder()
-        .addTextDisplayComponents(td => td.setContent(`### <a:boost:1366892421635375167>  Boosts: \n<a:arrow:1366894100917391471>\`${boostCount}\``));
+        .addTextDisplayComponents(td => td.setContent(`### <a:boost:1366892421635375167>  Boosts: \`${boostCount}\``));
+
+      boostSection.setButtonAccessory(boostButton);
 
       container.addSectionComponents(boostSection);
-
 
       // Send the container
       await interaction.editReply({

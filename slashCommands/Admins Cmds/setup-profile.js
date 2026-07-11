@@ -90,7 +90,7 @@ module.exports = {
                 const guildNick = me.nickname || null;
 
                 const container = new ContainerBuilder()
-                    .setAccentColor(0x5865F2)
+                    .setAccentColor(0x00FFFF)
                     .addTextDisplayComponents(td => td.setContent(`# <:pic:1518430671922528256> Server Bot Profile`))
                     .addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small))
                     .addSectionComponents(

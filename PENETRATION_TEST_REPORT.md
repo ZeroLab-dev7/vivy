@@ -3,7 +3,7 @@
 **Date:** 2026-06-18  
 **Tester:** Antigravity Security Review  
 **Methodology:** Black-box + white-box, simulated attacker perspective  
-**Target:** https://vivy.zerolab.best (Express dashboard + Discord bot API)
+**Target:** https://vivy.pro (Express dashboard + Discord bot API)
 
 ---
 

@@ -29,9 +29,9 @@ module.exports = {
     // Category Data (Synced with actual files)
     const categories = {
       general: {
-        name: 'General & Info',
+        name: 'General / Member',
         emoji: 'ℹ️',
-        description: 'General, Information, Fun, and Voice commands',
+        description: 'General details, user & server information',
         commands: [
           "`?ping` - Bot latency.",
           "`?user` - User info.",
@@ -46,53 +46,32 @@ module.exports = {
           "`?channelinfo` - Show channel information.",
           "`?invites` - User invites count.",
           "`?topinvites` - Server invite leaderboard.",
-          "`/vc` - Server voice stats (Slash).",
-          "`?find` - Find in voice.",
-          "`?join` - Make bot join vc.",
-          "`?vclist` - List voice users.",
-          "`?vdeafen` - Voice deafen.",
-          "`?vkick` - Voice kick.",
-          "`?vmute` - Mute in voice.",
-          "`?vundeafen` - Undeafen.",
-          "`?vunmute` - Unmute.",
-          "`?stats-voice` - Voice activity stats.",
-          "`?cat` - Random cat.",
-          "`?cringe` - Cringe meter.",
-          "`?dance` - Dance.",
-          "`?gender` - Check gender.",
-          "`?howgay` - Gay rate.",
-          "`?hug` - Hug a user.",
-          "`?kiss` - Kiss a user.",
-          "`?love` - Love calc.",
-          "`?roll` - Roll dice.",
-          "`?slap` - Slap user.",
-          "`?smile` - Smile.",
           "`?boosters` - Show server boosters.",
-          "`?firstmsj` - Show the first message in a channel.",
-          "`?move` - Move a user."
+          "`?firstmsj` - Show the first message in a channel."
         ]
       },
-      security: {
-        name: 'Security',
-        emoji: '🛡️',
-        description: 'Security & Protections',
+      admin: {
+        name: 'Admin',
+        emoji: '⚙️',
+        description: 'Server administration and utility configuration',
         commands: [
-          "`?antibots` - Anti-Bot protection.",
-          "`?antilink` - Anti-Link protection.",
-          "`?antilink-stats` - Link deletion statistics.",
-          "`?antilink-whitelist` - Trusted link whitelists.",
-          "`?antiwebhook` - Anti-Webhook spam defense."
+          "`?addprefix` - Set a custom prefix for the bot.",
+          "`?alias` - Manage custom command aliases.",
+          "`?autorole` - Configure auto-role for new members.",
+          "`?addemoji` - Add a custom emoji to the server.",
+          "`?emojiinfo` - Show custom emoji information.",
+          "`?inviteinfo` - Show invite code details.",
+          "`?addinvites` - Add bonus invites to a user.",
+          "`?setup-profile` - Configure native per-guild bot profile."
         ]
       },
-      moderation: {
-        name: 'Moderation',
+      moderator: {
+        name: 'Moderator',
         emoji: '👮',
-        description: 'Moderation & Staff Management Tools',
+        description: 'Moderation and member management tools',
         commands: [
           "`?ban` - Ban a user.",
-          "`?banforlife` - Ban a user forever.",
           "`?unban` - Unban user.",
-          "`?unbanforlife` - Remove a life ban.",
           "`?kick` - Kick a user.",
           "`?timeout` - Timeout user.",
           "`?untimeout` - Remove timeout.",
@@ -104,62 +83,114 @@ module.exports = {
           "`?unwarn` - Remove warnings of a user.",
           "`?warnlist` - View warnings of a user.",
           "`?clear` - Clear messages.",
-          "`?lock` - Lock a channel.",
-          "`?unlock` - Unlock channel.",
-          "`?hide` - Hide a channel.",
-          "`?unhide` - Unhide channel.",
           "`?addrole` - Add a role to a user.",
           "`?removerole` - Remove role from a user.",
           "`?crole` - Create a new role.",
           "`?inrole` - Show users in a role.",
           "`?roleinfo` - Role information.",
-          "`?nick` - Change user nickname."
+          "`?nick` - Change user nickname.",
+          "`?move` - Move a user.",
+          "`?lock` - Lock a channel.",
+          "`?unlock` - Unlock channel.",
+          "`?hide` - Hide a channel.",
+          "`?unhide` - Unhide channel."
         ]
       },
-      community: {
-        name: 'Community',
-        emoji: '🎉',
-        description: 'Verification, Applications, Economy & Socials',
+      security: {
+        name: 'Security',
+        emoji: '🛡️',
+        description: 'Server security, spam defense, and permissions',
+        commands: [
+          "`?antibots` - Anti-Bot protection.",
+          "`?antilink` - Anti-Link protection.",
+          "`?antilink-stats` - Link deletion statistics.",
+          "`?antilink-whitelist` - Trusted link whitelists.",
+          "`?antiwebhook` - Anti-Webhook spam defense.",
+        ]
+      },
+      fun: {
+        name: 'Fun',
+        emoji: '🎮',
+        description: 'Interactive, mini-games, and fun commands',
+        commands: [
+          "`?cat` - Random cat.",
+          "`?cringe` - Cringe meter.",
+          "`?dance` - Dance.",
+          "`?gender` - Check gender.",
+          "`?howgay` - Gay rate.",
+          "`?hug` - Hug a user.",
+          "`?kiss` - Kiss a user.",
+          "`?love` - Love calc.",
+          "`?roll` - Roll dice.",
+          "`?slap` - Slap user.",
+          "`?smile` - Smile.",
+          "`?mcstats` - Get Minecraft server stats."
+        ]
+      },
+      voice: {
+        name: 'Voice',
+        emoji: '🔊',
+        description: 'Voice channel utilities and stats',
+        commands: [
+          "`/vc` - Server voice stats (Slash).",
+          "`?find` - Find in voice.",
+          "`?join` - Make bot join vc.",
+          "`?vclist` - List voice users.",
+          "`?vdeafen` - Voice deafen.",
+          "`?vkick` - Voice kick.",
+          "`?vmute` - Mute in voice.",
+          "`?vundeafen` - Undeafen.",
+          "`?vunmute` - Unmute.",
+          "`?stats-voice` - Voice activity stats."
+        ]
+      },
+      economy: {
+        name: 'Economy',
+        emoji: '🪙',
+        description: 'Claim daily, transfer currency, check leaderboard',
         commands: [
           "`?bal` - Check your balance.",
           "`?daily` - Claim daily rewards.",
           "`?transfer` - Transfer money.",
           "`?top` - Show economy leaderboard.",
-          "`?marry` - Marry a user.",
-          "`?divorce` - Divorce your partner.",
-          "`?marry-stats` - Check marriage stats.",
-          "`?vb` - Verify member as male.",
-          "`?vg` - Verify member as female.",
-          "`?v-blacklist` - Manage the verification blacklist.",
-          "`/apply-panel` - Spawn the application panel."
+          "`?tax` - Calculate server/donation taxes."
         ]
       },
-      advanced: {
-        name: 'Advanced',
-        emoji: '💎',
-        description: 'Server Configuration & Premium Tools',
+      marriage: {
+        name: 'Marriage',
+        emoji: '💍',
+        description: 'Marry, divorce, or check marriage status',
         commands: [
-          "`/setup` - Centralized setup dashboard (Main Guide).",
-          "`/setup_warn` - Configure warning system.",
-          "`/setupmute` - Configure mute system.",
-          "`/setup_jail` - Configure jail system.",
-          "`/set-needhelp` - Configure support room system.",
-          "`/setup_verification` - Configure verification system.",
-          "`/setup-logs` - Configure advanced system logging.",
-          "`/setup-apply` - Configure application roles & channels.",
-          "`/setup-premium` - Configure premium features.",
-          "`?setup-owner` - Configure security owner roles.",
-          "`?setup-profile` - Configure native per-guild bot profile.",
-          "`?addprefix` - Set a custom prefix for the bot.",
-          "`?alias` - Manage custom command aliases.",
-          "`?autorole` - Configure auto-role for new members.",
-          "`?embed` - Create custom embed messages.",
-          "`?tax` - Calculate server/donation taxes.",
-          "`?temprole` - Give temporary roles to users.",
-          "`?addemoji` - Add a custom emoji to the server.",
-          "`?emojiinfo` - Show custom emoji information.",
-          "`?inviteinfo` - Show invite code details.",
-          "`?addinvites` - Add bonus invites to a user.",
+          "`?marry` - Marry a user.",
+          "`?divorce` - Divorce your partner.",
+          "`?marry-stats` - Check marriage stats."
+        ]
+      },
+      leveling: {
+        name: 'Leveling',
+        emoji: '📈',
+        description: 'Rank, leaderboard, and XP settings',
+        commands: [
+          "`?rank` - Check your rank and level.",
+          "`?leaderboard` - Check leveling leaderboard.",
+          "`?leveladmin` - Manage levels (Admin only)."
+        ]
+      },
+      verification: {
+        name: 'Verification',
+        emoji: '✅',
+        description: 'Gender role verification and setup',
+        commands: [
+          "`?vb` - Verify member as male.",
+          "`?vg` - Verify member as female.",
+          "`?v-blacklist` - Manage the verification blacklist."
+        ]
+      },
+      premium: {
+        name: 'Premium',
+        emoji: '💎',
+        description: 'Create plans, customize colors, and manage members',
+        commands: [
           "`?pcreate` - Create a premium plan.",
           "`?pdelete` - Delete a premium plan.",
           "`?pshowall` - Show all premium plans (Manager).",
@@ -171,7 +202,26 @@ module.exports = {
           "`?pname` - Rename your plan.",
           "`?pcolor` - Change plan role color.",
           "`?picon` - Change plan role icon.",
-          "`?pdebug` - Debug premium system."
+          "`?pdebug` - Debug premium system.",
+          "`?temprole` - Give temporary roles to users."
+        ]
+      },
+      setup: {
+        name: 'Setup & Config',
+        emoji: '🛠️',
+        description: 'Configuration menus for log systems, warn, mute, jail, apply',
+        commands: [
+          "`/setup` - Centralized setup dashboard (Main Guide).",
+          "`/setup_warn` - Configure warning system.",
+          "`/setupmute` - Configure mute system.",
+          "`/setup_jail` - Configure jail system.",
+          "`/set-needhelp` - Configure support room system.",
+          "`/setup_verification` - Configure verification system.",
+          "`/setup-logs` - Configure advanced system logging.",
+          "`/setup-apply` - Configure application roles & channels.",
+          "`/setup-premium` - Configure premium features.",
+          "`?setup-owner` - Configure security owner roles.",
+          "`/apply-panel` - Spawn the application panel."
         ]
       }
     };
@@ -179,7 +229,7 @@ module.exports = {
     // Helper to send error (Style matching user example)
     async function sendErrorMessage(msg, content) {
       const errorContainer = new ContainerBuilder()
-        .setAccentColor(0xFF0000)
+        .setAccentColor(0x00FFFF)
         .addTextDisplayComponents(td => td.setContent(`❌ **Error**\n${content}`));
 
       return msg.channel.send({
@@ -206,6 +256,7 @@ module.exports = {
 
       // Build main container
       const mainContainer = new ContainerBuilder()
+        .setAccentColor(0x00FFFF)
         .addTextDisplayComponents(td => td.setContent(`## <:vivy:1510334908562804856> __${message.client.user.username} Help__`))
         .addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Large))
         .addTextDisplayComponents(td => td.setContent(`## > <:wchydrangeaflower:1516951730745770025> Welcome to **Vivy**!\n## > <a:21261cyan:1516952984389685399> Current Prefix: \`${prefix}\``))
@@ -229,6 +280,7 @@ module.exports = {
         if (foundCategoryKey) {
           const category = categories[foundCategoryKey];
           const categoryContainer = new ContainerBuilder()
+            .setAccentColor(0x00FFFF)
             .addTextDisplayComponents(td => td.setContent(category.emoji ? `# ${category.emoji} ${category.name} Commands` : `# ${category.name} Commands`))
             .addTextDisplayComponents(td => td.setContent(`*Requested by ${message.author.tag}*`))
             .addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small))
@@ -283,6 +335,7 @@ module.exports = {
 
           // Build category response
           const categoryContainer = new ContainerBuilder()
+            .setAccentColor(0x00FFFF)
             .addTextDisplayComponents(td => td.setContent(category.emoji ? `# ${category.emoji} ${category.name} Commands` : `# ${category.name} Commands`))
             .addTextDisplayComponents(td => td.setContent(`*Requested by ${interaction.user.tag}*`))
             .addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small))
@@ -316,6 +369,7 @@ module.exports = {
         try {
           const disabledMenu = StringSelectMenuBuilder.from(selectMenu).setDisabled(true).setPlaceholder('❌ Menu Expired');
           const expiredContainer = new ContainerBuilder()
+            .setAccentColor(0x00FFFF)
             .addTextDisplayComponents(td => td.setContent(`# Help Menu Expired`))
             .addTextDisplayComponents(td => td.setContent(`Please run \`?help\` again to view commands.`))
             .addActionRowComponents(row => row.setComponents(disabledMenu));

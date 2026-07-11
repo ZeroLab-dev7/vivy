@@ -1,7 +1,10 @@
-const { PermissionsBitField } = require("discord.js");
-const { GuildSettings, JailSetup, JailedUser, AntiBotSetup, Mute, MuteSetup, PubSetup } = require("../db/models");
+const { PermissionsBitField, AuditLogEvent } = require("discord.js");
+const { GuildSettings, JailSetup, JailedUser, AntiBotSetup, Mute, MuteSetup, PubSetup, SecuritySettings, RaidProtectionSettings, TrustedEntity } = require("../db/models");
+const { isExecutorTrusted, punishExecutor, logSecurityEvent } = require("../utils/securityHelper");
 const UI = require("../utils/ui");
 const WelcomeService = require("../services/welcomeService");
+
+const recentJoins = new Map();
 
 module.exports = {
   name: "guildMemberAdd",
@@ -22,39 +25,112 @@ module.exports = {
         }
       }
 
-      // 1. Anti-Bot Protection
-      const antiBot = await AntiBotSetup.findByPk(member.guild.id);
+      const guild = member.guild;
 
-      if (antiBot && antiBot.is_enabled && member.user.bot) {
-        if (!member.guild.members.me.permissions.has(PermissionsBitField.Flags.KickMembers)) {
-          console.warn(`Missing "Kick Members" permission in guild: ${member.guild.name} (${member.guild.id})`);
-          return;
-        }
+      // 0.5. Raid Protection check (Check this extremely early to mitigate join floods)
+      const raidSettings = await RaidProtectionSettings.findOne({ where: { guild_id: guild.id } });
+      if (raidSettings && raidSettings.is_enabled) {
+          const now = Date.now();
+          let joins = recentJoins.get(guild.id) || [];
+          const windowMs = (raidSettings.join_time_window_sec || 10) * 1000;
+          
+          joins = joins.filter(t => now - t < windowMs);
+          joins.push(now);
+          recentJoins.set(guild.id, joins);
 
-        try {
-          await member.kick("Anti-Bot: Unauthorized bot");
-          console.log(`Kicked unauthorized bot: ${member.user.tag} from guild: ${member.guild.name}`);
+          if (joins.length >= (raidSettings.join_limit || 10)) {
+              // Lock down server if configured
+              if (raidSettings.lock_server) {
+                  await guild.roles.everyone.setPermissions(
+                      guild.roles.everyone.permissions.remove(PermissionsBitField.Flags.SendMessages),
+                      'Vivy Raid Protection: Server Lockdown'
+                  ).catch(console.error);
+              }
 
-          const settings = await GuildSettings.findOne({ where: { guild_id: member.guild.id } });
-          const logChannelId = antiBot.log_channel_id || settings?.log_channel;
-          const logChannel = logChannelId ? member.guild.channels.cache.get(logChannelId) : null;
+              // Punish the current joining user
+              const punishResult = await punishExecutor(
+                  guild,
+                  member.id,
+                  raidSettings.punishment,
+                  'Vivy Raid Protection: Join limit exceeded (Raid Lockdown)'
+              );
 
-          if (logChannel) {
-            const logContainer = UI.createContainer({
-                title: "🚫 Unauthorized Bot Kicked",
-                description: `Bot **${member.user.tag}** (\`${member.id}\`) was kicked due to Anti-Bot settings.\n\n**Account Created:** <t:${Math.floor(member.user.createdTimestamp / 1000)}:R>`,
-                color: 0xFF0000
-            });
+              // Log Raid Event
+              await logSecurityEvent(guild, {
+                  module: 'raid-protection',
+                  action: 'Join Raid Detected',
+                  executor: null,
+                  target: member.user,
+                  result: `Server lock: ${raidSettings.lock_server}. Joined user punished: ${punishResult}`,
+                  logChannelId: raidSettings.log_channel_id
+              });
 
-            await logChannel.send({
-                components: [logContainer],
-                flags: 128 // MessageFlags.IsComponentsV2
-            });
+              if (punishResult === 'Kicked' || punishResult === 'Banned') {
+                  return; // Stop execution if member kicked/banned
+              }
           }
-        } catch (kickError) {
-          console.error(`Failed to kick bot ${member.user.tag}:`, kickError);
-        }
-        return; // Stop processing further if kicked
+      }
+
+      // 1. Anti-Bot Protection
+      const secSettings = await SecuritySettings.findOne({ where: { guild_id: guild.id } });
+      if (secSettings && secSettings.anti_bot_enabled && member.user.bot) {
+          // Identify inviter (executor) who added the bot
+          const auditLogs = await guild.fetchAuditLogs({
+              limit: 1,
+              type: AuditLogEvent.BotAdd
+          }).catch(() => null);
+
+          const log = auditLogs?.entries.first();
+          let executor = null;
+          if (log && Date.now() - log.createdTimestamp < 8000) {
+              executor = log.executor;
+          }
+
+          // Check Whitelist:
+          // A. Is this bot ID whitelisted directly?
+          const isBotTrusted = await TrustedEntity.findOne({
+              where: { guild_id: guild.id, entity_id: member.id, type: 'bot' }
+          });
+
+          // B. Is the inviter (executor) trusted?
+          const isInviterTrusted = executor ? await isExecutorTrusted(guild, executor.id) : false;
+
+          const isWhitelisted = isBotTrusted || isInviterTrusted;
+
+          if (!isWhitelisted) {
+              // Unauthorized bot join. Execute punishment on both bot and executor!
+              // 1. Kick/ban bot
+              const botAction = secSettings.anti_bot_punishment === 'ban' ? 'ban' : 'kick';
+              
+              if (botAction === 'ban') {
+                  await member.ban({ reason: 'Anti-Bot: Unauthorized bot account' }).catch(() => {});
+              } else {
+                  await member.kick('Anti-Bot: Unauthorized bot account').catch(() => {});
+              }
+
+              // 2. Punish inviter (executor)
+              let inviterPunishmentResult = 'None';
+              if (executor) {
+                  inviterPunishmentResult = await punishExecutor(
+                      guild,
+                      executor.id,
+                      secSettings.anti_bot_punishment,
+                      `Vivy Anti-Bot: Unauthorized bot addition of bot "${member.user.tag}"`
+                  );
+              }
+
+              // 3. Log Action
+              await logSecurityEvent(guild, {
+                  module: 'anti-bot',
+                  action: 'Unauthorized Bot Joined',
+                  executor,
+                  target: member.user,
+                  result: `Bot account: ${botAction}ned. Inviter punished: ${inviterPunishmentResult}`,
+                  logChannelId: secSettings.log_channel_id
+              });
+
+              return; // Stop processing further for this member
+          }
       }
 
       // 2. Auto-Jail Check (Must be done after Anti-Bot check)

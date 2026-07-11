@@ -48,43 +48,36 @@ function startDashboard(client) {
         message: { error: 'Too many requests. Please try again later.' }
     });
 
-    // ── Security Headers ─────────────────────────────────────
-    app.use((req, res, next) => {
-        // Prevent clickjacking
-        res.setHeader('X-Frame-Options', 'DENY');
-        // Prevent MIME-type sniffing
-        res.setHeader('X-Content-Type-Options', 'nosniff');
-        // Enable XSS filter in older browsers
-        res.setHeader('X-XSS-Protection', '1; mode=block');
-        // Referrer policy
-        res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
-        // Permissions policy — disable sensitive APIs
-        res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
-        // Content Security Policy
-        res.setHeader('Content-Security-Policy', [
-            "default-src 'self'",
-            "script-src 'self' 'unsafe-inline'",           // unsafe-inline needed for inline scripts in HTML pages
-            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com",
-            "font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com",
-            // Media Discord CDN for avatars/icons; media.discordapp.net for attachment images
-            "img-src 'self' data: https://cdn.discordapp.com https://media.discordapp.net https://ui-avatars.com",
-            "connect-src 'self'",
-            "frame-ancestors 'none'",
-            "base-uri 'self'",
-            "form-action 'self'",
-            "object-src 'none'",
-            "upgrade-insecure-requests"
-        ].join('; '));
-        // HSTS — max 1 year, include subdomains, eligible for preload list
-        res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
-        // Prevent browsers from opening downloads directly (IE/Edge)
-        res.setHeader('X-Download-Options', 'noopen');
-        next();
-    });
+    // ── Security Hardening Pass ──────────────────────────────
+    const security = require('./middleware/security');
 
-    // ── Body Parsing ─────────────────────────────────────────
-    app.use(express.json({ limit: '100kb' }));     // Prevent large payload DoS
+    // 1. IP Reputation and Suspect Threat check (Very early to avoid parsing overhead)
+    app.use(security.checkIpReputation);
+
+    // 2. Reject malformed HTTP requests
+    app.use(security.rejectMalformedRequests);
+
+    // 3. User-Agent Validation (Checks for scans and crawlers)
+    app.use(security.validateUserAgent);
+
+    // 4. Block sensitive paths, dotfiles, and directory traversal
+    app.use(security.blockSensitivePaths);
+
+    // 5. Helmet Security Headers and Permissions-Policy
+    app.use(security.helmetMiddleware);
+    app.use(security.customHeaders);
+
+    // 6. Body Parsing (with strict body-size limits to protect against DoS)
+    app.use(express.json({ limit: '100kb' }));
     app.use(express.urlencoded({ extended: true, limit: '100kb' }));
+
+    // 7. Sanitize inputs (Recursive Prototype Pollution cleanup)
+    app.use(security.sanitizeBodyAndQuery);
+
+    // 8. Validate inputs (Query, Route and Body validations)
+    app.use(security.validateQueryParams);
+    app.use(security.validateRouteParams);
+    app.use(security.validateRequestBody);
 
     // ── Session Store ─────────────────────────────────────────
     const { sequelize } = require('../db/connection');
@@ -119,28 +112,7 @@ function startDashboard(client) {
     // Create session table if it doesn't exist
     sessionStore.sync();
 
-    // ── Block Sensitive Paths ─────────────────────────────────
-    app.use((req, res, next) => {
-        const sensitivePatterns = [
-            /\.env/i,
-            /\.git/i,
-            /node_modules/i,
-            /\.(zip|sql|bak|tar|gz|log)$/i,
-            /(package\.json|package-lock\.json|tsconfig\.json|config\.js|config\.json)$/i
-        ];
-        
-        const pathToCheck = req.path;
-        if (sensitivePatterns.some(pattern => pattern.test(pathToCheck))) {
-            console.warn(`[Security Alert] Blocked access to sensitive path: ${pathToCheck} from ${req.ip}`);
-            res.status(404);
-            if (req.accepts('html')) {
-                return res.sendFile(path.join(__dirname, 'public', '404.html'));
-            } else {
-                return res.json({ error: 'Not Found' });
-            }
-        }
-        next();
-    });
+    // Note: Block Sensitive Paths has been promoted to run as early as possible to prevent resource consumption.
 
     // ── Redirect legacy .html routes to clean routes ──────────
     app.get('/selector.html', (req, res) => {

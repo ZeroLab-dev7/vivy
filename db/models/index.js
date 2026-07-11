@@ -16,6 +16,29 @@ const GuildSettings = sequelize.define('GuildSettings', {
     server_bot_banner: { type: DataTypes.STRING }
 });
 
+// Centralized upsert override to prevent partial updates or empty inputs from overwriting/resetting guild prefix.
+GuildSettings.upsert = async function(values, options) {
+    const guildId = values.guild_id;
+    if (!guildId) {
+        throw new Error('upsert requires a guild_id');
+    }
+    
+    // Strip empty prefix to prevent overwriting existing prefix
+    if (values.prefix === '' || values.prefix === null || values.prefix === undefined) {
+        delete values.prefix;
+    }
+    
+    const record = await GuildSettings.findByPk(guildId);
+    if (record) {
+        return [await record.update(values, options), false];
+    } else {
+        if (values.prefix === undefined) {
+            values.prefix = '&';
+        }
+        return [await GuildSettings.create(values, options), true];
+    }
+};
+
 const Warning = sequelize.define('Warning', {
     guild_id: { type: DataTypes.STRING },
     user_id: { type: DataTypes.STRING },
@@ -71,6 +94,10 @@ const SupportTicket = require('./SupportTicket');
 const LifeBan = require('./LifeBan');
 const PubSetup = require('./PubSetup');
 const DashboardModels = require('./DashboardModels');
+const TrustedEntity = require('./TrustedEntity');
+const SecuritySettings = require('./SecuritySettings');
+const RaidProtectionSettings = require('./RaidProtectionSettings');
+const SecurityLog = require('./SecurityLog');
 
 module.exports = {
     GuildSettings,
@@ -100,5 +127,9 @@ module.exports = {
     SupportTicket,
     LifeBan,
     PubSetup,
+    TrustedEntity,
+    SecuritySettings,
+    RaidProtectionSettings,
+    SecurityLog,
     ...DashboardModels
 };

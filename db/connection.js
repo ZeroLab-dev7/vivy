@@ -32,6 +32,10 @@ const connectDatabase = async () => {
         require('./models/SupportTicket');
         require('./models/LifeBan');
         require('./models/DashboardModels');
+        require('./models/TrustedEntity');
+        require('./models/SecuritySettings');
+        require('./models/RaidProtectionSettings');
+        require('./models/SecurityLog');
         require('./models/index'); // Ensure GuildSettings and others are loaded
 
         // Sync all models - Removed { alter: true } to prevent SQLite migration errors

@@ -8,7 +8,7 @@ const { isDeveloper } = require('../../utils/developerHelper');
 // ── Config (NO hardcoded fallbacks for secrets) ──────────────
 const CLIENT_ID = process.env.OAUTH_CLIENT_ID;
 const CLIENT_SECRET = process.env.OAUTH_CLIENT_SECRET;
-const REDIRECT_URI = process.env.REDIRECT_URI || 'https://vivy.zerolab.best/auth/discord/callback';
+const REDIRECT_URI = process.env.REDIRECT_URI || 'https://vivy.pro/auth/discord/callback';
 
 // Fail loudly at startup if critical env vars are missing
 if (!CLIENT_SECRET) {

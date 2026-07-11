@@ -24,7 +24,7 @@ module.exports = {
             const buttonsRow = new ActionRowBuilder().addComponents(
                 new ButtonBuilder()
                     .setLabel('Open Dashboard')
-                    .setURL('https://vivy.zerolab.best/')
+                    .setURL('https://vivy.pro/')
                     .setStyle(ButtonStyle.Link)
                     .setEmoji('<:vivy:1510334908562804856>'),
                 new ButtonBuilder()
@@ -51,7 +51,7 @@ module.exports = {
                 fields: [
                     {
                         name: '<a:one:1522764802764705914> Step 1: Visit & Login',
-                        value: 'Go to [vivy.zerolab.best](https://vivy.zerolab.best/) and click **Login** in the top-right corner to authorize the dashboard with your Discord account.'
+                        value: 'Go to [vivy.pro](https://vivy.pro/) and click **Login** in the top-right corner to authorize the dashboard with your Discord account.'
                     },
                     {
                         name: '<a:two:1522764857105973328> Step 2: Select Server',
@@ -76,7 +76,7 @@ module.exports = {
                     .setEmoji('⬅️'),
                 new ButtonBuilder()
                     .setLabel('Open Dashboard')
-                    .setURL('https://vivy.zerolab.best/')
+                    .setURL('https://vivy.pro/')
                     .setStyle(ButtonStyle.Link)
                     .setEmoji('<:vivy:1510334908562804856>'),
                 new ButtonBuilder()
@@ -138,7 +138,7 @@ module.exports = {
                     const disabledRow = new ActionRowBuilder().addComponents(
                         new ButtonBuilder()
                             .setLabel('Open Dashboard')
-                            .setURL('https://vivy.zerolab.best/')
+                            .setURL('https://vivy.pro/')
                             .setStyle(ButtonStyle.Link)
                             .setEmoji('<:vivy:1510334908562804856>'),
                         new ButtonBuilder()
@@ -153,8 +153,8 @@ module.exports = {
                     await interaction.editReply({
                         components: [finalContainer],
                         flags: MessageFlags.IsComponentsV2
-                    }).catch(() => {});
-                } catch (err) {}
+                    }).catch(() => { });
+                } catch (err) { }
             });
 
         } catch (error) {

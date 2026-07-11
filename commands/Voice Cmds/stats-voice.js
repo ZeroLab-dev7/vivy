@@ -1,4 +1,4 @@
-const { ActivityType, MessageFlags } = require('discord.js');
+const { ActivityType, MessageFlags, ButtonBuilder, ButtonStyle, ContainerBuilder, SectionBuilder, SeparatorBuilder, ThumbnailBuilder } = require('discord.js');
 const UI = require('../../utils/ui');
 
 module.exports = {
@@ -8,60 +8,64 @@ module.exports = {
     async execute(message, args) {
         const guild = message.guild;
 
-        // Members count
-        const totalMembers = guild.memberCount;
-
-        // Online: Filter by presence status (online, idle, dnd)
-        // Note: Needs GuildPresences intent (which is enabled)
-        const onlineAPI = guild.members.cache.filter(m => !m.user.bot && (m.presence?.status === 'online' || m.presence?.status === 'idle' || m.presence?.status === 'dnd')).size;
-
-        // Streaming: Checks activities for Streaming type
-        const streamingAPI = guild.members.cache.filter(m => m.presence?.activities.some(a => a.type === ActivityType.Streaming)).size;
-
-        // In Voice
-        const membersInVoice = guild.members.cache.filter(m => m.voice.channelId).size;
-
-        // Boosts (Count)
+        const membersInVoice = guild.voiceStates.cache.size;
         const boostCount = guild.premiumSubscriptionCount || 0;
+        const guildIconURL = guild.iconURL({ dynamic: true });
 
-        // Boosting Members (Distinct users)
-        const boostingMembers = guild.members.cache.filter(m => m.premiumSince).size;
+        // Create the container manually to support specific layout
+        const container = new ContainerBuilder();
+        container.setAccentColor(0x00FFFF);
 
-        // Emojis (using generic placeholders or keeping specific IDs if user insists, adhering to image style)
-        // Image has generic looking colored icons. 
-        // I'll stick to the user's previously provided IDs where matches, and common emojis for others.
+        // Section 1: Members (with guild icon as thumbnail accessory)
+        const membersSection = new SectionBuilder();
 
-        const container = UI.createContainer({
-            title: `| ${guild.name} Stats!`,
-            description: '<a:white:1366765876006879263>',
-            fields: [
-                {
-                    name: `| <a:member:1366766051626582050> Members :`,
-                    value: `\`${totalMembers}\``,
-                    inline: false
-                },
-                {
-                    name: `| 🟢 Online Members :`,
-                    value: `\`${onlineAPI}\``,
-                    inline: false
-                },
-                {
-                    name: `| <a:voice:1366765217761071134> Members In Voice :`,
-                    value: `\`${membersInVoice}\``,
-                    inline: false
-                },
-                {
-                    name: `| 🟣 Streaming Members :`,
-                    value: `\`${streamingAPI}\``,
-                    inline: false
-                },
-                {
-                    name: `| <a:boost:1366892421635375167> Boosts :`,
-                    value: `\`${boostingMembers}\` (Count: \`${boostCount}\`)`,
-                    inline: false
-                }
-            ]
-        });
+        if (guildIconURL) {
+            membersSection.setThumbnailAccessory(new ThumbnailBuilder().setURL(guildIconURL));
+        }
+
+        // Add Title and Members count to the first section
+        membersSection.addTextDisplayComponents(td => td.setContent(`# ${guild.name} Stats!`));
+        membersSection.addTextDisplayComponents(td => td.setContent(`### <a:member:1366766051626582050>  Members: \`${guild.memberCount}\``));
+
+        const membersButton = new ButtonBuilder()
+            .setCustomId('stats_member_count')
+            .setLabel(`${guild.memberCount}`)
+            .setDisabled(true)
+            .setStyle(ButtonStyle.Secondary);
+
+        membersSection.setButtonAccessory(membersButton);
+
+        container.addSectionComponents(membersSection);
+        container.addSeparatorComponents(new SeparatorBuilder());
+
+        // Section 2: Voice Stats (With Button Accessory)
+        const voiceButton = new ButtonBuilder()
+            .setCustomId('stats_voice_count')
+            .setLabel(`${membersInVoice}`)
+            .setDisabled(true)
+            .setStyle(ButtonStyle.Secondary);
+
+        const voiceSection = new SectionBuilder()
+            .addTextDisplayComponents(td => td.setContent(`### <a:voice:1366765217761071134>  In Voice: \`${membersInVoice}\``));
+
+        voiceSection.setButtonAccessory(voiceButton);
+
+        container.addSectionComponents(voiceSection);
+        container.addSeparatorComponents(new SeparatorBuilder());
+
+        // Section 3: Boosts (With Button Accessory)
+        const boostButton = new ButtonBuilder()
+            .setCustomId('stats_boost_level')
+            .setLabel(`Level: ${guild.premiumTier}`)
+            .setDisabled(true)
+            .setStyle(ButtonStyle.Secondary);
+
+        const boostSection = new SectionBuilder()
+            .addTextDisplayComponents(td => td.setContent(`### <a:boost:1366892421635375167>  Boosts: \`${boostCount}\``));
+
+        boostSection.setButtonAccessory(boostButton);
+
+        container.addSectionComponents(boostSection);
 
         await message.channel.send({
             components: [container],

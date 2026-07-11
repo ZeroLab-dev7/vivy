@@ -51,6 +51,12 @@ const client = new Client({
     Partials.GuildMember,
     Partials.Reaction,
   ],
+  allowedMentions: {
+    parse: [],
+    users: [],
+    roles: [],
+    repliedUser: false
+  }
 });
 
 // 2. Attach Collections
@@ -82,6 +88,14 @@ const init = async () => {
     // Start Dashboard Server
     const startDashboard = require('./server/server');
     startDashboard(client);
+
+    // Daily premium expiry cleanup — runs every 24h
+    const { revokeExpiredPremium } = require('./utils/premiumHelper');
+    setInterval(async () => {
+        await revokeExpiredPremium();
+    }, 24 * 60 * 60 * 1000); // every 24 hours
+    // Also run once on startup
+    revokeExpiredPremium().catch(err => console.error('[Premium] Startup expiry check failed:', err));
 
   } catch (error) {
     console.error('❌ Startup Error:', error);

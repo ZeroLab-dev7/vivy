@@ -6,7 +6,7 @@ module.exports = {
   once: true,
   async execute(client) {
     const statuses = [
-      'https://vivy.zerolab.best/',
+      'https://vivy.pro/',
       '?help',
       '?dashboard to manage server',
     ];

@@ -20,6 +20,33 @@ module.exports = {
 
       // Execute the general Temp Voice Service (Join to Create)
       await VoiceService.handleVoiceStateUpdate(oldState, newState);
+
+      // Stop/pause music if the bot is server muted, and resume when unmuted
+      if (newState.id === newState.client.user.id) {
+        if (oldState.serverMute !== newState.serverMute) {
+          const MusicService = require("../services/musicService");
+          const queue = MusicService.getQueue(newState.guild.id);
+          if (queue) {
+            if (newState.serverMute) {
+              // Bot was server muted -> pause the player
+              if (queue.player && typeof queue.player.pause === "function") {
+                queue.player.pause();
+                if (queue.textChannel) {
+                  await queue.textChannel.send("⏸️ **Music has been paused because the bot was server-muted.**").catch(() => {});
+                }
+              }
+            } else {
+              // Bot was server unmuted -> resume the player
+              if (queue.player && typeof queue.player.unpause === "function") {
+                queue.player.unpause();
+                if (queue.textChannel) {
+                  await queue.textChannel.send("▶️ **Music has been resumed because the bot was server-unmuted.**").catch(() => {});
+                }
+              }
+            }
+          }
+        }
+      }
       // Fetch server settings
       const settings = await RoomSetupDB.getSettings(newState.guild.id);
       if (!settings || !settings.log_channel || !settings.room_category || !settings.join_channel) {

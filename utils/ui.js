@@ -59,16 +59,14 @@ class UI {
      * @param {Array} [options.fields] - Array of {name, value} objects
      * @param {string} [options.footer]
      */
-    static createContainer({ title, description, color, fields = [], footer, image, thumbnail }) {
+    static createContainer({ title, description, color = 0x00FFFF, fields = [], footer, image, thumbnail }) {
         const container = new ContainerBuilder();
 
-        if (color) {
-            // Container accent color expects integer/hex
-            const colorInt = typeof color === 'string' && color.startsWith('#')
-                ? parseInt(color.replace('#', ''), 16)
-                : color;
-            if (colorInt) container.setAccentColor(colorInt);
-        }
+        // Container accent color expects integer/hex; defaults to cyan
+        const colorInt = typeof color === 'string' && color.startsWith('#')
+            ? parseInt(color.replace('#', ''), 16)
+            : color;
+        if (colorInt) container.setAccentColor(colorInt);
 
         // Handle Thumbnail (Header Section) or Standard Header
         if (thumbnail) {

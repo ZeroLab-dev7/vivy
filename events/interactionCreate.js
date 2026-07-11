@@ -15,11 +15,11 @@ module.exports = {
             const embed = UI.createEmbed({
               color: check.reason === 'maintenance' ? 'Orange' : 'Red',
               title: check.reason === 'maintenance' ? '🚧 Maintenance Mode Enabled' : '❌ Command Disabled',
-              description: check.reason === 'maintenance' 
+              description: check.reason === 'maintenance'
                 ? check.message
                 : `The \`${interaction.commandName}\` command has been disabled globally by the developers.`
             });
-            return interaction.reply({ embeds: [embed], ephemeral: true }).catch(() => {});
+            return interaction.reply({ embeds: [embed], ephemeral: true }).catch(() => { });
           }
 
           try {
@@ -60,11 +60,11 @@ module.exports = {
                 const embed = UI.createEmbed({
                   color: check.reason === 'maintenance' ? 'Orange' : 'Red',
                   title: check.reason === 'maintenance' ? '🚧 Maintenance Mode Enabled' : '❌ Command Disabled',
-                  description: check.reason === 'maintenance' 
+                  description: check.reason === 'maintenance'
                     ? check.message
                     : `The \`${interaction.commandName}\` command has been disabled globally by the developers.`
                 });
-                return interaction.reply({ embeds: [embed], ephemeral: true }).catch(() => {});
+                return interaction.reply({ embeds: [embed], ephemeral: true }).catch(() => { });
               }
               const CustomCommandService = require('../services/customCommandService');
               await CustomCommandService.executeInteraction(customCmd, interaction);
@@ -395,7 +395,7 @@ module.exports = {
         const redirectDashboard = (title) => {
           const embed = UI.createEmbed({
             title: title,
-            description: `め 」 **This system can be easily configured via the Web Panel.**\n\n🔗 [Open Dashboard](https://vivy.zerolab.best/servers/${interaction.guild.id})`,
+            description: `め 」 **This system can be easily configured via the Web Panel.**\n\n🔗 [Open Dashboard](https://vivy.pro/servers/${interaction.guild.id})`,
             color: 0x0099ff
           });
           return interaction.reply({ embeds: [embed], ephemeral: true });
@@ -424,10 +424,10 @@ module.exports = {
         }
 
         // --- Apply System Button Handlers ---
-        if (interaction.customId.startsWith('apply_') && 
-            !interaction.customId.startsWith('apply_approve_') && 
-            !interaction.customId.startsWith('apply_deny_') && 
-            !interaction.customId.startsWith('apply_modal_')) {
+        if (interaction.customId.startsWith('apply_') &&
+          !interaction.customId.startsWith('apply_approve_') &&
+          !interaction.customId.startsWith('apply_deny_') &&
+          !interaction.customId.startsWith('apply_modal_')) {
           const clickedDept = interaction.customId.replace('apply_', '');
           return openApplyModal(interaction, clickedDept);
         }
@@ -443,71 +443,71 @@ module.exports = {
           const { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } = require('discord.js');
 
           const getDepartments = (settings) => {
-              let depts = [];
-              if (settings && settings.departments) {
-                  try {
-                      depts = typeof settings.departments === 'string'
-                          ? JSON.parse(settings.departments)
-                          : settings.departments;
-                  } catch {}
-              }
-              if (!Array.isArray(depts) || depts.length === 0) {
-                  depts = [
-                      {
-                          key: 'staff',
-                          label: 'Staff Team',
-                          emoji: '<:staff:1369870831383220225>',
-                          description: 'Moderate and assist members',
-                          role_id: settings?.role_staff_id,
-                          questions: [
-                              'Why do you want to join our staff team?',
-                              'What experience do you have in moderation?',
-                              'How active can you be on a weekly basis?',
-                              'How would you handle a conflict between members?'
-                          ]
-                      },
-                      {
-                          key: 'designer',
-                          label: 'Designer',
-                          emoji: '<:designer:1492427141374152714>',
-                          description: 'Create visuals & graphics',
-                          role_id: settings?.role_designer_id,
-                          questions: [
-                              'What design software do you use?',
-                              'Link to your portfolio or examples of work.',
-                              'Describe your design style (Minimalist, etc.)',
-                              'Are you comfortable working with deadlines?'
-                          ]
-                      },
-                      {
-                          key: 'event',
-                          label: 'Event Hoster',
-                          emoji: '<:event:1492427991429677167>',
-                          description: 'Organize fun community events',
-                          role_id: settings?.role_event_id,
-                          questions: [
-                              'What kind of events would you like to host?',
-                              'Experience managing large groups/events?',
-                              'What makes a successful community event?',
-                              'What is your availability for hosting events?'
-                          ]
-                      },
-                      {
-                          key: 'partnership',
-                          label: 'Partnership',
-                          emoji: '<:partner:1492427938950545498>',
-                          description: 'Build server relationships',
-                          role_id: settings?.role_partnership_id,
-                          questions: [
-                              'Previous experience in server partnerships?',
-                              'How do you find potential partners?',
-                              'What are your methods for growing relationships?',
-                              'How many partnerships can you handle weekly?'
-                          ]
-                      }
-                  ];
-              }
-              return depts;
+            let depts = [];
+            if (settings && settings.departments) {
+              try {
+                depts = typeof settings.departments === 'string'
+                  ? JSON.parse(settings.departments)
+                  : settings.departments;
+              } catch { }
+            }
+            if (!Array.isArray(depts) || depts.length === 0) {
+              depts = [
+                {
+                  key: 'staff',
+                  label: 'Staff Team',
+                  emoji: '<:staff:1369870831383220225>',
+                  description: 'Moderate and assist members',
+                  role_id: settings?.role_staff_id,
+                  questions: [
+                    'Why do you want to join our staff team?',
+                    'What experience do you have in moderation?',
+                    'How active can you be on a weekly basis?',
+                    'How would you handle a conflict between members?'
+                  ]
+                },
+                {
+                  key: 'designer',
+                  label: 'Designer',
+                  emoji: '<:designer:1492427141374152714>',
+                  description: 'Create visuals & graphics',
+                  role_id: settings?.role_designer_id,
+                  questions: [
+                    'What design software do you use?',
+                    'Link to your portfolio or examples of work.',
+                    'Describe your design style (Minimalist, etc.)',
+                    'Are you comfortable working with deadlines?'
+                  ]
+                },
+                {
+                  key: 'event',
+                  label: 'Event Hoster',
+                  emoji: '<:event:1492427991429677167>',
+                  description: 'Organize fun community events',
+                  role_id: settings?.role_event_id,
+                  questions: [
+                    'What kind of events would you like to host?',
+                    'Experience managing large groups/events?',
+                    'What makes a successful community event?',
+                    'What is your availability for hosting events?'
+                  ]
+                },
+                {
+                  key: 'partnership',
+                  label: 'Partnership',
+                  emoji: '<:partner:1492427938950545498>',
+                  description: 'Build server relationships',
+                  role_id: settings?.role_partnership_id,
+                  questions: [
+                    'Previous experience in server partnerships?',
+                    'How do you find potential partners?',
+                    'What are your methods for growing relationships?',
+                    'How many partnerships can you handle weekly?'
+                  ]
+                }
+              ];
+            }
+            return depts;
           };
 
           const departments = getDepartments(settings);
@@ -515,27 +515,27 @@ module.exports = {
           let deptIndex = -1;
 
           if (clickedDept.startsWith('dept_')) {
-              deptIndex = parseInt(clickedDept.replace('dept_', ''), 10);
-              dept = departments[deptIndex];
+            deptIndex = parseInt(clickedDept.replace('dept_', ''), 10);
+            dept = departments[deptIndex];
           } else if (/^\d+$/.test(clickedDept)) {
-              deptIndex = parseInt(clickedDept, 10);
-              dept = departments[deptIndex];
+            deptIndex = parseInt(clickedDept, 10);
+            dept = departments[deptIndex];
           } else {
-              // Backward compatibility string match
-              deptIndex = departments.findIndex(d => d.key === clickedDept);
+            // Backward compatibility string match
+            deptIndex = departments.findIndex(d => d.key === clickedDept);
+            if (deptIndex !== -1) {
+              dept = departments[deptIndex];
+            } else {
+              // Fallback match label
+              deptIndex = departments.findIndex(d => d.label.toLowerCase() === clickedDept.toLowerCase());
               if (deptIndex !== -1) {
-                  dept = departments[deptIndex];
-              } else {
-                  // Fallback match label
-                  deptIndex = departments.findIndex(d => d.label.toLowerCase() === clickedDept.toLowerCase());
-                  if (deptIndex !== -1) {
-                      dept = departments[deptIndex];
-                  }
+                dept = departments[deptIndex];
               }
+            }
           }
 
           if (!dept) {
-              return interaction.reply({ content: '❌ Selected department configuration not found.', ephemeral: true });
+            return interaction.reply({ content: '❌ Selected department configuration not found.', ephemeral: true });
           }
 
           const modal = new ModalBuilder()
@@ -555,7 +555,7 @@ module.exports = {
           });
 
           if (rows.length === 0) {
-              return interaction.reply({ content: '❌ No questions configured for this department.', ephemeral: true });
+            return interaction.reply({ content: '❌ No questions configured for this department.', ephemeral: true });
           }
 
           modal.addComponents(...rows);
@@ -581,36 +581,36 @@ module.exports = {
 
           // Get departments to find dynamic role and label
           const getDepartments = (settings) => {
-              let depts = [];
-              if (settings && settings.departments) {
-                  try {
-                      depts = typeof settings.departments === 'string'
-                          ? JSON.parse(settings.departments)
-                          : settings.departments;
-                  } catch {}
-              }
-              if (!Array.isArray(depts) || depts.length === 0) {
-                  depts = [
-                      { key: 'staff', label: 'Staff Team', role_id: settings?.role_staff_id },
-                      { key: 'designer', label: 'Designer', role_id: settings?.role_designer_id },
-                      { key: 'event', label: 'Event Hoster', role_id: settings?.role_event_id },
-                      { key: 'partnership', label: 'Partnership', role_id: settings?.role_partnership_id }
-                  ];
-              }
-              return depts;
+            let depts = [];
+            if (settings && settings.departments) {
+              try {
+                depts = typeof settings.departments === 'string'
+                  ? JSON.parse(settings.departments)
+                  : settings.departments;
+              } catch { }
+            }
+            if (!Array.isArray(depts) || depts.length === 0) {
+              depts = [
+                { key: 'staff', label: 'Staff Team', role_id: settings?.role_staff_id },
+                { key: 'designer', label: 'Designer', role_id: settings?.role_designer_id },
+                { key: 'event', label: 'Event Hoster', role_id: settings?.role_event_id },
+                { key: 'partnership', label: 'Partnership', role_id: settings?.role_partnership_id }
+              ];
+            }
+            return depts;
           };
 
           const departments = getDepartments(settings);
           let dept = null;
           let deptIndex = parseInt(clickedDept, 10);
           if (isNaN(deptIndex)) {
-              dept = departments.find(d => d.key === clickedDept);
+            dept = departments.find(d => d.key === clickedDept);
           } else {
-              dept = departments[deptIndex];
+            dept = departments[deptIndex];
           }
 
           if (!dept) {
-              return interaction.reply({ content: '❌ Department configuration not found.', ephemeral: true });
+            return interaction.reply({ content: '❌ Department configuration not found.', ephemeral: true });
           }
 
           const container = UI.createContainer({
@@ -1027,73 +1027,73 @@ module.exports = {
           }
 
           const getDepartments = (settings) => {
-              let depts = [];
-              if (settings && settings.departments) {
-                  try {
-                      depts = typeof settings.departments === 'string'
-                          ? JSON.parse(settings.departments)
-                          : settings.departments;
-                  } catch {}
-              }
-              if (!Array.isArray(depts) || depts.length === 0) {
-                  depts = [
-                      {
-                          key: 'staff',
-                          label: 'Staff Team',
-                          questions: [
-                              'Why do you want to join our staff team?',
-                              'What experience do you have in moderation?',
-                              'How active can you be on a weekly basis?',
-                              'How would you handle a conflict between members?'
-                          ]
-                      },
-                      {
-                          key: 'designer',
-                          label: 'Designer',
-                          questions: [
-                              'What design software do you use?',
-                              'Link to your portfolio or examples of work.',
-                              'Describe your design style (Minimalist, etc.)',
-                              'Are you comfortable working with deadlines?'
-                          ]
-                      },
-                      {
-                          key: 'event',
-                          label: 'Event Hoster',
-                          questions: [
-                              'What kind of events would you like to host?',
-                              'Experience managing large groups/events?',
-                              'What makes a successful community event?',
-                              'What is your availability for hosting events?'
-                          ]
-                      },
-                      {
-                          key: 'partnership',
-                          label: 'Partnership',
-                          questions: [
-                              'Previous experience in server partnerships?',
-                              'How do you find potential partners?',
-                              'What are your methods for growing relationships?',
-                              'How many partnerships can you handle weekly?'
-                          ]
-                      }
-                  ];
-              }
-              return depts;
+            let depts = [];
+            if (settings && settings.departments) {
+              try {
+                depts = typeof settings.departments === 'string'
+                  ? JSON.parse(settings.departments)
+                  : settings.departments;
+              } catch { }
+            }
+            if (!Array.isArray(depts) || depts.length === 0) {
+              depts = [
+                {
+                  key: 'staff',
+                  label: 'Staff Team',
+                  questions: [
+                    'Why do you want to join our staff team?',
+                    'What experience do you have in moderation?',
+                    'How active can you be on a weekly basis?',
+                    'How would you handle a conflict between members?'
+                  ]
+                },
+                {
+                  key: 'designer',
+                  label: 'Designer',
+                  questions: [
+                    'What design software do you use?',
+                    'Link to your portfolio or examples of work.',
+                    'Describe your design style (Minimalist, etc.)',
+                    'Are you comfortable working with deadlines?'
+                  ]
+                },
+                {
+                  key: 'event',
+                  label: 'Event Hoster',
+                  questions: [
+                    'What kind of events would you like to host?',
+                    'Experience managing large groups/events?',
+                    'What makes a successful community event?',
+                    'What is your availability for hosting events?'
+                  ]
+                },
+                {
+                  key: 'partnership',
+                  label: 'Partnership',
+                  questions: [
+                    'Previous experience in server partnerships?',
+                    'How do you find potential partners?',
+                    'What are your methods for growing relationships?',
+                    'How many partnerships can you handle weekly?'
+                  ]
+                }
+              ];
+            }
+            return depts;
           };
 
           const departments = getDepartments(settings);
           let dept = null;
           let deptIndex = parseInt(clickedDept, 10);
           if (isNaN(deptIndex)) {
-              dept = departments.find(d => d.key === clickedDept);
-              deptIndex = departments.indexOf(dept);
+            dept = departments.find(d => d.key === clickedDept);
+            deptIndex = departments.indexOf(dept);
           } else {
-              dept = departments[deptIndex];
+            dept = departments[deptIndex];
           }
 
           if (!dept) {
-              return interaction.reply({ content: '❌ Department configuration not found.', ephemeral: true });
+            return interaction.reply({ content: '❌ Department configuration not found.', ephemeral: true });
           }
 
           const { ActionRowBuilder, ButtonBuilder, ButtonStyle, SeparatorBuilder, SeparatorSpacingSize } = require('discord.js');

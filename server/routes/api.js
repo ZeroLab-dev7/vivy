@@ -9,7 +9,7 @@ const {
     WarnSetup, JailSetup, MuteSetup, VerificationRoles, AntiLink, ApplySetup,
     AntiBotSetup, AutoRoleSetup, LogSettings, RoomSettings, AntiWebhook, Warning,
     CustomCommand, PremiumServer, LevelReward, XPBoost, VoiceSession, LevelHistory, LevelLeaderboardCache,
-    UserXP
+    UserXP, SecuritySettings, RaidProtectionSettings, TrustedEntity, SecurityLog
 } = require('../../db/models');
 
 const BackupService  = require('../../services/backupService');
@@ -19,7 +19,8 @@ const GeneralService = require('../../services/generalService');
 const ALLOWED_MODULES = new Set([
     'warn', 'jail', 'mute', 'verification', 'antilink', 'apply',
     'antibot', 'antiwebhook', 'autorole', 'logs', 'rooms',
-    'guildsettings', 'automod', 'welcome', 'economy', 'leveling'
+    'guildsettings', 'automod', 'welcome', 'economy', 'leveling',
+    'security', 'raid'
 ]);
 
 // ── Middleware: require authenticated session ────────────────
@@ -67,6 +68,23 @@ const checkGuildPermission = (req, res, next) => {
     // Server owner or users with ADMINISTRATOR/MANAGE_GUILD permission can manage the server
     const isAdmin = guild.owner === true || (perms & ADMINISTRATOR) === ADMINISTRATOR || (perms & MANAGE_GUILD) === MANAGE_GUILD;
     if (!isAdmin) return res.status(403).json({ error: 'Manage Server permission required.' });
+    next();
+};const ensureSecurityModulePermission = (req, res, next) => {
+    const { guildId, moduleName } = req.params;
+    if (!moduleName) return next();
+    const safeModule = moduleName.toLowerCase().trim();
+
+    if (['guildsettings', 'antibot', 'antiwebhook', 'security', 'raid'].includes(safeModule)) {
+        const userGuilds = req.session.guilds || [];
+        const guildSession = userGuilds.find(g => g.id === guildId);
+        const isOwner = guildSession && guildSession.owner === true;
+        const isDeveloper = req.session.isDeveloper === true;
+
+        if (!isOwner && !isDeveloper) {
+            console.warn(`[Security Alert] Blocked non-owner/non-dev access to security module ${safeModule} for guild ${guildId} by user ${req.session?.user?.id}`);
+            return res.status(403).json({ error: 'Access Denied: Only server owners and bot developers can manage Security & Prefix settings.' });
+        }
+    }
     next();
 };
 
@@ -131,6 +149,12 @@ router.get('/guilds', async (req, res) => {
 // ── GET /guilds/:guildId — all config in one shot ────────────
 router.get('/guilds/:guildId', validateGuildId, checkGuildPermission, async (req, res) => {
     const { guildId } = req.params;
+    const userGuilds = req.session.guilds || [];
+    const guildSession = userGuilds.find(g => g.id === guildId);
+    const isOwner = guildSession && guildSession.owner === true;
+    const isDeveloper = req.session.isDeveloper === true;
+    const canAccessSecurity = isOwner || isDeveloper;
+
     const client = req.app.get('discordClient');
     const guild = client.guilds.cache.get(guildId);
     if (!guild) return res.status(404).json({ error: 'Bot is not in this server.' });
@@ -154,7 +178,8 @@ router.get('/guilds/:guildId', validateGuildId, checkGuildPermission, async (req
         guildSettings, automod, welcome,
         warn, jail, mute, verification,
         antilink, apply, antibot, antiwebhook,
-        autorole, logs, rooms, economy, leveling
+        autorole, logs, rooms, economy, leveling,
+        security, raid
     ] = await Promise.all([
         safeGet(GuildSettings, guildId),
         safeGet(AutoModSettings, guildId),
@@ -172,6 +197,8 @@ router.get('/guilds/:guildId', validateGuildId, checkGuildPermission, async (req
         safeGet(RoomSettings, guildId),
         safeGet(EconomyConfig, guildId),
         safeGet(LevelConfig, guildId),
+        safeGet(SecuritySettings, guildId),
+        safeGet(RaidProtectionSettings, guildId),
     ]);
 
     let commands = [];
@@ -186,8 +213,14 @@ router.get('/guilds/:guildId', validateGuildId, checkGuildPermission, async (req
     try {
         const premiumRecord = await PremiumServer.findOne({ where: { guild_id: guildId, is_premium: true } });
         if (premiumRecord) {
-            isPremium = true;
-            premiumExpiresAt = premiumRecord.expires_at;
+            // Auto-revoke if expired
+            if (premiumRecord.expires_at && new Date(premiumRecord.expires_at) < new Date()) {
+                await premiumRecord.update({ is_premium: false });
+                console.log(`[Premium] Auto-revoked expired premium for guild ${guildId}`);
+            } else {
+                isPremium = true;
+                premiumExpiresAt = premiumRecord.expires_at;
+            }
         }
     } catch (err) {
         console.error('Error checking premium status:', err);
@@ -197,13 +230,15 @@ router.get('/guilds/:guildId', validateGuildId, checkGuildPermission, async (req
         guildName: guild.name,
         guildIcon: guild.iconURL(),
         memberCount: guild.memberCount,
+        isOwner,
+        isDeveloper,
         channels,
         roles,
         isPremium,
         premiumExpiresAt,
         configs: {
-            guildSettings,
-            guildsettings: guildSettings,
+            guildSettings: canAccessSecurity ? guildSettings : null,
+            guildsettings: canAccessSecurity ? guildSettings : null,
             automod,
             welcome,
             commands,
@@ -213,13 +248,15 @@ router.get('/guilds/:guildId', validateGuildId, checkGuildPermission, async (req
             verification,
             antilink,
             apply,
-            antibot,
-            antiwebhook,
+            antibot: canAccessSecurity ? antibot : null,
+            antiwebhook: canAccessSecurity ? antiwebhook : null,
             autorole,
             logs,
             rooms,
             economy,
-            leveling
+            leveling,
+            security: canAccessSecurity ? security : null,
+            raid: canAccessSecurity ? raid : null
         }
     });
 });
@@ -365,7 +402,7 @@ router.delete('/guilds/:guildId/config/commands/:id', validateGuildId, checkGuil
 });
 
 // ── GET /guilds/:guildId/config/:moduleName ──────────────────
-router.get('/guilds/:guildId/config/:moduleName', validateGuildId, checkGuildPermission, async (req, res) => {
+router.get('/guilds/:guildId/config/:moduleName', validateGuildId, checkGuildPermission, ensureSecurityModulePermission, async (req, res) => {
     const { guildId, moduleName } = req.params;
 
     const safeModule = moduleName.toLowerCase();
@@ -390,6 +427,8 @@ router.get('/guilds/:guildId/config/:moduleName', validateGuildId, checkGuildPer
         welcome:       { ref: WelcomeSettings },
         economy:       { ref: EconomyConfig },
         leveling:      { ref: LevelConfig },
+        security:      { ref: SecuritySettings },
+        raid:          { ref: RaidProtectionSettings },
     };
 
     const mapping = modelMap[safeModule];
@@ -405,7 +444,7 @@ router.get('/guilds/:guildId/config/:moduleName', validateGuildId, checkGuildPer
 });
 
 // ── POST /guilds/:guildId/config/:moduleName ─────────────────
-router.post('/guilds/:guildId/config/:moduleName', validateGuildId, checkGuildPermission, async (req, res) => {
+router.post('/guilds/:guildId/config/:moduleName', validateGuildId, checkGuildPermission, ensureSecurityModulePermission, async (req, res) => {
     const { guildId, moduleName } = req.params;
 
     // Whitelist module names to prevent prototype pollution / injection
@@ -431,6 +470,8 @@ router.post('/guilds/:guildId/config/:moduleName', validateGuildId, checkGuildPe
         welcome:       { ref: WelcomeSettings,    label: 'Welcome & Leave Settings' },
         economy:       { ref: EconomyConfig,      label: 'Economy System' },
         leveling:      { ref: LevelConfig,        label: 'Leveling System' },
+        security:      { ref: SecuritySettings,      label: 'Security & Anti-Nuke Settings' },
+        raid:          { ref: RaidProtectionSettings, label: 'Raid Protection Settings' },
     };
 
     const mapping = modelMap[safeModule];
@@ -542,6 +583,65 @@ router.get('/guilds/:guildId/backups', validateGuildId, checkGuildPermission, as
     const { guildId } = req.params;
     try { res.json(await BackupInstance.findAll({ where: { guild_id: guildId } })); }
     catch { res.json([]); }
+});
+
+router.post('/guilds/:guildId/backups/:backupId/restore', validateGuildId, checkGuildPermission, async (req, res) => {
+    const { guildId, backupId } = req.params;
+    const client = req.app.get('discordClient');
+    const guild = client.guilds.cache.get(guildId);
+    if (!guild) return res.status(404).json({ error: 'Guild not found.' });
+
+    // Restoring a backup requires Owner-only or developer permissions
+    const userGuilds = req.session.guilds || [];
+    const guildSession = userGuilds.find(g => g.id === guildId);
+    const isOwner = guildSession && guildSession.owner === true;
+    const isDeveloper = req.session.isDeveloper === true;
+    if (!isOwner && !isDeveloper) {
+        return res.status(403).json({ error: 'Access Denied: Only server owners and bot developers can restore backups.' });
+    }
+
+    try {
+        const result = await BackupService.loadBackup(guild, backupId);
+        if (result.success) {
+            try {
+                await GeneralService.logAction(guildId, req.session.user.id, `Restored backup: ${backupId}`, null, null);
+            } catch {}
+            res.json({ success: true });
+        } else {
+            res.status(400).json({ error: result.reason || 'Failed to restore backup.' });
+        }
+    } catch (e) {
+        console.error('[BackupRestore] Error:', e);
+        res.status(500).json({ error: 'Internal error during backup restore.' });
+    }
+});
+
+router.delete('/guilds/:guildId/backups/:backupId', validateGuildId, checkGuildPermission, async (req, res) => {
+    const { guildId, backupId } = req.params;
+
+    // Deleting a backup requires Owner-only or developer permissions
+    const userGuilds = req.session.guilds || [];
+    const guildSession = userGuilds.find(g => g.id === guildId);
+    const isOwner = guildSession && guildSession.owner === true;
+    const isDeveloper = req.session.isDeveloper === true;
+    if (!isOwner && !isDeveloper) {
+        return res.status(403).json({ error: 'Access Denied: Only server owners and bot developers can delete backups.' });
+    }
+
+    try {
+        const rows = await BackupInstance.destroy({ where: { id: backupId, guild_id: guildId } });
+        if (rows > 0) {
+            try {
+                await GeneralService.logAction(guildId, req.session.user.id, `Deleted backup: ${backupId}`, null, null);
+            } catch {}
+            res.json({ success: true });
+        } else {
+            res.status(404).json({ error: 'Backup not found.' });
+        }
+    } catch (e) {
+        console.error('[BackupDelete] Error:', e);
+        res.status(500).json({ error: 'Failed to delete backup.' });
+    }
 });
 
 // ── API Keys ─────────────────────────────────────────────────
@@ -895,6 +995,99 @@ router.post('/guilds/:guildId/leveling/admin', validateGuildId, checkGuildPermis
     } catch (err) {
         console.error('Admin leveling error:', err);
         res.status(500).json({ error: 'Admin action failed.' });
+    }
+});
+
+// ── SECURITY LOGS & TRUSTED WHITELIST ────────────────────────
+
+// GET Whitelist
+router.get('/guilds/:guildId/security/trusted', validateGuildId, checkGuildPermission, async (req, res) => {
+    const { guildId } = req.params;
+    try {
+        const list = await TrustedEntity.findAll({ where: { guild_id: guildId } });
+        res.json(list);
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to load whitelist.' });
+    }
+});
+
+// POST Whitelist
+router.post('/guilds/:guildId/security/trusted', validateGuildId, checkGuildPermission, async (req, res) => {
+    const { guildId } = req.params;
+    const { entity_id, type, label } = req.body;
+
+    // Require Owner or Developer role
+    const userGuilds = req.session.guilds || [];
+    const guildSession = userGuilds.find(g => g.id === guildId);
+    const isOwner = guildSession && guildSession.owner === true;
+    const isDeveloper = req.session.isDeveloper === true;
+    if (!isOwner && !isDeveloper) {
+        return res.status(403).json({ error: 'Access Denied: Only server owners and bot developers can whitelist entities.' });
+    }
+
+    if (!entity_id || !/^\d{17,19}$/.test(entity_id)) {
+        return res.status(400).json({ error: 'Invalid entity ID format.' });
+    }
+    if (!['user', 'role', 'bot'].includes(type)) {
+        return res.status(400).json({ error: 'Invalid whitelist type.' });
+    }
+
+    try {
+        const record = await TrustedEntity.create({
+            guild_id: guildId,
+            entity_id,
+            type,
+            label: label?.trim() || null
+        });
+        try {
+            await GeneralService.logAction(guildId, req.session.user.id, `Whitelisted ${type}: ${entity_id}`, null, null);
+        } catch {}
+        res.json({ success: true, record });
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to add whitelisted entity.' });
+    }
+});
+
+// DELETE Whitelist
+router.delete('/guilds/:guildId/security/trusted/:id', validateGuildId, checkGuildPermission, async (req, res) => {
+    const { guildId, id } = req.params;
+
+    // Require Owner or Developer role
+    const userGuilds = req.session.guilds || [];
+    const guildSession = userGuilds.find(g => g.id === guildId);
+    const isOwner = guildSession && guildSession.owner === true;
+    const isDeveloper = req.session.isDeveloper === true;
+    if (!isOwner && !isDeveloper) {
+        return res.status(403).json({ error: 'Access Denied: Only server owners and bot developers can remove whitelisted entities.' });
+    }
+
+    try {
+        const rows = await TrustedEntity.destroy({ where: { id, guild_id: guildId } });
+        if (rows > 0) {
+            try {
+                await GeneralService.logAction(guildId, req.session.user.id, `Removed whitelisted entity ID: ${id}`, null, null);
+            } catch {}
+            res.json({ success: true });
+        } else {
+            res.status(404).json({ error: 'Entity not found.' });
+        }
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to delete whitelisted entity.' });
+    }
+});
+
+// GET Security Logs
+router.get('/guilds/:guildId/security/logs', validateGuildId, checkGuildPermission, async (req, res) => {
+    const { guildId } = req.params;
+    try {
+        const logs = await SecurityLog.findAll({
+            where: { guild_id: guildId },
+            order: [['created_at', 'DESC']],
+            limit: 50
+        });
+        res.json(logs);
+    } catch (err) {
+        res.json([]);
     }
 });
 

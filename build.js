@@ -39,6 +39,13 @@ const dashBindings = `
     window.saveLogs = typeof saveLogs !== 'undefined' ? saveLogs : undefined;
     window.updateLivePreview = typeof updateLivePreview !== 'undefined' ? updateLivePreview : undefined;
     window.saveGuildSettings = typeof saveGuildSettings !== 'undefined' ? saveGuildSettings : undefined;
+    window.saveSecuritySettings = typeof saveSecuritySettings !== 'undefined' ? saveSecuritySettings : undefined;
+    window.saveRaidSettings = typeof saveRaidSettings !== 'undefined' ? saveRaidSettings : undefined;
+    window.createBackup = typeof createBackup !== 'undefined' ? createBackup : undefined;
+    window.restoreBackup = typeof restoreBackup !== 'undefined' ? restoreBackup : undefined;
+    window.deleteBackup = typeof deleteBackup !== 'undefined' ? deleteBackup : undefined;
+    window.addWhitelistEntity = typeof addWhitelistEntity !== 'undefined' ? addWhitelistEntity : undefined;
+    window.deleteWhitelistEntity = typeof deleteWhitelistEntity !== 'undefined' ? deleteWhitelistEntity : undefined;
 }
 `;
 

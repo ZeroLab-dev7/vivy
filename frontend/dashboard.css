@@ -454,11 +454,18 @@ input, select, textarea {
     padding: 32px;
     box-shadow: 0 10px 40px rgba(0,0,0,0.4);
     transition: border-color var(--transition), background-color var(--transition);
+    position: relative;
+    z-index: 1;
 }
 
 .glass-card:hover {
     background-color: var(--bg-card-hover);
     border-color: var(--border-hover);
+}
+
+.glass-card:focus-within,
+.glass-card:has(.custom-multiselect-wrap.open) {
+    z-index: 10;
 }
 
 .glass-card-sm {
