@@ -16,7 +16,6 @@ module.exports = {
         return message.reply({
           components: [UI.createContainer({
             title: 'Verification Help',
-            footer: `Requested by ${message.author.tag}`,
             fields: [
               { name: "Aliases:", value: "- verify-girl, verifygirl" },
               { name: "Usage:", value: "- ?vg @user/id" },
@@ -61,7 +60,7 @@ module.exports = {
       if (blacklistEntry) {
         return message.reply({
           components: [UI.createContainer({
-            description: `- ❌ This user is blocked from verification!\n**Reason:** ${blacklistEntry.reason}\n**Blacklisted By ID:** \`${blacklistEntry.verificator_id}\``
+            description: `- <:no:1526496561188831244>This user is blocked from verification!\n**Reason:** ${blacklistEntry.reason}\n**Blacklisted By ID:** \`${blacklistEntry.verificator_id}\``
           })],
           flags: MessageFlags.IsComponentsV2
         });

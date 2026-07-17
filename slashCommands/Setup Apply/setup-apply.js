@@ -67,7 +67,7 @@ module.exports = {
         const staffRoleIds = staffRolesRaw.match(/\d+/g) || [];
 
         if (staffRoleIds.length === 0) {
-            return interaction.editReply({ content: '❌ Invalid staff roles. Please provide role mentions or IDs.' });
+            return interaction.editReply({ content: '<:no:1526496561188831244>Invalid staff roles. Please provide role mentions or IDs.' });
         }
 
         try {
@@ -98,7 +98,7 @@ module.exports = {
             await interaction.editReply({ embeds: [embed] });
         } catch (error) {
             console.error('APPLY SETUP ERROR:', error);
-            await interaction.editReply({ content: `❌ Failed to save apply settings: ${error.message}` });
+            await interaction.editReply({ content: `<:no:1526496561188831244>Failed to save apply settings: ${error.message}` });
         }
     }
 };

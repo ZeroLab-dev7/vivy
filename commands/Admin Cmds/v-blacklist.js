@@ -51,7 +51,7 @@ module.exports = {
                 const requestChannel = message.guild.channels.cache.get(requestChannelId);
 
                 if (!requestChannel) {
-                    return message.reply(`- ❌ Could not find the blacklist request channel (<#${requestChannelId}>). Please check the ID.`);
+                    return message.reply(`- <:no:1526496561188831244>Could not find the blacklist request channel (<#${requestChannelId}>). Please check the ID.`);
                 }
 
                 const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
@@ -67,11 +67,14 @@ module.exports = {
                         .setStyle(ButtonStyle.Danger)
                 );
 
+                const requestContainer = UI.createContainer({
+                    title: 'Blacklist Request',
+                    description: `**Target:** ${target.username} (\`${target.id}\`)\n**Reason:** ${reason}\n**Requested By:** ${message.author.username}`
+                });
+                requestContainer.addActionRowComponents(row);
+
                 await requestChannel.send({
-                    components: [UI.createContainer({
-                        title: 'Blacklist Request',
-                        description: `**Target:** ${target.username} (\`${target.id}\`)\n**Reason:** ${reason}\n**Requested By:** ${message.author.username}`
-                    }), row],
+                    components: [requestContainer],
                     flags: MessageFlags.IsComponentsV2
                 });
 
@@ -101,7 +104,7 @@ module.exports = {
                 if (entry.verificator_id !== message.author.id && !isOwner) {
                     return message.reply({
                         components: [UI.createContainer({
-                            description: `- ❌ Only the person who blacklisted this user (\`${entry.verificator_id}\`), an **Owner**, or an **Administrator** can remove them from the blacklist!`
+                            description: `- <:no:1526496561188831244>Only the person who blacklisted this user (\`${entry.verificator_id}\`), an **Owner**, or an **Administrator** can remove them from the blacklist!`
                         })],
                         flags: MessageFlags.IsComponentsV2
                     });

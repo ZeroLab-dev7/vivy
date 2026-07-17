@@ -22,7 +22,6 @@ module.exports = {
             const guideContainer = UI.createContainer({
                 title: 'Command : InviteInfo',
                 description: 'Retrieve details about a specific Discord invite link.',
-                footer: `Requested by ${message.author.tag}`,
                 fields: [
                     { name: "Aliases:", value: "iinfo, invite-info" },
                     { name: "Usage:", value: "?inviteinfo invite-code / full-link" },
@@ -43,7 +42,6 @@ module.exports = {
             const inviteContainer = UI.createContainer({
                 title: 'Command : Invite Info',
                 description: `Invite Information for **${invite.guild.name}**`,
-                footer: `Requested by ${message.author.tag}`,
                 fields: [
                     { name: " Server Name", value: `\`${invite.guild.name}\`` },
                     { name: " Server ID", value: `\`${invite.guild.id}\`` },

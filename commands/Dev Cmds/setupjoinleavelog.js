@@ -107,7 +107,7 @@ async function handleSet(message, args) {
     } catch (err) {
         console.error('[setupjoinleavelog] Error saving:', err);
         return message.reply({
-            components: [UI.createContainer({ description: '- ❌ Failed to save channel. Please try again.' })],
+            components: [UI.createContainer({ description: '- <:no:1526496561188831244>Failed to save channel. Please try again.' })],
             flags: MessageFlags.IsComponentsV2
         });
     }
@@ -163,7 +163,7 @@ async function handleRemove(message, args) {
     } catch (err) {
         console.error('[setupjoinleavelog] Error removing:', err);
         return message.reply({
-            components: [UI.createContainer({ description: '- ❌ Failed to remove channel. Please try again.' })],
+            components: [UI.createContainer({ description: '- <:no:1526496561188831244>Failed to remove channel. Please try again.' })],
             flags: MessageFlags.IsComponentsV2
         });
     }
@@ -196,7 +196,7 @@ async function handleView(message) {
     } catch (err) {
         console.error('[setupjoinleavelog] Error viewing:', err);
         return message.reply({
-            components: [UI.createContainer({ description: '- ❌ Failed to fetch configuration.' })],
+            components: [UI.createContainer({ description: '- <:no:1526496561188831244>Failed to fetch configuration.' })],
             flags: MessageFlags.IsComponentsV2
         });
     }

@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const axios = require('axios');
 const config = require('../../config');
+const Messages = require('../../utils/messages');
 const {
     WelcomeSettings, AutoModSettings, LevelConfig, TicketConfig,
     VerificationConfig, MusicConfig, AiConfig, EconomyConfig, StarboardConfig,
@@ -9,7 +10,7 @@ const {
     WarnSetup, JailSetup, MuteSetup, VerificationRoles, AntiLink, ApplySetup,
     AntiBotSetup, AutoRoleSetup, LogSettings, RoomSettings, AntiWebhook, Warning,
     CustomCommand, PremiumServer, LevelReward, XPBoost, VoiceSession, LevelHistory, LevelLeaderboardCache,
-    UserXP, SecuritySettings, RaidProtectionSettings, TrustedEntity, SecurityLog
+    UserXP, SecuritySettings, RaidProtectionSettings, TrustedEntity, SecurityLog, VerificationLog, SecurityVerificationSetup
 } = require('../../db/models');
 
 const BackupService  = require('../../services/backupService');
@@ -63,11 +64,11 @@ const checkGuildPermission = (req, res, next) => {
     const { guildId } = req.params;
     const userGuilds = req.session.guilds || [];
     const guild = userGuilds.find(g => g.id === guildId);
-    if (!guild) return res.status(403).json({ error: 'Access denied.' });
+    if (!guild) return res.status(403).json({ error: Messages.api.accessDenied });
     const perms = parsePermissions(guild.permissions);
     // Server owner or users with ADMINISTRATOR/MANAGE_GUILD permission can manage the server
     const isAdmin = guild.owner === true || (perms & ADMINISTRATOR) === ADMINISTRATOR || (perms & MANAGE_GUILD) === MANAGE_GUILD;
-    if (!isAdmin) return res.status(403).json({ error: 'Manage Server permission required.' });
+    if (!isAdmin) return res.status(403).json({ error: Messages.api.manageServerRequired });
     next();
 };const ensureSecurityModulePermission = (req, res, next) => {
     const { guildId, moduleName } = req.params;
@@ -82,7 +83,7 @@ const checkGuildPermission = (req, res, next) => {
 
         if (!isOwner && !isDeveloper) {
             console.warn(`[Security Alert] Blocked non-owner/non-dev access to security module ${safeModule} for guild ${guildId} by user ${req.session?.user?.id}`);
-            return res.status(403).json({ error: 'Access Denied: Only server owners and bot developers can manage Security & Prefix settings.' });
+            return res.status(403).json({ error: Messages.api.securityAdminDenied });
         }
     }
     next();
@@ -556,12 +557,33 @@ router.get('/guilds/:guildId/auditlogs', validateGuildId, checkGuildPermission, 
     try {
         const logs = await DashboardAuditLog.findAll({
             where: { guild_id: guildId },
-            attributes: ['user_id', 'action', 'module', 'created_at'],  // Only safe columns
-            order: [['created_at', 'DESC']],
+            order: [['createdAt', 'DESC']],
             limit: 50
         });
-        res.json(logs);
-    } catch { res.json([]); }
+        const mappedLogs = logs.map(l => {
+            const data = l.toJSON();
+            let moduleName = 'Dashboard';
+            const actionLower = (data.action || '').toLowerCase();
+            if (actionLower.includes('command')) moduleName = 'Commands';
+            else if (actionLower.includes('welcome') || actionLower.includes('leave')) moduleName = 'Welcome & Leave';
+            else if (actionLower.includes('reward') || actionLower.includes('xp') || actionLower.includes('level')) moduleName = 'Leveling';
+            else if (actionLower.includes('backup')) moduleName = 'Backup';
+            else if (actionLower.includes('whitelist') || actionLower.includes('security')) moduleName = 'Security';
+            else if (actionLower.includes('mute')) moduleName = 'Mute';
+            else if (actionLower.includes('jail')) moduleName = 'Jail';
+            
+            return {
+                user_id: data.user_id,
+                action: data.action,
+                module: moduleName,
+                created_at: data.createdAt
+            };
+        });
+        res.json(mappedLogs);
+    } catch (e) {
+        console.error('[GET auditlogs] Error:', e.message);
+        res.json([]);
+    }
 });
 
 // ── Backups ──────────────────────────────────────────────────
@@ -581,8 +603,24 @@ router.post('/guilds/:guildId/backups', validateGuildId, checkGuildPermission, a
 
 router.get('/guilds/:guildId/backups', validateGuildId, checkGuildPermission, async (req, res) => {
     const { guildId } = req.params;
-    try { res.json(await BackupInstance.findAll({ where: { guild_id: guildId } })); }
-    catch { res.json([]); }
+    try {
+        const backups = await BackupInstance.findAll({ where: { guild_id: guildId } });
+        const mapped = backups.map(b => {
+            const data = b.toJSON();
+            return {
+                id: data.id,
+                guild_id: data.guild_id,
+                creator_id: data.creator_id,
+                data: data.backup_data,
+                created_at: data.timestamp
+            };
+        });
+        res.json(mapped);
+    }
+    catch (err) {
+        console.error('[GET backups] Error:', err.message);
+        res.json([]);
+    }
 });
 
 router.post('/guilds/:guildId/backups/:backupId/restore', validateGuildId, checkGuildPermission, async (req, res) => {
@@ -1076,17 +1114,399 @@ router.delete('/guilds/:guildId/security/trusted/:id', validateGuildId, checkGui
     }
 });
 
+// ── Security Verification Independent Routes ─────────────────
+router.get('/guilds/:guildId/security-verification/config', validateGuildId, checkGuildPermission, async (req, res) => {
+    const { guildId } = req.params;
+    try {
+        let setup = await SecurityVerificationSetup.findOne({ where: { guild_id: guildId } });
+        if (!setup) {
+            setup = await SecurityVerificationSetup.create({ guild_id: guildId });
+        }
+        res.json(setup.toJSON());
+    } catch (err) {
+        console.error('[GET security-verification config] Error:', err.message);
+        res.status(500).json({ error: 'Failed to load security verification settings.' });
+    }
+});
+
+router.post('/guilds/:guildId/security-verification/config', validateGuildId, checkGuildPermission, ensureSecurityModulePermission, async (req, res) => {
+    const { guildId } = req.params;
+    try {
+        let setup = await SecurityVerificationSetup.findOne({ where: { guild_id: guildId } });
+        if (!setup) {
+            setup = await SecurityVerificationSetup.create({ guild_id: guildId });
+        }
+
+        // Server-side validation of inputs
+        if (req.body.btn_label && req.body.btn_label.length > 80) {
+            return res.status(400).json({ error: 'Button label is too long (max 80 chars).' });
+        }
+        if (req.body.embed_title && req.body.embed_title.length > 256) {
+            return res.status(400).json({ error: 'Embed title is too long (max 256 chars).' });
+        }
+        if (req.body.embed_desc && req.body.embed_desc.length > 2048) {
+            return res.status(400).json({ error: 'Embed description is too long (max 2048 chars).' });
+        }
+
+        await setup.update(req.body);
+
+        try {
+            await GeneralService.logAction(guildId, req.session.user.id, `Updated Security Verification settings (Level: ${setup.level.toUpperCase()})`, null, null);
+        } catch {}
+
+        res.json({ success: true, config: setup.toJSON() });
+    } catch (err) {
+        console.error('[POST security-verification config] Error:', err.message);
+        res.status(500).json({ error: 'Failed to save security verification settings.' });
+    }
+});
+
+router.post('/guilds/:guildId/security-verification/post-embed', validateGuildId, checkGuildPermission, ensureSecurityModulePermission, async (req, res) => {
+    const { guildId } = req.params;
+    const client = req.app.get('discordClient');
+    const guild = client.guilds.cache.get(guildId);
+    if (!guild) return res.status(404).json({ error: 'Guild not found.' });
+
+    try {
+        let setup = await SecurityVerificationSetup.findOne({ where: { guild_id: guildId } });
+        if (!setup) {
+            setup = await SecurityVerificationSetup.create({ guild_id: guildId });
+        }
+
+        let channelId = setup.channel_id;
+
+        // Auto Create Channel if configured
+        if (setup.auto_create_channel && !channelId) {
+            const { ChannelType, PermissionFlagsBits } = require('discord.js');
+            
+            const createOptions = {
+                name: 'verification',
+                type: ChannelType.GuildText
+            };
+            if (setup.category_id) {
+                createOptions.parent = setup.category_id;
+            }
+
+            const channel = await guild.channels.create(createOptions);
+            channelId = channel.id;
+            await setup.update({ channel_id: channelId });
+        }
+
+        if (!channelId) {
+            return res.status(400).json({ error: 'Verification channel is not configured.' });
+        }
+
+        const channel = guild.channels.cache.get(channelId) || await guild.channels.fetch(channelId).catch(() => null);
+        if (!channel || !channel.isTextBased()) {
+            return res.status(400).json({ error: 'Invalid text channel.' });
+        }
+
+        // Auto Permissions setup if configured
+        if (setup.auto_permissions) {
+            const { PermissionFlagsBits } = require('discord.js');
+            await channel.permissionOverwrites.set([
+                {
+                    id: guild.roles.everyone.id,
+                    deny: [
+                        PermissionFlagsBits.SendMessages,
+                        PermissionFlagsBits.AddReactions,
+                        PermissionFlagsBits.ReadMessageHistory
+                    ],
+                    allow: [
+                        PermissionFlagsBits.ViewChannel
+                    ]
+                }
+            ]).catch(console.error);
+        }
+
+        // Delete Previous verification messages if configured
+        if (setup.delete_previous_msg) {
+            try {
+                const messages = await channel.messages.fetch({ limit: 50 });
+                const toDelete = messages.filter(m => m.author.id === client.user.id && m.components.some(row => row.components.some(btn => btn.customId === 'btn_security_verify_member')));
+                for (const m of toDelete.values()) {
+                    await m.delete().catch(() => {});
+                }
+            } catch (e) {
+                console.error('[Post Security Embed] Error clearing previous messages:', e.message);
+            }
+        }
+
+        const UI = require('../../utils/ui');
+        const { ButtonBuilder, ButtonStyle, ActionRowBuilder, MessageFlags } = require('discord.js');
+
+        const container = UI.createContainer({
+            title: setup.embed_title || 'Verification Required',
+            description: setup.embed_desc || 'Click the button below to verify and access the server.',
+            color: setup.embed_color || '#0099ff',
+            thumbnail: setup.embed_thumbnail || null,
+            footer: setup.embed_footer || null
+        });
+
+        let style = ButtonStyle.Primary;
+        if (setup.btn_style === 'secondary') style = ButtonStyle.Secondary;
+        else if (setup.btn_style === 'success') style = ButtonStyle.Success;
+        else if (setup.btn_style === 'danger') style = ButtonStyle.Danger;
+
+        const button = new ButtonBuilder()
+            .setCustomId('btn_security_verify_member')
+            .setLabel(setup.btn_label || 'Verify Me')
+            .setStyle(style);
+        if (setup.btn_emoji) button.setEmoji(setup.btn_emoji);
+
+        const row = new ActionRowBuilder().addComponents(button);
+        container.addActionRowComponents(row);
+
+        await channel.send({
+            components: [container],
+            flags: MessageFlags.IsComponentsV2
+        });
+        res.json({ success: true });
+    } catch (e) {
+        console.error('[Post Security Verification Embed] Error:', e);
+        res.status(500).json({ error: `Failed to send verification message: ${e.message}` });
+    }
+});
+
+// ── Verification Expanded Module Routes ──────────────────────
+router.get('/guilds/:guildId/verification/config', validateGuildId, checkGuildPermission, async (req, res) => {
+    const { guildId } = req.params;
+    try {
+        const config = await VerificationConfig.findByPk(guildId) || await VerificationConfig.create({ guild_id: guildId });
+        const roles = await VerificationRoles.findByPk(guildId) || await VerificationRoles.create({ guild_id: guildId });
+        res.json({
+            ...config.toJSON(),
+            roles: roles.toJSON()
+        });
+    } catch (err) {
+        console.error('[GET verification config] Error:', err.message);
+        res.status(500).json({ error: 'Failed to load verification config.' });
+    }
+});
+
+router.post('/guilds/:guildId/verification/config', validateGuildId, checkGuildPermission, ensureSecurityModulePermission, async (req, res) => {
+    const { guildId } = req.params;
+    try {
+        const config = await VerificationConfig.findByPk(guildId) || await VerificationConfig.create({ guild_id: guildId });
+        const roles = await VerificationRoles.findByPk(guildId) || await VerificationRoles.create({ guild_id: guildId });
+
+        await config.update(req.body);
+        if (req.body.roles) {
+            await roles.update(req.body.roles);
+        } else {
+            await roles.update(req.body);
+        }
+
+        try {
+            await GeneralService.logAction(guildId, req.session.user.id, `Updated Verification Settings (Mode: ${config.mode.toUpperCase()})`, null, null);
+        } catch {}
+
+        res.json({ success: true });
+    } catch (err) {
+        console.error('[POST verification config] Error:', err.message);
+        res.status(500).json({ error: 'Failed to save verification config.' });
+    }
+});
+
+router.get('/guilds/:guildId/verification/stats', validateGuildId, checkGuildPermission, async (req, res) => {
+    const { guildId } = req.params;
+    try {
+        const { Op } = require('sequelize');
+        const past24h = new Date(Date.now() - 24 * 60 * 60 * 1000);
+
+        const verifiedToday = await VerificationLog.count({
+            where: { guild_id: guildId, status: 'passed', createdAt: { [Op.gte]: past24h } }
+        });
+
+        const failedToday = await VerificationLog.count({
+            where: { guild_id: guildId, status: 'failed', createdAt: { [Op.gte]: past24h } }
+        });
+
+        const totalPassed = await VerificationLog.count({ where: { guild_id: guildId, status: 'passed' } });
+        const totalFailed = await VerificationLog.count({ where: { guild_id: guildId, status: 'failed' } });
+        const total = totalPassed + totalFailed;
+        const successRate = total > 0 ? Math.round((totalPassed / total) * 100) : 100;
+
+        // Pending Members (having unverified role)
+        let pendingMembers = 0;
+        let roleId = null;
+
+        const config = await VerificationConfig.findByPk(guildId);
+        const roles = await VerificationRoles.findByPk(guildId);
+
+        let type = 'staff';
+        if (config && config.mode === 'security') {
+            type = 'security';
+        }
+
+        if (type === 'security') {
+            const setup = await SecurityVerificationSetup.findOne({ where: { guild_id: guildId } });
+            roleId = setup ? setup.unverified_role_id : null;
+        } else {
+            roleId = roles ? roles.unverified_role : null;
+        }
+
+        if (roleId) {
+            const client = req.app.get('discordClient');
+            const guild = client.guilds.cache.get(guildId);
+            if (guild) {
+                const role = guild.roles.cache.get(roleId);
+                if (role) pendingMembers = role.members.size;
+            }
+        }
+
+        // Average verification time (ms)
+        const logsWithTime = await VerificationLog.findAll({
+            where: { guild_id: guildId, status: 'passed' },
+            attributes: ['duration_ms'],
+            limit: 100
+        });
+        const avgTimeMs = logsWithTime.length > 0
+            ? Math.round(logsWithTime.reduce((acc, curr) => acc + curr.duration_ms, 0) / logsWithTime.length)
+            : 0;
+
+        res.json({
+            verifiedToday,
+            failedToday,
+            pendingMembers,
+            successRate,
+            avgTimeMs
+        });
+    } catch (err) {
+        console.error('[GET verification stats] Error:', err.message);
+        res.json({
+            verifiedToday: 0,
+            failedToday: 0,
+            pendingMembers: 0,
+            successRate: 100,
+            avgTimeMs: 0
+        });
+    }
+});
+
+router.get('/guilds/:guildId/verification/history', validateGuildId, checkGuildPermission, async (req, res) => {
+    const { guildId } = req.params;
+    const { status, timeframe, search } = req.query;
+
+    try {
+        const { Op } = require('sequelize');
+        const where = { guild_id: guildId };
+
+        if (status && status !== 'all') {
+            where.status = status;
+        }
+
+        if (timeframe && timeframe !== 'all') {
+            let dateLimit = new Date();
+            if (timeframe === 'today') {
+                dateLimit.setHours(0, 0, 0, 0);
+            } else if (timeframe === 'week') {
+                dateLimit.setDate(dateLimit.getDate() - 7);
+            } else if (timeframe === 'month') {
+                dateLimit.setDate(dateLimit.getDate() - 30);
+            }
+            where.createdAt = { [Op.gte]: dateLimit };
+        }
+
+        if (search) {
+            where[Op.or] = [
+                { username: { [Op.like]: `%${search}%` } },
+                { user_id: { [Op.like]: `%${search}%` } }
+            ];
+        }
+
+        const logs = await VerificationLog.findAll({
+            where,
+            order: [['createdAt', 'DESC']],
+            limit: 100
+        });
+        res.json(logs);
+    } catch (err) {
+        console.error('[GET verification history] Error:', err.message);
+        res.json([]);
+    }
+});
+
+router.post('/guilds/:guildId/verification/post-embed', validateGuildId, checkGuildPermission, ensureSecurityModulePermission, async (req, res) => {
+    const { guildId } = req.params;
+    const { channel_id } = req.body;
+    if (!channel_id) return res.status(400).json({ error: 'Channel ID is required.' });
+
+    const client = req.app.get('discordClient');
+    const guild = client.guilds.cache.get(guildId);
+    if (!guild) return res.status(404).json({ error: 'Guild not found.' });
+
+    const channel = guild.channels.cache.get(channel_id);
+    if (!channel || !channel.isTextBased()) {
+        return res.status(400).json({ error: 'Invalid text channel.' });
+    }
+
+    try {
+        const config = await VerificationConfig.findByPk(guildId) || await VerificationConfig.create({ guild_id: guildId });
+
+        const embedTitle = config.msg_embed_title || 'Verification Required';
+        const embedDesc = config.msg_embed_desc || 'Click the button below to verify and access the server.';
+        const embedColor = config.msg_embed_color || '#0099ff';
+        const embedThumb = config.msg_embed_thumbnail || null;
+        const embedFoot = config.msg_embed_footer || null;
+
+        const btnText = config.msg_btn_text || 'Verify Me';
+        const btnEmoji = config.msg_btn_emoji || '🛡️';
+        const btnStyle = config.msg_btn_style || 'primary';
+
+        const UI = require('../../utils/ui');
+        const { ButtonBuilder, ButtonStyle, ActionRowBuilder } = require('discord.js');
+
+        const embedOpts = {
+            title: embedTitle,
+            description: embedDesc,
+            color: parseInt(embedColor.replace('#', ''), 16) || 0x0099ff
+        };
+        if (embedThumb) embedOpts.thumbnail = embedThumb;
+        if (embedFoot) embedOpts.footer = embedFoot;
+
+        const embed = UI.createEmbed(embedOpts);
+
+        let style = ButtonStyle.Primary;
+        if (btnStyle === 'secondary') style = ButtonStyle.Secondary;
+        else if (btnStyle === 'success') style = ButtonStyle.Success;
+        else if (btnStyle === 'danger') style = ButtonStyle.Danger;
+
+        const button = new ButtonBuilder()
+            .setCustomId('btn_verify_member')
+            .setLabel(btnText)
+            .setStyle(style);
+        if (btnEmoji) button.setEmoji(btnEmoji);
+
+        const row = new ActionRowBuilder().addComponents(button);
+
+        await channel.send({ embeds: [embed], components: [row] });
+        res.json({ success: true });
+    } catch (e) {
+        console.error('[Post Verification Embed] Error:', e);
+        res.status(500).json({ error: `Failed to send message: ${e.message}` });
+    }
+});
+
 // GET Security Logs
 router.get('/guilds/:guildId/security/logs', validateGuildId, checkGuildPermission, async (req, res) => {
     const { guildId } = req.params;
     try {
         const logs = await SecurityLog.findAll({
             where: { guild_id: guildId },
-            order: [['created_at', 'DESC']],
+            order: [['createdAt', 'DESC']],
             limit: 50
         });
-        res.json(logs);
+        const mapped = logs.map(l => {
+            const d = l.toJSON();
+            return {
+                ...d,
+                created_at: d.createdAt
+            };
+        });
+        res.json(mapped);
     } catch (err) {
+        console.error('[GET security logs] Error:', err.message);
         res.json([]);
     }
 });

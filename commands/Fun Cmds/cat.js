@@ -14,7 +14,6 @@ module.exports = {
             const container = UI.createContainer({
                 title: '🐱 Meow!',
                 image: catUrl,
-                footer: `Requested by ${message.author.tag}`
             });
 
             message.reply({

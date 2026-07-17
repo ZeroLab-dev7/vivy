@@ -19,6 +19,7 @@ module.exports = async (client) => {
                 for (const file of commandFiles) {
                     const command = require(path.join(folderPath, file));
                     if (command.name) {
+                        command.category = folder;
                         client.commands.set(command.name, command);
                     }
                 }
@@ -37,6 +38,8 @@ module.exports = async (client) => {
                 for (const file of commandFiles) {
                     const command = require(path.join(folderPath, file));
                     if (command.data) {
+                        command.category = folder;
+                        command.name = command.data.name;
                         client.slashCommands.set(command.data.name, command);
                         slashCommandsArray.push(command.data.toJSON());
                     }
@@ -59,6 +62,6 @@ module.exports = async (client) => {
         );
         console.log('✅ Successfully reloaded application (/) commands GLOBALLY.');
     } catch (error) {
-        console.error('❌ Error registering global commands:', error);
+        console.error('<:no:1526496561188831244>Error registering global commands:', error);
     }
 };

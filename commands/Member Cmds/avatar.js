@@ -19,7 +19,7 @@ module.exports = {
                 } catch (error) {
                     return message.reply({
                         components: [UI.createContainer({
-                            description: "❌ Invalid user ID or mention provided."
+                            description: "<:no:1526496561188831244>Invalid user ID or mention provided."
                         })],
                         flags: MessageFlags.IsComponentsV2
                     });
@@ -33,7 +33,7 @@ module.exports = {
             if (!target) {
                 return message.reply({
                     components: [UI.createContainer({
-                        description: "❌ Could not find the specified user."
+                        description: "<:no:1526496561188831244>Could not find the specified user."
                     })],
                     flags: MessageFlags.IsComponentsV2
                 });
@@ -64,7 +64,7 @@ module.exports = {
             console.error("Error in avatar command:", error);
             await message.reply({
                 components: [UI.createContainer({
-                    description: "❌ An error occurred while fetching the avatar."
+                    description: "<:no:1526496561188831244>An error occurred while fetching the avatar."
                 })],
                 flags: MessageFlags.IsComponentsV2
             });

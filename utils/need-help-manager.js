@@ -1,5 +1,6 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ChannelType } = require("discord.js");
 const RoomSetupDB = require("../db/room-setup-db");
+const Messages = require("./messages");
 
 module.exports = {
     async handleButton(interaction) {
@@ -19,7 +20,7 @@ module.exports = {
 
             // If channel is deleted, just update embed to say "Closed" or "Deleted"
             if (!targetChannel && action !== 'close') {
-                return interaction.reply({ content: "❌ The room no longer exists.", ephemeral: true });
+                return interaction.reply({ content: "Hmm... that room no longer exists. 💨", ephemeral: true });
             }
 
             switch (action) {
@@ -32,7 +33,7 @@ module.exports = {
 
                     const claimedEmbed = EmbedBuilder.from(oldEmbed)
                         .setColor("Yellow")
-                        .setDescription(oldEmbed.description + `\n\n✅ **Claimed by:** ${member} | \`${member.id}\``);
+                        .setDescription(oldEmbed.description + `\n\n<:success:1526086221338771567> **Claimed by:** ${member} | \`${member.id}\``);
 
                     // Update message components to disable 'Click to Claim'? Or just update text.
                     // Let's replace the "Claim" button with "Claimed" disabled button.
@@ -47,7 +48,7 @@ module.exports = {
                     // Notify in the user's room
                     if (targetChannel) {
                         await targetChannel.send({
-                            content: `👋 **Hello!** ${member} has claimed your request and will be with you shortly.`
+                            content: Messages.ticket.claimed(member)
                         }).catch(() => { });
                     }
                     break;
@@ -55,14 +56,14 @@ module.exports = {
                 case 'join':
                     // Move the staff member to the channel
                     if (!member.voice.channel) {
-                        return interaction.reply({ content: "❌ You need to be in a voice channel first to be moved!", ephemeral: true });
+                        return interaction.reply({ content: "Hmm... you need to be in a voice channel first for me to move you! 🎙️", ephemeral: true });
                     }
 
                     if (targetChannel) {
                         await member.voice.setChannel(targetChannel);
-                        await interaction.reply({ content: `✅ Moved to <#${targetChannelId}>`, ephemeral: true });
+                        await interaction.reply({ content: `Poof! You've been moved to <#${targetChannelId}>. ✨`, ephemeral: true });
                     } else {
-                        await interaction.reply({ content: "❌ Room not found.", ephemeral: true });
+                        await interaction.reply({ content: Messages.error.notFound('room'), ephemeral: true });
                     }
                     break;
 
@@ -86,7 +87,7 @@ module.exports = {
                     // Update embed to closed
                     const closedEmbed = EmbedBuilder.from(interaction.message.embeds[0])
                         .setColor("Red")
-                        .setDescription(interaction.message.embeds[0].description.split('\n\n✅ **Claimed by:**')[0] + `\n\n❌ **Closed by:** ${member} | \`${member.id}\``);
+                        .setDescription(interaction.message.embeds[0].description.split('\n\n<:success:1526086221338771567> **Claimed by:**')[0] + `\n\n${Messages.ticket.closed(member)}`);
 
                     // Disable all buttons
                     const closedRow = ActionRowBuilder.from(interaction.message.components[0]);
@@ -102,7 +103,7 @@ module.exports = {
         } catch (error) {
             console.error("Staff Management Error:", error);
             if (!interaction.replied) {
-                await interaction.reply({ content: "❌ An error occurred.", ephemeral: true });
+                await interaction.reply({ content: Messages.error.generic(), ephemeral: true });
             }
         }
     }

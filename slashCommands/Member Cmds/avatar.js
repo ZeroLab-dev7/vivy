@@ -27,7 +27,7 @@ module.exports = {
         .setTitle(`${user.tag}'s Global Avatar`)
         .setURL(globalAvatarURL)
         .setImage(globalAvatarURL)
-        .setFooter({ text: `Requested by ${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })
+        
         .setTimestamp();
 
       const serverEmbed = new EmbedBuilder()
@@ -35,7 +35,7 @@ module.exports = {
         .setTitle(`${user.tag}'s Server Avatar`)
         .setURL(serverAvatarURL)
         .setImage(serverAvatarURL)
-        .setFooter({ text: `Requested by ${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })
+        
         .setTimestamp();
 
       embeds.push(globalEmbed, serverEmbed);
@@ -45,7 +45,7 @@ module.exports = {
         .setTitle(`${user.tag}'s Avatar`)
         .setURL(globalAvatarURL)
         .setImage(globalAvatarURL)
-        .setFooter({ text: `Requested by ${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })
+        
         .setTimestamp();
 
       embeds.push(embed);

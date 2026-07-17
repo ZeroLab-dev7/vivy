@@ -7,7 +7,7 @@ module.exports = {
     },
     // Standard Status
     Status: {
-        success: "✅",
+        success: "<:success:1526086221338771567>",
         error: "❌",
         warning: "⚠️"
     },

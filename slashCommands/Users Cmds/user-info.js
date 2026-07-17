@@ -52,7 +52,6 @@ module.exports = {
                     { name: '<a:info:1366763944177434626>・Basic Server Info', value: `**Joined Server**: ${timeJoined}\n**Highest Role**: ${highestRoleName}`, inline: false },
                     { name: '<a:info:1366763944177434626>・Roles', value: rolesDisplay, inline: false }
                 ],
-                footer: `Requested by ${interaction.user.username}`
             });
 
             await interaction.editReply({

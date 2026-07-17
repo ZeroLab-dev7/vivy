@@ -237,7 +237,7 @@ module.exports = {
                 title: targetUser.id === message.author.id ?
                     `Your Invite Stats` :
                     `${targetUser.username}'s Invite Stats`,
-                description: `Requested by ${message.author.username}`,
+                description: ``,
                 fields: fields,
                 footer: `${guild.name} Invite System`
             });
@@ -272,8 +272,10 @@ module.exports = {
 
             // Send the message with embed and buttons
             // Send the message with embed and buttons
+            embedContainer.addActionRowComponents(row);
+
             await message.reply({
-                components: [embedContainer, row],
+                components: [embedContainer],
                 flags: MessageFlags.IsComponentsV2
             });
 
@@ -358,7 +360,6 @@ module.exports = {
             const leaderboardContainer = UI.createContainer({
                 title: `🏆 Invite Leaderboard - ${guild.name}`,
                 description: leaderboardText,
-                footer: authorFooter || `${guild.name} Invite System`
             });
 
             // Cache the leaderboard
@@ -380,8 +381,10 @@ module.exports = {
 
             const row = new ActionRowBuilder().addComponents(refreshButton, myInvitesButton);
 
+            leaderboardContainer.addActionRowComponents(row);
+
             await message.reply({
-                components: [leaderboardContainer, row],
+                components: [leaderboardContainer],
                 flags: MessageFlags.IsComponentsV2
             });
 
@@ -473,7 +476,7 @@ module.exports = {
                 title: targetUser.id === interaction.user.id ?
                     `Your Invite Stats` :
                     `${targetUser.username}'s Invite Stats`,
-                description: `Requested by ${interaction.user.username}`,
+                description: ``,
                 fields: fields,
                 footer: `${guild.name} Invite System`
             });

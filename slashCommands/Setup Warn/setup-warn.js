@@ -39,7 +39,7 @@ module.exports = {
 
             if (warnerRoleIds.length === 0) {
                 return interaction.editReply({
-                    content: '❌ Please provide valid roles or role IDs for warner roles.',
+                    content: '<:no:1526496561188831244>Please provide valid roles or role IDs for warner roles.',
                     ephemeral: true
                 });
             }

@@ -43,7 +43,7 @@ module.exports = {
             if (!interaction.member.permissions.has(PermissionFlagsBits.ManageGuild) && !interaction.member.permissions.has(PermissionFlagsBits.Administrator)) {
                 return interaction.editReply({
                     components: [UI.createContainer({
-                        description: '❌ You require **Manage Server** or **Administrator** permissions to use this command.'
+                        description: '<:no:1526496561188831244>You require **Manage Server** or **Administrator** permissions to use this command.'
                     })],
                     flags: MessageFlags.IsComponentsV2
                 });
@@ -67,7 +67,7 @@ module.exports = {
             if (!member) {
                 return interaction.editReply({
                     components: [UI.createContainer({
-                        description: '❌ User is not in this server.'
+                        description: '<:no:1526496561188831244>User is not in this server.'
                     })],
                     flags: MessageFlags.IsComponentsV2
                 });
@@ -76,7 +76,7 @@ module.exports = {
             if (targetUser.bot) {
                 return interaction.editReply({
                     components: [UI.createContainer({
-                        description: '❌ Bots do not participate in leveling.'
+                        description: '<:no:1526496561188831244>Bots do not participate in leveling.'
                     })],
                     flags: MessageFlags.IsComponentsV2
                 });
@@ -141,7 +141,7 @@ module.exports = {
             console.error('Error in slash leveladmin command:', error);
             await interaction.editReply({
                 components: [UI.createContainer({
-                    description: '❌ Failed to process admin leveling command.',
+                    description: '<:no:1526496561188831244>Failed to process admin leveling command.',
                     color: 0xff0000
                 })],
                 flags: MessageFlags.IsComponentsV2

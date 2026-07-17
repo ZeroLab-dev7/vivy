@@ -19,7 +19,7 @@ module.exports = {
                 } catch (error) {
                     return message.reply({
                         components: [UI.createContainer({
-                            description: "❌ Invalid user ID or mention provided."
+                            description: "<:no:1526496561188831244>Invalid user ID or mention provided."
                         })],
                         flags: MessageFlags.IsComponentsV2
                     });
@@ -43,7 +43,7 @@ module.exports = {
             if (!globalBannerURL && !serverBannerURL) {
                 return message.reply({
                     components: [UI.createContainer({
-                        description: "❌ This user does not have a banner set."
+                        description: "<:no:1526496561188831244>This user does not have a banner set."
                     })],
                     flags: MessageFlags.IsComponentsV2
                 });
@@ -66,7 +66,7 @@ module.exports = {
             console.error("Error in banner command:", error);
             await message.reply({
                 components: [UI.createContainer({
-                    description: "❌ An error occurred while fetching the banner."
+                    description: "<:no:1526496561188831244>An error occurred while fetching the banner."
                 })],
                 flags: MessageFlags.IsComponentsV2
             });

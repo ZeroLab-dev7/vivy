@@ -11,7 +11,6 @@ module.exports = {
         const container = UI.createContainer({
             title: '🏳️‍🌈 Gay Rate Machine',
             description: `${target} is **${rate}%** gay!`,
-            footer: `Requested by ${message.author.tag}`,
             thumbnail: target.displayAvatarURL({ dynamic: true })
         });
 

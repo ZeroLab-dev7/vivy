@@ -106,7 +106,7 @@ module.exports = {
 
         return message.reply({
             components: [UI.createContainer({
-                title: isError ? '❌ Eval Error' : '✅ Eval Result',
+                title: isError ? '<:no:1526496561188831244>Eval Error' : '✅ Eval Result',
                 description: [
                     `**📥 Input:**`,
                     `\`\`\`js\n${code.slice(0, 500)}\n\`\`\``,

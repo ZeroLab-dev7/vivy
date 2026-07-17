@@ -62,7 +62,8 @@ module.exports = {
 
     const marriageData = loadMarriageData();
 
-    if (marriageData[message.author.id] || marriageData[target.id]) {
+    if ((marriageData[message.author.id] && marriageData[message.author.id].partner) ||
+      (marriageData[target.id] && marriageData[target.id].partner)) {
       return message.channel.send({
         components: [UI.createContainer({
           description: "- <a:warn:1365688576758644797> You or the person you're proposing to is already married!"
@@ -72,7 +73,7 @@ module.exports = {
     }
 
     const container = UI.createContainer({
-      description: `💍 Hey \`${target.username}\`, it would make \`${message.author.username}\` really happy if you would marry them. What do you say?`
+      description: `<:ring:1526494769050816512> Hey \`${target.username}\`, it would make \`${message.author.username}\` really happy if you would marry them. What do you say?`
     });
 
     const row = new ActionRowBuilder().addComponents(
@@ -86,8 +87,10 @@ module.exports = {
         .setStyle(ButtonStyle.Danger)
     );
 
+    container.addActionRowComponents(row);
+
     const msg = await message.channel.send({
-      components: [container, row],
+      components: [container],
       flags: MessageFlags.IsComponentsV2
     });
 
@@ -97,22 +100,28 @@ module.exports = {
     collector.on("collect", async (interaction) => {
       if (interaction.customId === "accept_marry") {
         marriageData[message.author.id] = {
+          ...marriageData[message.author.id],
           partner: target.id,
           date: Date.now()
         };
         marriageData[target.id] = {
+          ...marriageData[target.id],
           partner: message.author.id,
           date: Date.now()
         };
         saveMarriageData(marriageData);
 
+        collector.stop('accepted');
+
         await interaction.update({
           components: [UI.createContainer({
-            description: `🎉 Congratulations!\n💍 \`${message.author.username}\` and \`${target.username}\` are now married! 💕`
+            description: `<a:pink8:1337678972108148757> Congratulations!\n<:ring:1526494769050816512> \`${message.author.username}\` and \`${target.username}\` are now married! 💕`
           })],
           flags: MessageFlags.IsComponentsV2
         });
       } else if (interaction.customId === "reject_marry") {
+        collector.stop('rejected');
+
         await interaction.update({
           components: [UI.createContainer({
             description: `-  \`${target.username}\` has rejected \`${message.author.username}\`'s marriage proposal.`
@@ -122,29 +131,33 @@ module.exports = {
       }
     });
 
-    collector.on("end", async () => {
-      if (!msg.deleted) {
-        const timeoutContainer = UI.createContainer({
-          description: "- ⏳ Time's up! You didn't get a response in time. Better luck next time!"
-        });
+    collector.on("end", async (collected, reason) => {
+      if (reason === 'time') {
+        if (!msg.deleted) {
+          const timeoutContainer = UI.createContainer({
+            description: "- ⏳ Time's up! You didn't get a response in time. Better luck next time!"
+          });
 
-        const disabledRow = new ActionRowBuilder().addComponents(
-          new ButtonBuilder()
-            .setCustomId("accept_marry")
-            .setLabel("Accept")
-            .setStyle(ButtonStyle.Success)
-            .setDisabled(true),
-          new ButtonBuilder()
-            .setCustomId("reject_marry")
-            .setLabel("Reject")
-            .setStyle(ButtonStyle.Danger)
-            .setDisabled(true)
-        );
+          const disabledRow = new ActionRowBuilder().addComponents(
+            new ButtonBuilder()
+              .setCustomId("accept_marry")
+              .setLabel("Accept")
+              .setStyle(ButtonStyle.Success)
+              .setDisabled(true),
+            new ButtonBuilder()
+              .setCustomId("reject_marry")
+              .setLabel("Reject")
+              .setStyle(ButtonStyle.Danger)
+              .setDisabled(true)
+          );
 
-        msg.edit({
-          components: [timeoutContainer, disabledRow],
-          flags: MessageFlags.IsComponentsV2
-        }).catch(() => { });
+          timeoutContainer.addActionRowComponents(disabledRow);
+
+          msg.edit({
+            components: [timeoutContainer],
+            flags: MessageFlags.IsComponentsV2
+          }).catch(() => { });
+        }
       }
     });
   }

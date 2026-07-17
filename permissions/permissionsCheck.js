@@ -1,4 +1,6 @@
 const { EmbedBuilder, PermissionsBitField } = require('discord.js');
+const UI = require('../utils/ui');
+const Messages = require('../utils/messages');
 
 const permissionsMap = {
     [PermissionsBitField.Flags.CreateInstantInvite]: 'Create Instant Invite',
@@ -47,10 +49,10 @@ module.exports = {
         const missingPermissions = permissions.filter(permission => !message.member.permissions.has(permission));
         if (missingPermissions.length > 0) {
             const missingPermsDescription = missingPermissions.map(permission => permissionsMap[permission]).join(', ');
-            const perm = new EmbedBuilder()
-                .setColor('Random')
-                .setDescription(`You are missing the following permissions: \`\`${missingPermsDescription}\`\``);
-            return message.reply({ embeds: [perm] });
+            const embed = UI.createEmbed({
+                description: Messages.error.noPermission(missingPermsDescription)
+            });
+            return message.reply({ embeds: [embed] });
         }
         return null;
     }

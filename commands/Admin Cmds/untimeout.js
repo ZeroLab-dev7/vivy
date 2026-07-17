@@ -11,7 +11,6 @@ module.exports = {
             const guideContainer = UI.createContainer({
                 title: 'Command: UnTimeout',
                 description: 'Remove a timeout from a user.',
-                footer: `Requested by ${message.author.tag}`,
                 fields: [
                     { name: "Aliases:", value: "- untimeout, remove-timeout, untimeoutuser" },
                     { name: "Usage:", value: "- ?untimeout (user/id)" },

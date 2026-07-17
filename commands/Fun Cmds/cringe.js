@@ -10,7 +10,6 @@ module.exports = {
         const container = UI.createContainer({
             title: '😬 Cringe Meter',
             description: `That's **${rate}%** cringe!`,
-            footer: `Requested by ${message.author.tag}`
         });
 
         message.reply({

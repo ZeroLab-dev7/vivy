@@ -43,7 +43,6 @@ module.exports = {
                         { name: "Usage:", value: "- ?vmute @user/id", inline: false },
                         { name: "Example:", value: `- ?vmute <@${message.author.id}>\n- ?vmute ${message.author.id}`, inline: false }
                     ],
-                    footer: `Requested by ${message.author.tag}`
                 })],
                 flags: MessageFlags.IsComponentsV2
             });

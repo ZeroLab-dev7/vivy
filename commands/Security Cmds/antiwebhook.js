@@ -18,7 +18,7 @@ module.exports = {
             return message.reply({
                 components: [UI.createContainer({
                     color: 0xFF0000,
-                    description: '❌ **Access Denied**\nYou need the **Owner Role** to use this command.'
+                    description: '<:no:1526496561188831244>**Access Denied**\nYou need the **Owner Role** to use this command.'
                 })],
                 flags: MessageFlags.IsComponentsV2
             });

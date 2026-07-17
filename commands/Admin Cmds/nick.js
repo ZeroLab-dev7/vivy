@@ -33,7 +33,6 @@ module.exports = {
                 components: [UI.createContainer({
                     title: 'Command : NickName',
                     description: 'Change a user\'s nickname on the server.',
-                    footer: `Requested by ${message.author.tag}`,
                     fields: [
                         { name: "Aliases:", value: "- nick, nickname" },
                         { name: "Usage:", value: "- ?nick (user)  [new nickname]" },

@@ -12,7 +12,7 @@ module.exports = {
 
             if (!plan) {
                 return message.reply({
-                    components: [UI.createContainer({ color: 0xFF0000, description: "❌ **Access Denied**\nYou do not own a premium plan." })],
+                    components: [UI.createContainer({ color: 0xFF0000, description: "<:no:1526496561188831244>**Access Denied**\nYou do not own a premium plan." })],
                     flags: MessageFlags.IsComponentsV2
                 });
             }
@@ -38,7 +38,7 @@ module.exports = {
 
             if (!managers.includes(targetId)) {
                 return message.reply({
-                    components: [UI.createContainer({ color: 0xFF0000, description: "❌ **This user is not a manager of your plan.**" })],
+                    components: [UI.createContainer({ color: 0xFF0000, description: "<:no:1526496561188831244>**This user is not a manager of your plan.**" })],
                     flags: MessageFlags.IsComponentsV2
                 });
             }
@@ -54,7 +54,7 @@ module.exports = {
         } catch (error) {
             console.error("pmremove Error:", error);
             message.reply({
-                components: [UI.createContainer({ color: 0xFF0000, description: "❌ **Internal Error**\nFailed to remove manager." })],
+                components: [UI.createContainer({ color: 0xFF0000, description: "<:no:1526496561188831244>**Internal Error**\nFailed to remove manager." })],
                 flags: MessageFlags.IsComponentsV2
             });
         }

@@ -35,7 +35,6 @@ module.exports = {
                 // url: serverAvatar, // Container might not support URL in title directly like Embed? keeping it safe or checking if needed.
                 // image: serverAvatar, // UI.createContainer might not support image directly yet based on previous notes.
                 description: `**Server Avatar**\n[Click to download](${serverAvatar})`,
-                footer: `Requested by ${message.author.tag}`
             });
 
             // Create the download button
@@ -47,8 +46,10 @@ module.exports = {
             // Create action row for the button
             const row = new ActionRowBuilder().addComponents(downloadButton);
 
+            avatarContainer.addActionRowComponents(row);
+
             await message.reply({
-                components: [avatarContainer, row],
+                components: [avatarContainer],
                 flags: MessageFlags.IsComponentsV2
             });
         } else {

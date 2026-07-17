@@ -59,7 +59,7 @@ module.exports = {
 
       if (staffRoleIds.length === 0) {
         return interaction.editReply({
-          content: '❌ Please provide valid roles or role IDs for staff roles.',
+          content: '<:no:1526496561188831244>Please provide valid roles or role IDs for staff roles.',
           ephemeral: true
         });
       }

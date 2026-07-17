@@ -21,7 +21,7 @@ module.exports = {
             if (targetUser.bot) {
                 return interaction.editReply({
                     components: [UI.createContainer({
-                        description: '❌ Bots do not earn XP or have rank cards.'
+                        description: '<:no:1526496561188831244>Bots do not earn XP or have rank cards.'
                     })],
                     flags: MessageFlags.IsComponentsV2
                 });
@@ -54,7 +54,7 @@ module.exports = {
             console.error('Error in slash rank command:', error);
             await interaction.editReply({
                 components: [UI.createContainer({
-                    description: '❌ An error occurred while generating the rank card.',
+                    description: '<:no:1526496561188831244>An error occurred while generating the rank card.',
                     color: 0xff0000
                 })],
                 flags: MessageFlags.IsComponentsV2

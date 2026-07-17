@@ -31,7 +31,6 @@ module.exports = {
       const guideContainer = UI.createContainer({
         title: 'Command : RemoveRole',
         description: 'Remove a role from a user.',
-        footer: `Requested by ${message.author.tag}`,
         fields: [
           { name: "Aliases:", value: "removerole, roleremove" },
           { name: "Usage:", value: "?removerole @user/id <role name/id/mention>" },
@@ -129,7 +128,7 @@ module.exports = {
         flags: MessageFlags.IsComponentsV2
       });
     } catch (err) {
-      console.error('❌ Error removing role:', err.message);
+      console.error('<:no:1526496561188831244>Error removing role:', err.message);
       return message.reply({
         components: [UI.createContainer({
           description: "- An error occurred while removing the role."

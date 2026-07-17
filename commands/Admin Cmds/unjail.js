@@ -19,7 +19,6 @@ module.exports = {
         components: [UI.createContainer({
           title: 'Command: unjail',
           description: "Unjail a user from the server.",
-          footer: `Requested by ${message.author.tag}`,
           fields: [
             { name: "Aliases:", value: "- unjail, release" },
             { name: "Usage:", value: "- ?unjail @user/id" },
@@ -168,7 +167,6 @@ module.exports = {
           { name: "Unjailed User", value: `- \`${targetName}\` | ${targetId}` },
           { name: "Unjailed By", value: `- \`${message.author.username}\` | ${message.author.id}` }
         ],
-        footer: `Requested by ${message.author.tag}`
       });
 
       await channel.send({

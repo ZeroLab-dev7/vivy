@@ -2,6 +2,16 @@ let activeGuildId = null;
 let globalChannels = [];
 let globalRoles = [];
 
+function escapeHtml(str) {
+    if (str === null || str === undefined) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
 // Parse guild ID from URL
 const pathParts = window.location.pathname.split('/').filter(Boolean);
 if (pathParts[0] === 'servers' && pathParts[1]) {
@@ -72,8 +82,8 @@ function switchLevelingSubTab(subTabId) {
     const activeSubTab = document.getElementById(`leveling-subtab-${subTabId}`);
     if (activeSubTab) activeSubTab.classList.add('active');
 
-    // Find the button and activate it
-    const activeBtn = Array.from(document.querySelectorAll('.sub-tab-btn')).find(btn => btn.getAttribute('onclick').includes(subTabId));
+    // Find the button and activate it via data-subtab attribute
+    const activeBtn = Array.from(document.querySelectorAll('.sub-tab-btn')).find(btn => btn.dataset.subtab === subTabId);
     if (activeBtn) activeBtn.classList.add('active');
 }
 
@@ -112,7 +122,7 @@ function populateSelectors(channels, roles, config) {
     const announceSelect = document.getElementById('lvl-setting-announce-channel');
     if (announceSelect) {
         announceSelect.innerHTML = `
-            <option value="disabled" ${(!config.announce_channel || config.announce_channel === 'disabled') ? 'selected' : ''}>❌ Disabled (Do not send)</option>
+            <option value="disabled" ${(!config.announce_channel || config.announce_channel === 'disabled') ? 'selected' : ''}><:no:1526496561188831244>Disabled (Do not send)</option>
             <option value="dm" ${(config.announce_channel === 'dm') ? 'selected' : ''}>📥 Direct Message (DM)</option>
         `;
         channels.filter(c => c.type === 0 || c.type === 5).forEach(c => {
@@ -187,9 +197,12 @@ function populateConfigSettings(config) {
     document.getElementById('lvl-setting-announce-embed').checked = config.announce_embed ?? true;
     document.getElementById('lvl-setting-announce-color').value = config.announce_color || '#5865F2';
     document.getElementById('lvl-setting-announce-image').value = config.announce_image_url || '';
-    document.getElementById('lvl-setting-announce-msg').value = config.announce_message || '🎉 Congratulations {user}! You reached Level {level}!';
+    document.getElementById('lvl-setting-announce-msg').value = config.announce_message || '<a:pink8:1337678972108148757> Congratulations {user}! You reached Level {level}!';
     document.getElementById('lvl-setting-stack').checked = config.stack_rewards ?? true;
     document.getElementById('lvl-setting-demote').checked = config.remove_rewards_on_demote ?? true;
+
+    const rankBgInput = document.getElementById('lvl-setting-rank-bg');
+    if (rankBgInput) rankBgInput.value = config.rank_card_background || '';
 }
 
 async function saveLevelingConfig() {
@@ -213,7 +226,8 @@ async function saveLevelingConfig() {
             announce_image_url: document.getElementById('lvl-setting-announce-image').value || null,
             announce_message: document.getElementById('lvl-setting-announce-msg').value,
             stack_rewards: document.getElementById('lvl-setting-stack').checked,
-            remove_rewards_on_demote: document.getElementById('lvl-setting-demote').checked
+            remove_rewards_on_demote: document.getElementById('lvl-setting-demote').checked,
+            rank_card_background: document.getElementById('lvl-setting-rank-bg')?.value || null
         };
 
         const res = await fetch(`/api/guilds/${activeGuildId}/config/leveling`, {
@@ -234,12 +248,60 @@ async function saveLevelingConfig() {
     }
 }
 
+function resetLevelingSettings() {
+    if (!confirm('Reset all leveling settings to their default values?\nThis only resets the form — you still need to click "Apply Settings" to save.')) return;
+
+    // Core
+    const enabledEl = document.getElementById('lvl-setting-enabled');
+    if (enabledEl) enabledEl.checked = false;
+
+    // Message XP
+    const fields = {
+        'lvl-setting-min-xp': 15,
+        'lvl-setting-max-xp': 25,
+        'lvl-setting-cooldown': 60,
+        'lvl-setting-voice-interval': 5,
+        'lvl-setting-voice-xp': 10,
+        'lvl-setting-formula-base': 100,
+        'lvl-setting-formula-exponent': 1.8,
+        'lvl-setting-formula-offset': 100,
+        'lvl-setting-daily-cap': 0,
+        'lvl-setting-weekly-cap': 0,
+    };
+    Object.entries(fields).forEach(([id, val]) => {
+        const el = document.getElementById(id);
+        if (el) el.value = val;
+    });
+
+    // Announcements
+    const announceEl = document.getElementById('lvl-setting-announce');
+    if (announceEl) announceEl.checked = true;
+    const embedEl = document.getElementById('lvl-setting-announce-embed');
+    if (embedEl) embedEl.checked = true;
+    const chanEl = document.getElementById('lvl-setting-announce-channel');
+    if (chanEl) chanEl.value = chanEl.options[0]?.value ?? '';
+    const colorEl = document.getElementById('lvl-setting-announce-color');
+    if (colorEl) colorEl.value = '#5865F2';
+    const imgEl = document.getElementById('lvl-setting-announce-image');
+    if (imgEl) imgEl.value = '';
+    const msgEl = document.getElementById('lvl-setting-announce-msg');
+    if (msgEl) msgEl.value = '<a:pink8:1337678972108148757> Congratulations {user}! You reached Level {level}!';
+
+    // Role reward options
+    const stackEl = document.getElementById('lvl-setting-stack');
+    if (stackEl) stackEl.checked = true;
+    const demoteEl = document.getElementById('lvl-setting-demote');
+    if (demoteEl) demoteEl.checked = true;
+
+    showToast('Settings reset to defaults. Click "Apply Settings" to save.', 'info');
+}
+
 // ── REWARDS CRUD ──
 async function loadRewards() {
     try {
         const res = await fetch(`/api/guilds/${activeGuildId}/leveling/rewards`);
         const rewards = await res.json();
-        
+
         const tbody = document.getElementById('lvl-rewards-list');
         if (!tbody) return;
 
@@ -257,14 +319,14 @@ async function loadRewards() {
             const role = globalRoles.find(r => r.id === reward.role_id);
             const roleName = role ? `@${role.name}` : `Unknown Role (${reward.role_id})`;
             const statusBadge = reward.is_enabled ? '<span class="status-badge status-active">Enabled</span>' : '<span class="status-badge status-inactive">Disabled</span>';
-            
+
             tbody.innerHTML += `
                 <tr>
                     <td>Level ${reward.level}</td>
                     <td style="color:${role ? role.color : 'inherit'}">${roleName}</td>
                     <td>${statusBadge}</td>
                     <td>
-                        <button class="btn btn-danger btn-sm" style="padding:4px 8px;font-size:12px;" onclick="deleteLevelReward(${reward.id})">
+                        <button class="btn btn-danger btn-sm btn-delete-level-reward" style="padding:4px 8px;font-size:12px;" data-id="${reward.id}">
                             <i class="fa-solid fa-trash-can"></i> Delete
                         </button>
                     </td>
@@ -369,7 +431,7 @@ async function loadBoosts() {
                     <td><strong style="color:#00f5ff">${boost.multiplier}x XP</strong></td>
                     <td>${duration}</td>
                     <td>
-                        <button class="btn btn-danger btn-sm" style="padding:4px 8px;font-size:12px;" onclick="deleteXPBoost(${boost.id})">
+                        <button class="btn btn-danger btn-sm btn-delete-xp-boost" style="padding:4px 8px;font-size:12px;" data-id="${boost.id}">
                             <i class="fa-solid fa-trash-can"></i> Delete
                         </button>
                     </td>
@@ -457,7 +519,7 @@ async function loadLeaderboardData() {
         tbody.innerHTML = '';
         data.forEach((user, index) => {
             const avatarImg = user.avatar ? `<img src="${user.avatar}" style="width:28px;height:28px;border-radius:50%;vertical-align:middle;margin-right:8px;" />` : `<div style="display:inline-block;width:28px;height:28px;border-radius:50%;background:#5865F2;vertical-align:middle;margin-right:8px;line-height:28px;text-align:center;font-size:12px;">${user.username[0].toUpperCase()}</div>`;
-            
+
             tbody.innerHTML += `
                 <tr>
                     <td><strong>#${index + 1}</strong></td>
@@ -469,7 +531,7 @@ async function loadLeaderboardData() {
                     <td>${user.xp_today} XP</td>
                     <td>
                         <div style="display:flex;gap:4px;">
-                            <button class="btn btn-secondary btn-sm" style="padding:2px 6px;font-size:11px;" onclick="adjustUserLevelDialog('${user.user_id}', '${user.username}')">Adjust</button>
+                            <button class="btn btn-secondary btn-sm btn-adjust-user-level" style="padding:2px 6px;font-size:11px;" data-userid="${user.user_id}" data-username="${escapeHtml(user.username)}">Adjust</button>
                         </div>
                     </td>
                 </tr>
@@ -682,6 +744,7 @@ window.addEventListener('resize', () => {
 if (typeof window !== 'undefined') {
     window.switchLevelingSubTab = switchLevelingSubTab;
     window.saveLevelingConfig = saveLevelingConfig;
+    window.resetLevelingSettings = resetLevelingSettings;
     window.addLevelReward = addLevelReward;
     window.deleteLevelReward = deleteLevelReward;
     window.addXPBoost = addXPBoost;
@@ -691,3 +754,81 @@ if (typeof window !== 'undefined') {
     window.loadLeaderboardData = loadLeaderboardData;
     window.adjustUserLevelDialog = adjustUserLevelDialog;
 }
+
+// Delegated click listeners for rewards, boosts, and user adjustments
+document.addEventListener('click', (e) => {
+    // Delete Level Reward
+    const deleteRewardBtn = e.target.closest('.btn-delete-level-reward');
+    if (deleteRewardBtn) {
+        const id = deleteRewardBtn.getAttribute('data-id');
+        if (id) deleteLevelReward(id);
+    }
+
+    // Delete XP Boost
+    const deleteBoostBtn = e.target.closest('.btn-delete-xp-boost');
+    if (deleteBoostBtn) {
+        const id = deleteBoostBtn.getAttribute('data-id');
+        if (id) deleteXPBoost(id);
+    }
+
+    // Adjust User Level Dialog
+    const adjustUserLevelBtn = e.target.closest('.btn-adjust-user-level');
+    if (adjustUserLevelBtn) {
+        const userId = adjustUserLevelBtn.getAttribute('data-userid');
+        const username = adjustUserLevelBtn.getAttribute('data-username');
+        if (userId && username) adjustUserLevelDialog(userId, username);
+    }
+});
+
+// Bind leveling UI elements once DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    // Sub-tab buttons
+    document.querySelectorAll('.sub-tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const subTabId = btn.dataset.subtab;
+            if (subTabId) switchLevelingSubTab(subTabId);
+        });
+    });
+
+    // Boost type selector
+    const boostTypeSelect = document.getElementById('lvl-boost-type');
+    if (boostTypeSelect) {
+        boostTypeSelect.addEventListener('change', () => toggleBoostTargetInput());
+    }
+
+    // Leaderboard sort selector
+    const leaderboardSort = document.getElementById('lvl-leaderboard-sort');
+    if (leaderboardSort) {
+        leaderboardSort.addEventListener('change', () => loadLeaderboardData());
+    }
+
+    // Save leveling config button
+    const btnSaveLevelingConfig = document.getElementById('btn-save-leveling-config');
+    if (btnSaveLevelingConfig) {
+        btnSaveLevelingConfig.addEventListener('click', () => saveLevelingConfig());
+    }
+
+    // Add level reward button
+    const btnAddLevelReward = document.getElementById('btn-add-level-reward');
+    if (btnAddLevelReward) {
+        btnAddLevelReward.addEventListener('click', () => addLevelReward());
+    }
+
+    // Add XP boost button
+    const btnAddXpBoost = document.getElementById('btn-add-xp-boost');
+    if (btnAddXpBoost) {
+        btnAddXpBoost.addEventListener('click', () => addXPBoost());
+    }
+
+    // Reset leaderboard button
+    const btnResetLeaderboard = document.getElementById('btn-reset-leaderboard');
+    if (btnResetLeaderboard) {
+        btnResetLeaderboard.addEventListener('click', () => resetServerLeaderboard());
+    }
+
+    // Reset leveling settings to defaults button
+    const btnResetLevelingConfig = document.getElementById('btn-reset-leveling-config');
+    if (btnResetLevelingConfig) {
+        btnResetLevelingConfig.addEventListener('click', () => resetLevelingSettings());
+    }
+});

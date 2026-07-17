@@ -21,7 +21,7 @@ module.exports = {
                 return message.reply({
                     components: [UI.createContainer({
                         color: 0xFF0000,
-                        description: "❌ **Access Denied**\nYou do not own a premium plan and you are not a manager of any plan."
+                        description: "<:no:1526496561188831244>**Access Denied**\nYou do not own a premium plan and you are not a manager of any plan."
                     })],
                     flags: MessageFlags.IsComponentsV2
                 });
@@ -31,7 +31,7 @@ module.exports = {
             const role = message.guild.roles.cache.get(plan.role_id);
             if (!role) {
                 return message.reply({
-                    components: [UI.createContainer({ color: 0xFF0000, description: "❌ **Plan role not found.**" })],
+                    components: [UI.createContainer({ color: 0xFF0000, description: "<:no:1526496561188831244>**Plan role not found.**" })],
                     flags: MessageFlags.IsComponentsV2
                 });
             }
@@ -47,7 +47,6 @@ module.exports = {
                     title: `Members of ${role.name}`,
                     description: memberList || "*No members yet.*",
                     color: 0x3498DB,
-                    footer: `${role.members.size} members currently in this plan.`
                 })],
                 flags: MessageFlags.IsComponentsV2
             });
@@ -55,7 +54,7 @@ module.exports = {
         } catch (error) {
             console.error("plist Error:", error);
             message.reply({
-                components: [UI.createContainer({ color: 0xFF0000, description: "❌ **Internal Error**\nFailed to fetch the member list." })],
+                components: [UI.createContainer({ color: 0xFF0000, description: "<:no:1526496561188831244>**Internal Error**\nFailed to fetch the member list." })],
                 flags: MessageFlags.IsComponentsV2
             });
         }

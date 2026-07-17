@@ -12,7 +12,7 @@ module.exports = {
             if (!message.member.permissions.has(PermissionsBitField.Flags.ManageGuild) && !message.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
                 return message.reply({
                     components: [UI.createContainer({
-                        description: '❌ You require **Manage Server** or **Administrator** permissions to use this command.'
+                        description: '<:no:1526496561188831244>You require **Manage Server** or **Administrator** permissions to use this command.'
                     })]
                 });
             }
@@ -47,7 +47,7 @@ module.exports = {
             if (!target) {
                 return message.reply({
                     components: [UI.createContainer({
-                        description: '❌ Please mention a valid user or specify a user ID.'
+                        description: '<:no:1526496561188831244>Please mention a valid user or specify a user ID.'
                     })]
                 });
             }
@@ -55,7 +55,7 @@ module.exports = {
             if (target.user.bot) {
                 return message.reply({
                     components: [UI.createContainer({
-                        description: '❌ Leveling operations cannot be performed on bots.'
+                        description: '<:no:1526496561188831244>Leveling operations cannot be performed on bots.'
                     })]
                 });
             }
@@ -63,7 +63,7 @@ module.exports = {
             let result;
             if (action === 'addxp') {
                 const amount = parseInt(args[2], 10);
-                if (isNaN(amount) || amount <= 0) return message.reply('❌ Please specify a positive number of XP to add.');
+                if (isNaN(amount) || amount <= 0) return message.reply('<:no:1526496561188831244>Please specify a positive number of XP to add.');
                 result = await LevelService.addAdminXP(target.id, message.guild.id, amount, message.client);
                 return message.reply({
                     components: [UI.createContainer({
@@ -74,7 +74,7 @@ module.exports = {
 
             if (action === 'removexp') {
                 const amount = parseInt(args[2], 10);
-                if (isNaN(amount) || amount <= 0) return message.reply('❌ Please specify a positive number of XP to remove.');
+                if (isNaN(amount) || amount <= 0) return message.reply('<:no:1526496561188831244>Please specify a positive number of XP to remove.');
                 result = await LevelService.removeAdminXP(target.id, message.guild.id, amount, message.client);
                 return message.reply({
                     components: [UI.createContainer({
@@ -85,7 +85,7 @@ module.exports = {
 
             if (action === 'setxp') {
                 const val = parseInt(args[2], 10);
-                if (isNaN(val) || val < 0) return message.reply('❌ Please specify a valid non-negative number of XP.');
+                if (isNaN(val) || val < 0) return message.reply('<:no:1526496561188831244>Please specify a valid non-negative number of XP.');
                 result = await LevelService.setXP(target.id, message.guild.id, val, message.client);
                 return message.reply({
                     components: [UI.createContainer({
@@ -96,7 +96,7 @@ module.exports = {
 
             if (action === 'setlevel') {
                 const val = parseInt(args[2], 10);
-                if (isNaN(val) || val < 0) return message.reply('❌ Please specify a valid level.');
+                if (isNaN(val) || val < 0) return message.reply('<:no:1526496561188831244>Please specify a valid level.');
                 result = await LevelService.setLevel(target.id, message.guild.id, val, message.client);
                 return message.reply({
                     components: [UI.createContainer({
@@ -116,7 +116,7 @@ module.exports = {
 
             return message.reply({
                 components: [UI.createContainer({
-                    description: '❌ Invalid leveling admin subcommand.'
+                    description: '<:no:1526496561188831244>Invalid leveling admin subcommand.'
                 })]
             });
 
@@ -124,7 +124,7 @@ module.exports = {
             console.error('Error in leveladmin command:', error);
             await message.reply({
                 components: [UI.createContainer({
-                    description: '❌ Failed to process admin leveling command.',
+                    description: '<:no:1526496561188831244>Failed to process admin leveling command.',
                     color: 0xff0000
                 })]
             });

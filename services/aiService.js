@@ -27,7 +27,7 @@ class AiService {
             return response.data?.candidates?.[0]?.content?.parts?.[0]?.text || "No response generated.";
         } catch (error) {
             console.error("AI Generation Error:", error.response?.data || error.message);
-            return "❌ Failed to communicate with the AI model. Please check the API key configuration.";
+            return "<:no:1526496561188831244>Failed to communicate with the AI model. Please check the API key configuration.";
         }
     }
 
@@ -37,10 +37,10 @@ class AiService {
 
         const prompt = `You are a Discord chat moderator. Check if the following message is highly toxic, abusive, or contains extreme hate speech. Answer ONLY with 'toxic' or 'safe'.\n\nMessage: "${message.content}"`;
         const result = await this.generateText(prompt, config.api_key);
-        
+
         if (result.trim().toLowerCase().includes('toxic')) {
-            await message.delete().catch(() => {});
-            await message.channel.send(`⚠️ ${message.author}, your message was removed by Smart AI Moderation.`).then(m => setTimeout(() => m.delete().catch(() => {}), 5000));
+            await message.delete().catch(() => { });
+            await message.channel.send(`⚠️ ${message.author}, your message was removed by Smart AI Moderation.`).then(m => setTimeout(() => m.delete().catch(() => { }), 5000));
             return true;
         }
         return false;
@@ -66,7 +66,7 @@ class AiService {
     static async summarizeChannel(channel, limit = 50) {
         const messages = await channel.messages.fetch({ limit });
         const list = messages.sort((a, b) => a.createdTimestamp - b.createdTimestamp);
-        
+
         let chatText = "";
         list.forEach(msg => {
             if (!msg.author.bot) {

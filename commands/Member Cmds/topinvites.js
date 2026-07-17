@@ -69,8 +69,10 @@ module.exports = {
 
         const row = new ActionRowBuilder().addComponents(topButton);
 
+        container.addActionRowComponents(row);
+
         await message.channel.send({
-            components: [container, row],
+            components: [container],
             flags: MessageFlags.IsComponentsV2
         });
     }

@@ -5,7 +5,7 @@ const COOLDOWN_TIME = 5000; // 5 seconds cooldown
 
 module.exports = {
     name: 'invite',
-    aliases: ['Celestail','support','celestail','invitebot'],
+    aliases: ['Celestail','celestail','invitebot'],
     description: 'Get the bot\'s invite link.',
     async execute(message) {
         // Check if the user is on cooldown

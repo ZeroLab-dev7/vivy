@@ -34,7 +34,6 @@ module.exports = {
             const guideContainer = UI.createContainer({
                 title: 'Command : crole',
                 description: "Create a new role in the server.",
-                footer: `Requested by ${message.author.tag}`,
                 fields: [
                     { name: "Aliases:", value: "- newrole, rolecreate" },
                     { name: "Usage:", value: "- ?crole <roleName>" },

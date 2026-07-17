@@ -22,7 +22,6 @@ module.exports = {
             const guideContainer = UI.createContainer({
                 title: 'Command : ChannelInfo',
                 description: 'Retrieve details about a specific channel,\n including its settings and permissions.',
-                footer: `Requested by ${message.author.tag}`,
                 fields: [
                     { name: "Aliases:", value: "- cinfo, channel-info" },
                     { name: "Usage:", value: "- ?channelinfo #channel/id" },
@@ -87,7 +86,6 @@ module.exports = {
         const channelContainer = UI.createContainer({
             title: 'Command : Channel Info',
             description: `Channel Information: **${channel.name}**`,
-            footer: `Requested by ${message.author.tag}`,
             fields: [
                 { name: " Channel ID", value: `\`${channel.id}\`` },
                 { name: " Type", value: `${channelType}` },

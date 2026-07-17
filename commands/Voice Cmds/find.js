@@ -49,7 +49,6 @@ module.exports = {
                     { name: '<a:voice:1366765217761071134> **Voice Check:**', value: `<#${voiceChannel.id}>`, inline: true },
                     { name: '<a:voice:1366765217761071134> **Voice Name:**', value: `${voiceChannel.name}`, inline: true }
                 ],
-                footer: `${user.tag}`
             });
         } else {
             container = UI.createContainer({

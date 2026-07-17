@@ -473,7 +473,7 @@
                 <i class="fa-solid fa-house" aria-hidden="true"></i>
                 Return Home
             </a>
-            <button class="btn btn-secondary" onclick="location.reload()" id="btn-retry">
+            <button class="btn btn-secondary" id="btn-retry">
                 <i class="fa-solid fa-rotate-right" aria-hidden="true"></i>
                 Try Again
             </button>
@@ -492,19 +492,7 @@
 
     </main>
 
-    <script>
-        // Countdown timer
-        let t = 10;
-        const el = document.getElementById('countdown');
-        const interval = setInterval(() => {
-            t--;
-            if (el) el.textContent = t;
-            if (t <= 0) {
-                clearInterval(interval);
-                location.reload();
-            }
-        }, 1000);
-    </script>
+    <script src="/500.js"></script>
 </body>
 
 </html>

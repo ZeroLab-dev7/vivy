@@ -23,7 +23,6 @@ module.exports = {
                     components: [UI.createContainer({
                         title: 'Command: warn',
                         description: "Warn a user from the server.",
-                        footer: `Requested by ${message.author.tag}`,
                         fields: [
                             { name: "Usage:", value: "- ?warn @user/id [reason]" },
                             { name: "Examples:", value: `- ?warn <@${message.author.id}> [reason]\n- ?warn ${message.author.id} [reason] ` }

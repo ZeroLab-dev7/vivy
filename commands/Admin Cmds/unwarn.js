@@ -22,7 +22,6 @@ module.exports = {
                 return message.reply({
                     components: [UI.createContainer({
                         title: 'Command: unwarn',
-                        footer: `Requested by ${message.author.tag}`,
                         fields: [
                             { name: "Examples:", value: `- ?unwarn <@${message.author.id}>` }
                         ]

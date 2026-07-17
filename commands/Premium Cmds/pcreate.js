@@ -13,7 +13,7 @@ module.exports = {
                 return message.reply({
                     components: [UI.createContainer({
                         color: 0xFF0000,
-                        description: "❌ **Premium system is not set up.**\nRun `/setup-premium` first."
+                        description: "<:no:1526496561188831244>**Premium system is not set up.**\nRun `/setup-premium` first."
                     })],
                     flags: MessageFlags.IsComponentsV2
                 });
@@ -32,7 +32,7 @@ module.exports = {
                 return message.reply({
                     components: [UI.createContainer({
                         color: 0xFF0000,
-                        description: "❌ **Access Denied**\nYou do not have permission to use this command."
+                        description: "<:no:1526496561188831244>**Access Denied**\nYou do not have permission to use this command."
                     })],
                     flags: MessageFlags.IsComponentsV2
                 });
@@ -64,7 +64,7 @@ module.exports = {
             const targetUser = await message.guild.members.fetch(targetId).catch(() => null);
             if (!targetUser) {
                 return message.reply({
-                    components: [UI.createContainer({ color: 0xFF0000, description: "❌ **User not found.**" })],
+                    components: [UI.createContainer({ color: 0xFF0000, description: "<:no:1526496561188831244>**User not found.**" })],
                     flags: MessageFlags.IsComponentsV2
                 });
             }
@@ -73,7 +73,7 @@ module.exports = {
             const existing = await PremiumPlan.findOne({ where: { owner_id: targetUser.id, guild_id: message.guild.id } });
             if (existing) {
                 return message.reply({
-                    components: [UI.createContainer({ color: 0xFF0000, description: `❌ **${targetUser.user.tag}** already owns a premium plan.` })],
+                    components: [UI.createContainer({ color: 0xFF0000, description: `<:no:1526496561188831244>**${targetUser.user.tag}** already owns a premium plan.` })],
                     flags: MessageFlags.IsComponentsV2
                 });
             }
@@ -89,7 +89,7 @@ module.exports = {
 
             if (!planRole) {
                 return message.reply({
-                    components: [UI.createContainer({ color: 0xFF0000, description: "❌ **Failed to create role.** Ensure I have `Manage Roles` permission and my role is high enough." })],
+                    components: [UI.createContainer({ color: 0xFF0000, description: "<:no:1526496561188831244>**Failed to create role.** Ensure I have `Manage Roles` permission and my role is high enough." })],
                     flags: MessageFlags.IsComponentsV2
                 });
             }
@@ -128,7 +128,7 @@ module.exports = {
 
             if (!planChannel) {
                 return message.reply({
-                    components: [UI.createContainer({ color: 0xFF0000, description: "❌ **Failed to create voice channel.** Ensure I have `Manage Channels` permission." })],
+                    components: [UI.createContainer({ color: 0xFF0000, description: "<:no:1526496561188831244>**Failed to create voice channel.** Ensure I have `Manage Channels` permission." })],
                     flags: MessageFlags.IsComponentsV2
                 });
             }
@@ -163,7 +163,7 @@ module.exports = {
         } catch (error) {
             console.error("pcreate Error:", error);
             message.reply({
-                components: [UI.createContainer({ color: 0xFF0000, description: "❌ **Internal Error**\nFailed to create the premium plan." })],
+                components: [UI.createContainer({ color: 0xFF0000, description: "<:no:1526496561188831244>**Internal Error**\nFailed to create the premium plan." })],
                 flags: MessageFlags.IsComponentsV2
             });
         }

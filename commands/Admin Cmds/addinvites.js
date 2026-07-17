@@ -11,7 +11,7 @@ module.exports = {
 
     async execute(message, args) {
         if (!message.member.permissions.has(PermissionFlagsBits.Administrator)) {
-            return message.reply({ content: '❌ You do not have permission to use this command.' });
+            return message.reply({ content: '<:no:1526496561188831244>You do not have permission to use this command.' });
         }
 
         const targetUser = message.mentions.users.first() || await message.client.users.fetch(args[0]).catch(() => null);
@@ -20,7 +20,7 @@ module.exports = {
         if (!targetUser || isNaN(amount)) {
             return message.reply({
                 components: [UI.createContainer({
-                    description: '❌ Usage: `?addinvites @User <amount>`'
+                    description: '<:no:1526496561188831244>Usage: `?addinvites @User <amount>`'
                 })],
                 flags: MessageFlags.IsComponentsV2
             });
@@ -48,7 +48,7 @@ module.exports = {
 
         } catch (error) {
             console.error('Error adding bonus invites:', error);
-            message.reply({ content: '❌ An error occurred while updating bonus invites.' });
+            message.reply({ content: '<:no:1526496561188831244>An error occurred while updating bonus invites.' });
         }
     }
 };

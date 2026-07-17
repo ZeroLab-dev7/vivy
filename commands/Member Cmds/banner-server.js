@@ -32,7 +32,6 @@ module.exports = {
                 title: `${guild.name}'s Banner`,
                 description: `**Server Banner**\n[Click to download](${serverBanner})`,
                 // image: serverBanner, // Assuming UI.createContainer might not support image yet, sticking to description link + button. Or if I want to display it, I'd need a separate image component if supported.
-                footer: `Requested by ${message.author.tag}`
             });
 
             // Create the download button
@@ -44,8 +43,10 @@ module.exports = {
             // Create action row for the button
             const row = new ActionRowBuilder().addComponents(downloadButton);
 
+            bannerContainer.addActionRowComponents(row);
+
             await message.reply({
-                components: [bannerContainer, row],
+                components: [bannerContainer],
                 flags: MessageFlags.IsComponentsV2
             });
         } else {

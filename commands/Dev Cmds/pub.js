@@ -12,9 +12,9 @@ module.exports = {
       return message.reply({
         embeds: [
           UI.createEmbed({
-             type: 'error',
-             title: 'Error',
-             description: "❌ You don't have permissions to use this command."
+            type: 'error',
+            title: 'Error',
+            description: "<:no:1526496561188831244>You don't have permissions to use this command."
           })
         ]
       });
@@ -22,14 +22,14 @@ module.exports = {
 
     if (!args[0]) {
       return message.reply({
-         embeds: [
-           UI.createEmbed({
-             type: 'info',
-             title: 'Info',
-             description: "❓ Please specify `on` or `off`.\nExample: `?pub on`"
-           })
-         ]
-       });
+        embeds: [
+          UI.createEmbed({
+            type: 'info',
+            title: 'Info',
+            description: "❓ Please specify `on` or `off`.\nExample: `?pub on`"
+          })
+        ]
+      });
     }
 
     const option = args[0].toLowerCase();
@@ -41,39 +41,39 @@ module.exports = {
       });
 
       return message.reply({
-         embeds: [
-           UI.createEmbed({
-             type: 'success',
-             title: 'Success',
-             description: "✅ Pub message has been enabled! New members will receive the Zero Lab welcome message."
-           })
-         ]
-       });
+        embeds: [
+          UI.createEmbed({
+            type: 'success',
+            title: 'Success',
+            description: "✅ Pub message has been enabled! New members will receive the Zero Lab welcome message."
+          })
+        ]
+      });
     } else if (option === 'off') {
-       await PubSetup.upsert({
-         guild_id: message.guild.id,
-         is_enabled: false
-       });
+      await PubSetup.upsert({
+        guild_id: message.guild.id,
+        is_enabled: false
+      });
 
-       return message.reply({
-          embeds: [
-            UI.createEmbed({
-              type: 'success',
-              title: 'Success',
-              description: "✅ Pub message has been disabled!"
-            })
-          ]
-        });
+      return message.reply({
+        embeds: [
+          UI.createEmbed({
+            type: 'success',
+            title: 'Success',
+            description: "✅ Pub message has been disabled!"
+          })
+        ]
+      });
     } else {
-       return message.reply({
-          embeds: [
-            UI.createEmbed({
-              type: 'info',
-              title: 'Info',
-              description: "❓ Invalid option. Please specify `on` or `off`.\nExample: `?pub on`"
-            })
-          ]
-        });
+      return message.reply({
+        embeds: [
+          UI.createEmbed({
+            type: 'info',
+            title: 'Info',
+            description: "❓ Invalid option. Please specify `on` or `off`.\nExample: `?pub on`"
+          })
+        ]
+      });
     }
   }
 };

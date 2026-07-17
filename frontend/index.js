@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ─── CUSTOM MOUSE CURSOR ───
     const cursor = document.getElementById('custom-cursor');
     const cursorGlow = document.getElementById('custom-cursor-glow');
-    
+
     // Check if device supports hover interactions (mouse cursor check)
     const hasHover = window.matchMedia('(any-hover: hover)').matches;
     if (hasHover && cursor && cursorGlow) {
@@ -193,7 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const rect = card.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
-            
+
             // Set css custom property coordinates for glow effects
             card.style.setProperty('--mouse-x', `${x}px`);
             card.style.setProperty('--mouse-y', `${y}px`);
@@ -307,7 +307,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Check if message contains blocked keywords
         const containsBlocked = /nitro|scam|free|gift|phish|http|discord\.gg/i.test(text);
-        
+
         setTimeout(() => {
             if (containsBlocked) {
                 const autoAlert = document.createElement('div');
@@ -376,8 +376,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 currentXp -= 100;
                 currentLevel++;
                 levelPreviewNum.textContent = currentLevel;
-                levelPreviewNotif.textContent = '🎉 Level Up!';
-                
+                levelPreviewNotif.textContent = '<a:pink8:1337678972108148757> Level Up!';
+
                 // Update role tier label
                 if (currentLevel >= 5) {
                     levelPreviewStatus.textContent = 'Elite Administrator';
@@ -667,12 +667,12 @@ document.addEventListener('DOMContentLoaded', () => {
         let ticketCounter = 1042;
         const ticketUsers = ['Loki', 'SkyReacher', 'Zenith', 'Aria', 'Kira'];
         const ticketCategories = ['Moderator Request', 'Feature Inquiry', 'Bug Report', 'General Support'];
-        
+
         tourCreateTicketBtn.addEventListener('click', () => {
             const ticketId = ticketCounter++;
             const user = ticketUsers[Math.floor(Math.random() * ticketUsers.length)];
             const cat = ticketCategories[Math.floor(Math.random() * ticketCategories.length)];
-            
+
             const ticketRow = document.createElement('div');
             ticketRow.className = 'tour-ticket-row';
             ticketRow.id = `ticket-${ticketId}`;
@@ -684,7 +684,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <button class="btn-ghost solve-ticket-btn" data-id="${ticketId}" style="padding:2px 8px;font-size:10px;border-color:rgba(255,255,255,0.1);">Close</button>
                 </div>
             `;
-            
+
             tourTicketsQueue.appendChild(ticketRow);
             tourTicketsQueue.scrollTop = tourTicketsQueue.scrollHeight;
             appendSandboxAuditLog(`Support Ticket <strong>#${ticketId}</strong> opened by <strong>@${user}</strong>.`);
@@ -750,12 +750,12 @@ document.addEventListener('DOMContentLoaded', () => {
         card.addEventListener('click', () => {
             const statusType = card.getAttribute('data-status');
             const chevron = card.querySelector('i');
-            
+
             statusIndicators.forEach(c => {
                 const icon = c.querySelector('i');
                 if (icon) icon.className = 'fa-solid fa-chevron-down';
             });
-            
+
             if (activeStatus === statusType) {
                 statusDetailsPanel.classList.remove('open');
                 statusDetailsPanel.style.maxHeight = '0px';
@@ -763,7 +763,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 activeStatus = statusType;
                 if (chevron) chevron.className = 'fa-solid fa-chevron-up';
-                
+
                 let detailsHTML = '';
                 if (statusType === 'api') {
                     detailsHTML = `
@@ -862,7 +862,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     `;
                 }
-                
+
                 statusDetailsContent.innerHTML = detailsHTML;
                 statusDetailsPanel.classList.add('open');
                 statusDetailsPanel.style.maxHeight = statusDetailsContent.scrollHeight + 40 + 'px';
@@ -876,7 +876,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const cmdPaletteResults = document.getElementById('cmdPaletteResults');
     const navSearchBtn = document.getElementById('navSearchBtn');
     const cmdPaletteCloseBtn = document.getElementById('cmdPaletteCloseBtn');
-    
+
     const cmdSearchDb = [
         { category: 'Sections', title: 'Go to Hero Section', desc: 'Scroll up to header top banner view', action: () => scrollToSection(document.body) },
         { category: 'Sections', title: 'Go to Features Grid', desc: 'Browse bot modules and anti-spam controls', action: () => scrollToSection('#features') },
@@ -885,21 +885,21 @@ document.addEventListener('DOMContentLoaded', () => {
         { category: 'Sections', title: 'Go to Pricing Plans', desc: 'Choose between Standard and Pro SaaS subscription tiers', action: () => scrollToSection('#pricing') },
         { category: 'Sections', title: 'Go to Shard Gateway Status Center', desc: 'Check voice node performance uptime and gateway latency', action: () => scrollToSection('.status-box') },
         { category: 'Sections', title: 'Go to FAQs', desc: 'Frequently asked developer question guides', action: () => scrollToSection('#faq') },
-        
+
         { category: 'Bot Commands', title: '?help', desc: 'Copy bot help instruction manual command', action: () => copyCommandText('?help') },
         { category: 'Bot Commands', title: '?dashboard', desc: 'Copy command shortcut to get dashboard server invite link', action: () => copyCommandText('?dashboard') },
         { category: 'Bot Commands', title: '?vstest', desc: 'Copy command to run voice node response speed benchmark test', action: () => copyCommandText('?vstest') },
         { category: 'Bot Commands', title: '?avatar', desc: 'Copy command to display high quality user server profile picture', action: () => copyCommandText('?avatar') },
         { category: 'Bot Commands', title: '?rank', desc: 'Copy command to display user level experience leaderboards', action: () => copyCommandText('?rank') },
-        
+
         { category: 'Quick Actions', title: 'Reset Sandbox & Playground Demos', desc: 'Restore simulated settings, ticket lists, and logs to factory defaults', action: () => resetAllDemos() },
         { category: 'Quick Actions', title: 'Test Bot Gateway Latency Check', desc: 'Perform live simulated WebSocket heartbeat timing validation', action: () => checkLivePing() },
         { category: 'Quick Actions', title: 'Toggle Page Color Lighting Mode', desc: 'Simulate high premium neon blue or deep obsidian darkness contrast', action: () => toggleObsidianMode() }
     ];
-    
+
     let cmdActiveIndex = 0;
     let filteredCmds = [];
-    
+
     function scrollToSection(selector) {
         const el = typeof selector === 'string' ? document.querySelector(selector) : selector;
         if (el) {
@@ -907,7 +907,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         hideCmdPalette();
     }
-    
+
     function copyCommandText(text) {
         navigator.clipboard.writeText(text).then(() => {
             showToast(`Copied "${text}" to clipboard successfully!`, 'success');
@@ -916,7 +916,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         hideCmdPalette();
     }
-    
+
     function resetAllDemos() {
         const wInput = document.getElementById('welcome-input');
         const wTitle = document.getElementById('welcome-title-input');
@@ -926,7 +926,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const wTitleP = document.getElementById('welcome-preview-title');
         if (wName) wName.textContent = 'Aiden';
         if (wTitleP) wTitleP.textContent = 'Welcome to the Server';
-        
+
         const wCard = document.getElementById('welcomeCardPreview');
         if (wCard) wCard.style.background = 'linear-gradient(135deg, rgba(157, 78, 221, 0.15) 0%, rgba(0, 242, 254, 0.05) 100%)';
         const wAvatar = document.getElementById('welcomeAvatarPreview');
@@ -939,7 +939,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         const wRadios = document.getElementsByName('avatar-shape');
         wRadios.forEach((r, idx) => r.checked = idx === 0);
-        
+
         const queue = document.getElementById('tour-tickets-queue');
         if (queue) {
             queue.innerHTML = `
@@ -952,16 +952,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `;
         }
-        
+
         const consoleEl = document.getElementById('sandboxAuditConsole');
         if (consoleEl) {
             consoleEl.innerHTML = '<div class="audit-line"><span style="color:var(--text-muted);">[SYSTEM]</span> Sandbox Dashboard initialized. Ready for operations.</div>';
         }
-        
+
         showToast('All playground variables restored successfully.', 'success');
         hideCmdPalette();
     }
-    
+
     function checkLivePing() {
         showToast('Checking WebSocket ping latency metrics...', 'info');
         setTimeout(() => {
@@ -970,13 +970,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 800);
         hideCmdPalette();
     }
-    
+
     function toggleObsidianMode() {
         document.body.classList.toggle('obsidian-contrast-mode');
         showToast('Contrast style toggled successfully.', 'info');
         hideCmdPalette();
     }
-    
+
     function showToast(msg, type = 'success') {
         const toast = document.createElement('div');
         toast.className = `toast-banner ${type}`;
@@ -997,20 +997,20 @@ document.addEventListener('DOMContentLoaded', () => {
             gap: 10px;
             animation: toastEnter 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         `;
-        
+
         let icon = '<i class="fa-solid fa-circle-check" style="color:var(--green)"></i>';
         if (type === 'error') icon = '<i class="fa-solid fa-circle-xmark" style="color:#ef4444"></i>';
         if (type === 'info') icon = '<i class="fa-solid fa-circle-info" style="color:var(--cyan)"></i>';
-        
+
         toast.innerHTML = `${icon} <span>${msg}</span>`;
         document.body.appendChild(toast);
-        
+
         setTimeout(() => {
             toast.style.animation = 'toastLeave 0.3s forwards';
             setTimeout(() => toast.remove(), 300);
         }, 3000);
     }
-    
+
     const toastStyle = document.createElement('style');
     toastStyle.textContent = `
         @keyframes toastEnter {
@@ -1027,7 +1027,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     `;
     document.head.appendChild(toastStyle);
-    
+
     function toggleCmdPalette() {
         if (!cmdPalette) return;
         const isHidden = cmdPalette.style.display === 'none';
@@ -1041,25 +1041,25 @@ document.addEventListener('DOMContentLoaded', () => {
             hideCmdPalette();
         }
     }
-    
+
     function hideCmdPalette() {
         if (!cmdPalette) return;
         cmdPalette.style.display = 'none';
         cmdPalette.setAttribute('aria-hidden', 'true');
     }
-    
+
     function renderCmdResults(query) {
         if (!cmdPaletteResults) return;
         const normalizedQuery = query.toLowerCase().trim();
-        
-        filteredCmds = cmdSearchDb.filter(item => 
+
+        filteredCmds = cmdSearchDb.filter(item =>
             item.title.toLowerCase().includes(normalizedQuery) ||
             item.desc.toLowerCase().includes(normalizedQuery) ||
             item.category.toLowerCase().includes(normalizedQuery)
         );
-        
+
         cmdActiveIndex = 0;
-        
+
         if (filteredCmds.length === 0) {
             cmdPaletteResults.innerHTML = `
                 <div style="padding:24px;text-align:center;color:var(--text-muted);font-size:13px;">
@@ -1069,7 +1069,7 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             return;
         }
-        
+
         const groups = {};
         filteredCmds.forEach((item, index) => {
             if (!groups[item.category]) {
@@ -1077,7 +1077,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             groups[item.category].push({ item, originalIndex: index });
         });
-        
+
         let html = '';
         Object.keys(groups).forEach(cat => {
             html += `<div class="cmd-section-title">${cat}</div>`;
@@ -1086,7 +1086,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 let iconClass = 'fa-solid fa-arrow-pointer';
                 if (cat === 'Bot Commands') iconClass = 'fa-solid fa-terminal';
                 if (cat === 'Quick Actions') iconClass = 'fa-solid fa-bolt';
-                
+
                 html += `
                     <div class="cmd-item ${isActive ? 'active' : ''}" data-index="${data.originalIndex}">
                         <div class="cmd-item-icon"><i class="${iconClass}"></i></div>
@@ -1098,21 +1098,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 `;
             });
         });
-        
+
         cmdPaletteResults.innerHTML = html;
-        
+
         const activeEl = cmdPaletteResults.querySelector('.cmd-item.active');
         if (activeEl) {
             activeEl.scrollIntoView({ block: 'nearest' });
         }
     }
-    
+
     document.addEventListener('keydown', (e) => {
         if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
             e.preventDefault();
             toggleCmdPalette();
         }
-        
+
         if (cmdPalette && cmdPalette.style.display !== 'none') {
             if (e.key === 'Escape') {
                 hideCmdPalette();
@@ -1132,35 +1132,35 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     });
-    
+
     function updateActiveCmdItem() {
         const items = cmdPaletteResults.querySelectorAll('.cmd-item');
         items.forEach(el => {
             const idx = parseInt(el.getAttribute('data-index'), 10);
             el.classList.toggle('active', idx === cmdActiveIndex);
         });
-        
+
         const activeEl = cmdPaletteResults.querySelector('.cmd-item.active');
         if (activeEl) {
             activeEl.scrollIntoView({ block: 'nearest' });
         }
     }
-    
+
     if (navSearchBtn) navSearchBtn.addEventListener('click', toggleCmdPalette);
     if (cmdPaletteCloseBtn) cmdPaletteCloseBtn.addEventListener('click', hideCmdPalette);
-    
+
     if (cmdPalette) {
         cmdPalette.addEventListener('click', (e) => {
             if (e.target === cmdPalette) hideCmdPalette();
         });
     }
-    
+
     if (cmdPaletteInput) {
         cmdPaletteInput.addEventListener('input', () => {
             renderCmdResults(cmdPaletteInput.value);
         });
     }
-    
+
     if (cmdPaletteResults) {
         cmdPaletteResults.addEventListener('click', (e) => {
             const item = e.target.closest('.cmd-item');
@@ -1170,6 +1170,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     filteredCmds[idx].action();
                 }
             }
+        });
+    }
+
+    // Newsletter subscription form handler
+    const newsletterForm = document.getElementById('newsletter-form');
+    if (newsletterForm) {
+        newsletterForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Subscribed!');
         });
     }
 });

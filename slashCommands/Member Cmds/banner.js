@@ -34,7 +34,7 @@ module.exports = {
           .setTitle(`${user.tag}'s Global Banner`)
           .setURL(globalBannerURL)
           .setImage(globalBannerURL)
-          .setFooter({ text: `Requested by ${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })
+          
           .setTimestamp();
         embeds.push(globalEmbed);
       }
@@ -45,7 +45,7 @@ module.exports = {
           .setTitle(`${user.tag}'s Server Banner`)
           .setURL(serverBannerURL)
           .setImage(serverBannerURL)
-          .setFooter({ text: `Requested by ${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })
+          
           .setTimestamp();
         embeds.push(serverEmbed);
       }

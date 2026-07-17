@@ -28,7 +28,6 @@ module.exports = {
         components: [UI.createContainer({
           title: 'Command: jail',
           description: "Jail a user from the server.",
-          footer: `Requested by ${message.author.tag}`,
           fields: [
             { name: "Aliases:", value: "- jail, eject" },
             { name: "Usage:", value: "- ?jail @user/id (reason)" },
@@ -150,9 +149,11 @@ module.exports = {
         disabled: true
       }]);
 
+      dmContainer.addActionRowComponents(buttonRow);
+
       try {
         await guildMember.send({
-          components: [dmContainer, buttonRow],
+          components: [dmContainer],
           flags: MessageFlags.IsComponentsV2
         });
       } catch (error) {
@@ -190,7 +191,6 @@ module.exports = {
           { name: "Jailed By", value: `- \`${message.author.username}\` | ${message.author.id}` },
           { name: "Reason", value: `- \`${reason}\`` }
         ],
-        footer: `Requested by ${message.author.tag}`
       });
       await channel.send({
         components: [logContainer],

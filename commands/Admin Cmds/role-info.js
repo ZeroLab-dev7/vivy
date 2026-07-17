@@ -10,7 +10,6 @@ module.exports = {
             const guideContainer = UI.createContainer({
                 title: 'Command : RoleInfo',
                 description: 'Retrieve details about a specific role,\n including permissions.',
-                footer: `Requested by ${message.author.tag}`,
                 fields: [
                     { name: "Aliases:", value: "- rinfo, role-info" },
                     { name: "Usage:", value: "- ?roleinfo @role/id" },
@@ -64,7 +63,6 @@ module.exports = {
         const roleContainer = UI.createContainer({
             title: 'Command : Role Info',
             description: `Role Information: **${role.name}**`,
-            footer: `Requested by ${message.author.tag}`,
             fields: [
                 { name: " Role ID", value: `\`${role.id}\`` },
                 { name: " Created At", value: `<t:${Math.floor(role.createdTimestamp / 1000)}:F>` },

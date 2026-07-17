@@ -56,7 +56,6 @@ module.exports = {
             // Send a confirmation embed
             const container = UI.createContainer({
                 description: `-  Successfully unbanned \`${banInfo.user.username}\` (${userId}).`,
-                footer: `Requested by ${message.author.tag}`
             });
 
             return message.reply({

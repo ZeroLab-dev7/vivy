@@ -1,6 +1,7 @@
 const { WelcomeSettings, AutoRoleSetup } = require('../db/models');
 const { createCanvas, loadImage } = require('@napi-rs/canvas');
 const { EmbedBuilder, AttachmentBuilder } = require('discord.js');
+const UI = require('../utils/ui');
 
 class WelcomeService {
     static async getOrCreateWelcomeSettings(guildId) {
@@ -30,7 +31,12 @@ class WelcomeService {
 
         if (bgUrl) {
             try {
-                const bg = await loadImage(bgUrl);
+                let imageSource = bgUrl;
+                if (bgUrl.startsWith('/presets/')) {
+                    const path = require('path');
+                    imageSource = path.join(__dirname, '../server/public', bgUrl);
+                }
+                const bg = await loadImage(imageSource);
                 ctx.drawImage(bg, 0, 0, 700, 250);
             } catch (e) {
                 console.error("Failed to load welcome banner background:", e);
@@ -92,28 +98,34 @@ class WelcomeService {
                         } catch (e) { }
                     }
 
-                    const welcomeEmbed = new EmbedBuilder();
+                    let welcomeTitle = '👋 Welcome!';
+                    let welcomeDesc = `Hey ${member}, welcome to **${member.guild.name}**!`;
+                    let welcomeColor = '#00f5ff';
+
                     if (embedData) {
-                        if (embedData.title) welcomeEmbed.setTitle(this.replaceVariables(embedData.title, member));
-                        if (embedData.description) welcomeEmbed.setDescription(this.replaceVariables(embedData.description, member));
-                        if (embedData.color) welcomeEmbed.setColor(embedData.color);
-                    } else {
-                        welcomeEmbed.setTitle('👋 Welcome!')
-                            .setDescription(`Hey ${member}, welcome to **${member.guild.name}**!`)
-                            .setColor('#00f5ff');
+                        if (embedData.title) welcomeTitle = this.replaceVariables(embedData.title, member);
+                        if (embedData.description) welcomeDesc = this.replaceVariables(embedData.description, member);
+                        if (embedData.color) welcomeColor = embedData.color;
                     }
 
-                    welcomeEmbed.setTimestamp();
+                    const containerOptions = {
+                        title: welcomeTitle,
+                        description: welcomeDesc,
+                        color: welcomeColor
+                    };
 
                     // Generate Welcome Banner Image if set
                     if (settings.welcome_bg_image) {
                         const buffer = await this.drawBanner(member, settings.welcome_bg_image);
                         const attachment = new AttachmentBuilder(buffer, { name: 'welcome.png' });
-                        welcomeEmbed.setImage('attachment://welcome.png');
+                        containerOptions.image = 'attachment://welcome.png';
                         options.files = [attachment];
                     }
 
-                    options.embeds = [welcomeEmbed];
+                    const welcomeContainer = UI.createContainer(containerOptions);
+                    options.components = [welcomeContainer];
+                    options.flags = 128; // MessageFlags.IsComponentsV2
+
                     await channel.send(options).catch(err => console.error("Error sending welcome message:", err));
                 }
             }
@@ -160,20 +172,26 @@ class WelcomeService {
                         } catch (e) { }
                     }
 
-                    const leaveEmbed = new EmbedBuilder();
+                    let leaveTitle = '🚪 Member Left';
+                    let leaveDesc = `${member.user.username} has left the server.`;
+                    let leaveColor = '#ff3333';
+
                     if (embedData) {
-                        if (embedData.title) leaveEmbed.setTitle(this.replaceVariables(embedData.title, member));
-                        if (embedData.description) leaveEmbed.setDescription(this.replaceVariables(embedData.description, member));
-                        if (embedData.color) leaveEmbed.setColor(embedData.color);
-                    } else {
-                        leaveEmbed.setTitle('🚪 Member Left')
-                            .setDescription(`${member.user.username} has left the server.`)
-                            .setColor('#ff3333');
+                        if (embedData.title) leaveTitle = this.replaceVariables(embedData.title, member);
+                        if (embedData.description) leaveDesc = this.replaceVariables(embedData.description, member);
+                        if (embedData.color) leaveColor = embedData.color;
                     }
 
-                    leaveEmbed.setTimestamp();
+                    const containerOptions = {
+                        title: leaveTitle,
+                        description: leaveDesc,
+                        color: leaveColor
+                    };
 
-                    options.embeds = [leaveEmbed];
+                    const leaveContainer = UI.createContainer(containerOptions);
+                    options.components = [leaveContainer];
+                    options.flags = 128; // MessageFlags.IsComponentsV2
+
                     await channel.send(options).catch(err => console.error("Error sending leave message:", err));
                 }
             }

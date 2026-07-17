@@ -28,7 +28,7 @@ class CustomCommandService {
         const member = message.member;
         for (const cond of conditions) {
             if (cond.type === 'has_role' && !member.roles.cache.has(cond.role_id)) {
-                return message.reply(`❌ You do not have the required role to use this command.`).catch(() => {});
+                return message.reply(`<:no:1526496561188831244>You do not have the required role to use this command.`).catch(() => { });
             }
         }
 
@@ -63,7 +63,7 @@ class CustomCommandService {
                         const builder = new ButtonBuilder()
                             .setLabel(btn.label)
                             .setStyle(ButtonStyle[btn.style || 'Secondary']);
-                        
+
                         if (btn.url) {
                             builder.setURL(btn.url).setStyle(ButtonStyle.Link);
                         } else {
@@ -111,7 +111,7 @@ class CustomCommandService {
                         const builder = new ButtonBuilder()
                             .setLabel(btn.label)
                             .setStyle(ButtonStyle[btn.style || 'Secondary']);
-                        
+
                         if (btn.url) {
                             builder.setURL(btn.url).setStyle(ButtonStyle.Link);
                         } else {
@@ -155,7 +155,7 @@ class CustomCommandService {
     static async syncGuildSlashCommands(client, guildId) {
         try {
             const { REST, Routes, SlashCommandBuilder } = require('discord.js');
-            
+
             // Get custom slash commands from DB
             const customCommands = await CustomCommand.findAll({
                 where: { guild_id: guildId, type: 'slash' }
@@ -190,7 +190,7 @@ class CustomCommandService {
     static async syncAllGuildsSlashCommands(client) {
         try {
             console.log('[SlashSync] Starting sync of slash commands...');
-            
+
             const customCommands = await CustomCommand.findAll({
                 where: { type: 'slash' }
             });

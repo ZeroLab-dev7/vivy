@@ -14,7 +14,7 @@ module.exports = {
 
     const container = UI.createContainer({
       title: `Server Setup • Page 1/4`,
-      description: 
+      description:
         `め 」 **Manage your server configuration using the buttons below.**\n\n` +
         `Use the navigation buttons at the bottom to switch between pages.`,
       color: 0x009aff, // Premium Blue
@@ -60,24 +60,24 @@ module.exports = {
       const AutoModService = require('../../services/autoModService');
       AutoModService.getOrCreateConfig(interaction.guild.id).then(config => {
         AutoModService.syncToDiscord(interaction.client, interaction.guild.id, config).catch(err => {
-          console.error("❌ Error syncing AutoMod rules on setup command:", err);
+          console.error("<:no:1526496561188831244>Error syncing AutoMod rules on setup command:", err);
         });
       });
     } catch (e) {
-      console.error("❌ Error initiating AutoMod sync on setup command:", e);
+      console.error("<:no:1526496561188831244>Error initiating AutoMod sync on setup command:", e);
     }
 
     try {
-      await interaction.editReply({ 
+      await interaction.editReply({
         components: [container],
         flags: MessageFlags.IsComponentsV2
       });
     } catch (error) {
       console.error("Setup Dashboard Error:", error);
       // Fallback for interaction editReply if V2 fails in ephmeral responses on some clients
-      await interaction.editReply({ 
-        content: `❌ An error occurred while opening the dashboard. Please ensure the bot has all necessary permissions.`,
-        components: [] 
+      await interaction.editReply({
+        content: `<:no:1526496561188831244>An error occurred while opening the dashboard. Please ensure the bot has all necessary permissions.`,
+        components: []
       });
     }
   },

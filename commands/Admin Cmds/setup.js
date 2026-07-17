@@ -10,7 +10,7 @@
 //         if (!message.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 //             return message.reply({
 //                 components: [UI.createContainer({
-//                     description: '- ❌ You need the `Administrator` permission to use this command.'
+//                     description: '- <:no:1526496561188831244>You need the `Administrator` permission to use this command.'
 //                 })],
 //                 flags: MessageFlags.IsComponentsV2
 //             });
@@ -64,11 +64,11 @@
 //             const AutoModService = require('../../services/autoModService');
 //             AutoModService.getOrCreateConfig(message.guild.id).then(config => {
 //                 AutoModService.syncToDiscord(message.client, message.guild.id, config).catch(err => {
-//                     console.error("❌ Error syncing AutoMod rules on setup command:", err);
+//                     console.error("<:no:1526496561188831244>Error syncing AutoMod rules on setup command:", err);
 //                 });
 //             });
 //         } catch (e) {
-//             console.error("❌ Error initiating AutoMod sync on setup command:", e);
+//             console.error("<:no:1526496561188831244>Error initiating AutoMod sync on setup command:", e);
 //         }
 
 //         return message.reply({

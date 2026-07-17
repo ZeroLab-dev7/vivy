@@ -29,7 +29,7 @@ async function checkMaintenanceAndDisabled(commandName, userId, client) {
         const isDev = await isDeveloper(userId, client);
         if (!isDev) {
             const msgConfig = await SystemConfig.findOne({ where: { key: 'maintenance_message' } });
-            const customMessage = msgConfig?.value || 'Vivy is currently undergoing maintenance.\nPlease try again later.';
+            const customMessage = msgConfig?.value || 'Vivy is currently undergoing maintenance. Please try again later.';
             return { blocked: true, reason: 'maintenance', message: customMessage };
         }
     }

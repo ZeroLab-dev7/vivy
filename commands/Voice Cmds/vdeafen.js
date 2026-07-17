@@ -38,7 +38,6 @@ module.exports = {
                         { name: 'Usage:', value: '- ?vdeafen @user/id', inline: false },
                         { name: 'Example:', value: `- ?vdeafen <@${message.author.id}>\n- ?vdeafen ${message.author.id} `, inline: false }
                     ],
-                    footer: `Requested by ${message.author.tag}`
                 })],
                 flags: MessageFlags.IsComponentsV2
             });

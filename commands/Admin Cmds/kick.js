@@ -45,7 +45,6 @@ module.exports = {
         components: [UI.createContainer({
           title: 'Command : kick',
           description: "Kick a user from the server.",
-          footer: `Requested by ${message.author.tag}`,
           fields: [
             { name: "Aliases:", value: "- kick, expluser" },
             { name: "Usage:", value: "- ?kick @user/id (reason)" },

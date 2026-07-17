@@ -11,7 +11,7 @@ module.exports = {
             const settings = await PremiumSetup.findByPk(message.guild.id);
             if (!settings) {
                 return message.reply({
-                    components: [UI.createContainer({ color: 0xFF0000, description: "❌ **Premium system not set up.**" })],
+                    components: [UI.createContainer({ color: 0xFF0000, description: "<:no:1526496561188831244>**Premium system not set up.**" })],
                     flags: MessageFlags.IsComponentsV2
                 });
             }
@@ -27,7 +27,7 @@ module.exports = {
             const hasManagerRole = parsedManagerRoles.some(id => message.member.roles.cache.has(id));
             if (!hasManagerRole && !message.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
                 return message.reply({
-                    components: [UI.createContainer({ color: 0xFF0000, description: "❌ **Access Denied**\nThis command is restricted to **Managers**." })],
+                    components: [UI.createContainer({ color: 0xFF0000, description: "<:no:1526496561188831244>**Access Denied**\nThis command is restricted to **Managers**." })],
                     flags: MessageFlags.IsComponentsV2
                 });
             }
@@ -62,7 +62,7 @@ module.exports = {
         } catch (error) {
             console.error("pshowall Error:", error);
             message.reply({
-                components: [UI.createContainer({ color: 0xFF0000, description: "❌ **Internal Error**\nFailed to fetch plans." })],
+                components: [UI.createContainer({ color: 0xFF0000, description: "<:no:1526496561188831244>**Internal Error**\nFailed to fetch plans." })],
                 flags: MessageFlags.IsComponentsV2
             });
         }

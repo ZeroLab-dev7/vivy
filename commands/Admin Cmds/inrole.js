@@ -35,7 +35,6 @@ module.exports = {
             const guideContainer = UI.createContainer({
                 title: 'Command : inrole',
                 description: "List all members with a specific role.",
-                footer: `Requested by ${message.author.tag}`,
                 fields: [
                     { name: "Aliases:", value: "- rolelist, membersinrole" },
                     { name: "Usage:", value: "- ?inrole @role/id" },
@@ -65,7 +64,7 @@ module.exports = {
         const container = UI.createContainer({
             title: `${message.guild.name} | Users with the role: ${role.name}`,
             description: members.join('\n').slice(0, 4000),
-            footer: `Requested by ${message.author.tag} | Total Members: ${members.length}`
+            footer: ``
         });
 
         return message.reply({

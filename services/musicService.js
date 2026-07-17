@@ -97,7 +97,7 @@ class MusicService {
         } catch (error) {
             console.error("Failed to play audio resource:", error);
             if (queue.textChannel) {
-                queue.textChannel.send(`❌ Failed to play: **${song.title}**`);
+                queue.textChannel.send(`<:no:1526496561188831244>Failed to play: **${song.title}**`);
             }
             this.playNext(guildId);
         }

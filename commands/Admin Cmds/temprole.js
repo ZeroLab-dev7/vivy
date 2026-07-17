@@ -10,7 +10,6 @@ module.exports = {
             const guideContainer = UI.createContainer({
                 title: 'Command: TempRole',
                 description: 'Assign a role to a user for a specific amount of time.',
-                footer: `Requested by ${message.author.tag}`,
                 fields: [
                     { name: "Aliases:", value: "- temprole, setrolefor" },
                     { name: "Usage:", value: "- ?temprole (user/id) (role/id) (time)" },
@@ -111,7 +110,7 @@ module.exports = {
                         flags: MessageFlags.IsComponentsV2
                     });
                 } catch (err) {
-                    console.error('❌ Error removing role:', err.message);
+                    console.error('<:no:1526496561188831244>Error removing role:', err.message);
                 }
             }, timeInMinutes * 60 * 1000);
         } catch (err) {

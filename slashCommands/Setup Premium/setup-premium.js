@@ -37,7 +37,7 @@ module.exports = {
             const managerRoleIds = managerRolesInput.match(/\d{17,19}/g) || [];
             if (managerRoleIds.length === 0) {
                 return interaction.editReply({
-                    content: '❌ Please provide valid roles or role IDs for manager roles.',
+                    content: '<:no:1526496561188831244>Please provide valid roles or role IDs for manager roles.',
                     ephemeral: true
                 });
             }
@@ -69,7 +69,7 @@ module.exports = {
             console.error("Setup Premium Error:", error);
             const errorEmbed = new EmbedBuilder()
                 .setColor(Colors.Red)
-                .setDescription("- ❌ An error occurred while setting up the premium system.");
+                .setDescription("- <:no:1526496561188831244>An error occurred while setting up the premium system.");
 
             const errorOptions = { embeds: [errorEmbed], ephemeral: true };
             if (interaction.deferred || interaction.replied) {

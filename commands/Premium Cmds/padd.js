@@ -22,7 +22,7 @@ module.exports = {
                 return message.reply({
                     components: [UI.createContainer({
                         color: 0xFF0000,
-                        description: "❌ **Access Denied**\nYou do not own a premium plan and you are not a manager of any plan."
+                        description: "<:no:1526496561188831244>**Access Denied**\nYou do not own a premium plan and you are not a manager of any plan."
                     })],
                     flags: MessageFlags.IsComponentsV2
                 });
@@ -47,7 +47,7 @@ module.exports = {
 
             if (!targetUser) {
                 return message.reply({
-                    components: [UI.createContainer({ color: 0xFF0000, description: "❌ **User not found.**" })],
+                    components: [UI.createContainer({ color: 0xFF0000, description: "<:no:1526496561188831244>**User not found.**" })],
                     flags: MessageFlags.IsComponentsV2
                 });
             }
@@ -56,7 +56,7 @@ module.exports = {
             const role = message.guild.roles.cache.get(plan.role_id);
             if (!role) {
                 return message.reply({
-                    components: [UI.createContainer({ color: 0xFF0000, description: "❌ **Plan role not found.** Please contact an admin." })],
+                    components: [UI.createContainer({ color: 0xFF0000, description: "<:no:1526496561188831244>**Plan role not found.** Please contact an admin." })],
                     flags: MessageFlags.IsComponentsV2
                 });
             }
@@ -66,7 +66,7 @@ module.exports = {
                 return message.reply({
                     components: [UI.createContainer({
                         color: 0xFF0000,
-                        description: `❌ **Permission Error**\nMy role is not high enough to manage the role **${role.name}**.`
+                        description: `<:no:1526496561188831244>**Permission Error**\nMy role is not high enough to manage the role **${role.name}**.`
                     })],
                     flags: MessageFlags.IsComponentsV2
                 });
@@ -88,7 +88,7 @@ module.exports = {
         } catch (error) {
             console.error("padd Error:", error);
             message.reply({
-                components: [UI.createContainer({ color: 0xFF0000, description: "❌ **Internal Error**\nAn unexpected error occurred." })],
+                components: [UI.createContainer({ color: 0xFF0000, description: "<:no:1526496561188831244>**Internal Error**\nAn unexpected error occurred." })],
                 flags: MessageFlags.IsComponentsV2
             });
         }

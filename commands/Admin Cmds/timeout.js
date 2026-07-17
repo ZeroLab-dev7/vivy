@@ -12,7 +12,6 @@ module.exports = {
             const guideContainer = UI.createContainer({
                 title: 'Command: Timeout',
                 description: 'Apply a timeout to a user for a specific amount of time.',
-                footer: `Requested by ${message.author.tag}`,
                 fields: [
                     { name: "Aliases:", value: "- timeout, timeoutuser, settimeout" },
                     { name: "Usage:", value: "- ?timeout (user/id) (time)" },
@@ -104,11 +103,11 @@ module.exports = {
                         flags: MessageFlags.IsComponentsV2
                     });
                 } catch (err) {
-                    console.error('❌ Error removing timeout:', err.message);
+                    console.error('<:no:1526496561188831244>Error removing timeout:', err.message);
                 }
             }, timeInMilliseconds);
         } catch (err) {
-            console.error('❌ Error applying timeout:', err.message);
+            console.error('<:no:1526496561188831244>Error applying timeout:', err.message);
             const errorContainer = UI.createContainer({
                 description: '- An error occurred while applying the timeout.'
             });

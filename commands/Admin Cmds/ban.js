@@ -44,7 +44,6 @@ module.exports = {
                 components: [UI.createContainer({
                     title: 'Command: ban',
                     description: 'Ban a user from the server.',
-                    footer: `Requested by ${message.author.tag}`,
                     fields: [
                         { name: "Usage:", value: "- ?ban @user/id (reason)" },
                         { name: "Examples:", value: `- ?ban <@${message.author.id}> breaking rules` }

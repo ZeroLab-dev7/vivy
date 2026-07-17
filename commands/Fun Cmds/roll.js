@@ -10,7 +10,6 @@ module.exports = {
         const container = UI.createContainer({
             title: '🎲 Dice Roll',
             description: `You rolled a **${roll}**!`,
-            footer: `Requested by ${message.author.tag}`
         });
 
         message.reply({

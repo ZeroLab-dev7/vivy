@@ -28,13 +28,13 @@ module.exports = {
         }
 
         if (!user) {
-            return message.reply('❌ User not found.');
+            return message.reply('<:no:1526496561188831244>User not found.');
         }
 
         const member = await message.guild.members.fetch(user.id).catch(() => null);
 
         if (!member) {
-            return message.reply('❌ This user is not in the server.');
+            return message.reply('<:no:1526496561188831244>This user is not in the server.');
         }
 
         const joinedAt = member.joinedAt;
@@ -62,7 +62,7 @@ module.exports = {
                 { name: '<a:info:1366763944177434626> Server Member Info', value: `> **Joined At**: ${timeJoined}\n> **Highest Role**: ${highestRoleName}`, inline: false },
                 { name: '<a:info:1366763944177434626> Roles', value: rolesDisplay, inline: false }
             )
-            .setFooter({ text: `Requested by ${message.author.username}`, iconURL: message.author.displayAvatarURL({ dynamic: true }) })
+
             .setTimestamp();
 
         await message.channel.send({ embeds: [embed] });

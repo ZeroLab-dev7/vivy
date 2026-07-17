@@ -6,13 +6,13 @@ class GiveawayService {
         const endTime = new Date(Date.now() + durationMinutes * 60 * 1000);
 
         const giveawayEmbed = new EmbedBuilder()
-            .setTitle(`🎉 GIVEAWAY 🎉`)
-            .setDescription(`**Prize:** ${prize}\n**Winners:** ${winnerCount}\n**React with 🎉 to enter!**\n\nEnds: <t:${Math.floor(endTime.getTime() / 1000)}:R>`)
+            .setTitle(`<a:pink8:1337678972108148757> GIVEAWAY <a:pink8:1337678972108148757>`)
+            .setDescription(`**Prize:** ${prize}\n**Winners:** ${winnerCount}\n**React with <a:pink8:1337678972108148757> to enter!**\n\nEnds: <t:${Math.floor(endTime.getTime() / 1000)}:R>`)
             .setColor('#00f5ff')
             .setTimestamp();
 
         const message = await channel.send({ embeds: [giveawayEmbed] });
-        await message.react('🎉');
+        await message.react('<a:pink8:1337678972108148757>');
 
         return await GiveawayInstance.create({
             guild_id: guild.id,
@@ -46,7 +46,7 @@ class GiveawayService {
                 const message = await channel.messages.fetch(giveaway.message_id).catch(() => null);
                 if (!message) continue;
 
-                const reaction = message.reactions.cache.get('🎉');
+                const reaction = message.reactions.cache.get('<a:pink8:1337678972108148757>');
                 if (!reaction) continue;
 
                 const users = await reaction.users.fetch();
@@ -98,7 +98,7 @@ class GiveawayService {
                 await giveaway.save();
 
                 const endEmbed = new EmbedBuilder()
-                    .setTitle(`🎉 GIVEAWAY ENDED 🎉`)
+                    .setTitle(`<a:pink8:1337678972108148757> GIVEAWAY ENDED <a:pink8:1337678972108148757>`)
                     .setDescription(`**Prize:** ${giveaway.prize}\n**Winners:** ${winnersList.map(id => `<@${id}>`).join(', ') || 'No eligible entrants.'}`)
                     .setColor('Purple')
                     .setTimestamp();

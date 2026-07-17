@@ -44,7 +44,6 @@ module.exports = {
                         { name: "Usage:", value: "- ?vkick @user/id", inline: false },
                         { name: "Example:", value: `- ?vkick <@${message.author.id}>\n- ?vkick ${message.author.id}`, inline: false }
                     ],
-                    footer: `Requested by ${message.author.tag}`
                 })],
                 flags: MessageFlags.IsComponentsV2
             });

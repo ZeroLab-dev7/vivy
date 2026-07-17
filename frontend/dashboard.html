@@ -66,81 +66,75 @@
         <!-- Sidebar -->
         <aside class="dash-sidebar">
             <span class="sidebar-section-label">General</span>
-            <div class="sidebar-item active" id="nav-overview" onclick="switchTab('overview')">
+            <div class="sidebar-item active" id="nav-overview" data-tab="overview">
                 <i class="fa-solid fa-chart-line"></i> Overview
             </div>
-            <div class="sidebar-item" id="nav-welcome" onclick="switchTab('welcome')">
+            <div class="sidebar-item" id="nav-welcome" data-tab="welcome">
                 <i class="fa-solid fa-door-open"></i> Welcome & Leave
             </div>
-            <div class="sidebar-item" id="nav-autorole" onclick="switchTab('autorole')">
+            <div class="sidebar-item" id="nav-autorole" data-tab="autorole">
                 <i class="fa-solid fa-user-plus"></i> Auto Role
             </div>
 
             <span class="sidebar-section-label">Security</span>
-            <div class="sidebar-item" id="nav-security" onclick="switchTab('security')">
+            <div class="sidebar-item" id="nav-security" data-tab="security">
                 <i class="fa-solid fa-user-shield"></i> Security & Prefix
             </div>
-            <div class="sidebar-item" id="nav-antilink" onclick="switchTab('antilink')">
+            <div class="sidebar-item" id="nav-antilink" data-tab="antilink">
                 <i class="fa-solid fa-link-slash"></i> Anti-Link
             </div>
-            <div class="sidebar-item" id="nav-automod" onclick="switchTab('automod')">
+            <div class="sidebar-item" id="nav-automod" data-tab="automod">
                 <i class="fa-solid fa-shield-halved"></i> Auto Moderation
             </div>
-            <div class="sidebar-item" id="nav-raid" onclick="switchTab('raid')">
+            <div class="sidebar-item" id="nav-raid" data-tab="raid">
                 <i class="fa-solid fa-triangle-exclamation"></i> Raid Protection
             </div>
-            <div class="sidebar-item" id="nav-backups" onclick="switchTab('backups')">
+            <div class="sidebar-item" id="nav-backups" data-tab="backups">
                 <i class="fa-solid fa-database"></i> Server Backup
             </div>
-            <div class="sidebar-item" id="nav-security-logs" onclick="switchTab('security-logs')">
+            <div class="sidebar-item" id="nav-security-logs" data-tab="security-logs">
                 <i class="fa-solid fa-shield-halved"></i> Security Logs
             </div>
 
             <span class="sidebar-section-label">Moderation</span>
-            <div class="sidebar-item" id="nav-warn" onclick="switchTab('warn')">
+            <div class="sidebar-item" id="nav-warn" data-tab="warn">
                 <i class="fa-solid fa-triangle-exclamation"></i> Warn System
             </div>
-            <div class="sidebar-item" id="nav-mute" onclick="switchTab('mute')">
+            <div class="sidebar-item" id="nav-mute" data-tab="mute">
                 <i class="fa-solid fa-microphone-slash"></i> Mute System
             </div>
-            <div class="sidebar-item" id="nav-jail" onclick="switchTab('jail')">
+            <div class="sidebar-item" id="nav-jail" data-tab="jail">
                 <i class="fa-solid fa-lock"></i> Jail System
             </div>
-            <div class="sidebar-item" id="nav-audit" onclick="switchTab('audit')">
+            <div class="sidebar-item" id="nav-audit" data-tab="audit">
                 <i class="fa-solid fa-list-check"></i> Audit Logs
             </div>
-            <div class="sidebar-item" id="nav-logs" onclick="switchTab('logs')">
+            <div class="sidebar-item" id="nav-logs" data-tab="logs">
                 <i class="fa-solid fa-book"></i> Server Logs
             </div>
 
             <span class="sidebar-section-label">Community</span>
-            <div class="sidebar-item" id="nav-verification" onclick="switchTab('verification')">
-                <i class="fa-solid fa-user-check"></i> Verification
+            <div class="sidebar-item" id="nav-verification" data-tab="verification">
+                <i class="fa-solid fa-user-check"></i> Verification Center
             </div>
-            <div class="sidebar-item" id="nav-apply" onclick="switchTab('apply')">
+            <div class="sidebar-item" id="nav-verification-history" data-tab="verification-history">
+                <i class="fa-solid fa-clock-rotate-left"></i> Verification History
+            </div>
+            <div class="sidebar-item" id="nav-apply" data-tab="apply">
                 <i class="fa-solid fa-file-pen"></i> Apply Panel
             </div>
-            <div class="sidebar-item" id="nav-economy" onclick="switchTab('economy')">
-                <i class="fa-solid fa-coins"></i> Economy Shop
-            </div>
-            <div class="sidebar-item" id="nav-leveling" onclick="switchTab('leveling')">
+            <div class="sidebar-item" id="nav-leveling" data-tab="leveling">
                 <i class="fa-solid fa-trophy"></i> Leveling System
             </div>
-            <div class="sidebar-item" id="nav-giveaways" onclick="switchTab('giveaways')">
+            <div class="sidebar-item" id="nav-giveaways" data-tab="giveaways">
                 <i class="fa-solid fa-gift"></i> Giveaways
             </div>
-            <div class="sidebar-item" id="nav-rooms" onclick="switchTab('rooms')">
+            <div class="sidebar-item" id="nav-rooms" data-tab="rooms">
                 <i class="fa-solid fa-comments"></i> Need Help Rooms
             </div>
 
             <span class="sidebar-section-label">Advanced</span>
-            <div class="sidebar-item" id="nav-commands" onclick="switchTab('commands')">
-                <i class="fa-solid fa-code"></i> Custom Commands
-            </div>
-            <div class="sidebar-item" id="nav-apikeys" onclick="switchTab('apikeys')">
-                <i class="fa-solid fa-key"></i> API Keys
-            </div>
-            <div class="sidebar-item" id="nav-premium" onclick="switchTab('premium')">
+            <div class="sidebar-item" id="nav-premium" data-tab="premium">
                 <i class="fa-solid fa-gem"></i> Premium Plan
             </div>
         </aside>
@@ -230,16 +224,75 @@
 
                         <div class="form-group">
                             <label class="form-label">Message Template</label>
-                            <textarea id="welcomeText" class="form-control" rows="3"
-                                oninput="updateLivePreview()">Welcome {user} to {server}!</textarea>
+                            <textarea id="welcomeText" class="form-control"
+                                rows="3">Welcome {user} to {server}!</textarea>
                             <div class="form-hint">Variables: <code>{user}</code> <code>{username}</code>
-                                <code>{server}</code> <code>{memberCount}</code></div>
+                                <code>{server}</code> <code>{memberCount}</code>
+                            </div>
                         </div>
 
                         <div class="form-group">
                             <label class="form-label">Card Background URL (Optional)</label>
                             <input type="url" id="welcomeBgImage" class="form-control"
-                                placeholder="https://example.com/banner.png" oninput="updateLivePreview()">
+                                placeholder="https://example.com/banner.png">
+
+                            <!-- Presets Gallery -->
+                            <div class="preset-gallery-label"
+                                style="font-size: 11px; color: var(--text-3); margin-top: 8px; margin-bottom: 4px; text-transform: uppercase; font-weight: 600;">
+                                Free Card Presets</div>
+                            <div class="preset-gallery" data-target="welcomeBgImage"
+                                style="display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 8px; margin-top: 4px;">
+                                <div class="preset-item" data-url="/presets/preset1.svg"
+                                    style="cursor: pointer; border-radius: 6px; border: 1.5px solid rgba(255,255,255,0.08); overflow: hidden; height: 45px; transition: border-color 0.2s;"
+                                    title="Abstract Waves">
+                                    <img src="/presets/preset1.svg"
+                                        style="width: 100%; height: 100%; object-fit: cover;">
+                                </div>
+                                <div class="preset-item" data-url="/presets/preset2.svg"
+                                    style="cursor: pointer; border-radius: 6px; border: 1.5px solid rgba(255,255,255,0.08); overflow: hidden; height: 45px; transition: border-color 0.2s;"
+                                    title="Deep Space">
+                                    <img src="/presets/preset2.svg"
+                                        style="width: 100%; height: 100%; object-fit: cover;">
+                                </div>
+                                <div class="preset-item" data-url="/presets/preset3.svg"
+                                    style="cursor: pointer; border-radius: 6px; border: 1.5px solid rgba(255,255,255,0.08); overflow: hidden; height: 45px; transition: border-color 0.2s;"
+                                    title="Sunset Mountain">
+                                    <img src="/presets/preset3.svg"
+                                        style="width: 100%; height: 100%; object-fit: cover;">
+                                </div>
+                                <div class="preset-item" data-url="/presets/preset4.svg"
+                                    style="cursor: pointer; border-radius: 6px; border: 1.5px solid rgba(255,255,255,0.08); overflow: hidden; height: 45px; transition: border-color 0.2s;"
+                                    title="Dark Grid">
+                                    <img src="/presets/preset4.svg"
+                                        style="width: 100%; height: 100%; object-fit: cover;">
+                                </div>
+                                <div class="preset-item" data-url="/presets/preset5.svg"
+                                    style="cursor: pointer; border-radius: 6px; border: 1.5px solid rgba(255,255,255,0.08); overflow: hidden; height: 45px; transition: border-color 0.2s;"
+                                    title="Fluid Orbs">
+                                    <img src="/presets/preset5.svg"
+                                        style="width: 100%; height: 100%; object-fit: cover;">
+                                </div>
+                                <div class="preset-item" data-url="/presets/preset6.svg"
+                                    style="cursor: pointer; border-radius: 6px; border: 1.5px solid rgba(255,255,255,0.08); overflow: hidden; height: 45px; transition: border-color 0.2s;"
+                                    title="Tech Lines">
+                                    <img src="/presets/preset6.svg"
+                                        style="width: 100%; height: 100%; object-fit: cover;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group"
+                            style="margin-top: 12px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 12px;">
+                            <label class="form-label">Container Title</label>
+                            <input type="text" id="welcomeEmbedTitle" class="form-control" placeholder="👋 Welcome!">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Container Description</label>
+                            <textarea id="welcomeEmbedDesc" class="form-control" rows="2"
+                                placeholder="Hey {user}, glad you're here!"></textarea>
+                            <div class="form-hint">This controls the main description block inside the welcome
+                                container.</div>
                         </div>
 
                         <div class="form-section-title" style="margin-top:24px;"><i class="fa-solid fa-door-closed"></i>
@@ -271,7 +324,20 @@
                                 rows="2">{user} has left the server.</textarea>
                         </div>
 
-                        <button class="btn btn-primary" id="save-welcome-btn" onclick="saveWelcomeSettings()">
+                        <div class="form-group"
+                            style="margin-top: 12px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 12px;">
+                            <label class="form-label">Container Title</label>
+                            <input type="text" id="leaveEmbedTitle" class="form-control" placeholder="🚪 Member Left">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Container Description</label>
+                            <textarea id="leaveEmbedDesc" class="form-control" rows="2"
+                                placeholder="{username} has left the server."></textarea>
+                            <div class="form-hint">This controls the description block inside the leave container.</div>
+                        </div>
+
+                        <button class="btn btn-primary" id="save-welcome-btn">
                             <i class="fa-solid fa-floppy-disk"></i> Save Settings
                         </button>
                     </div>
@@ -293,8 +359,9 @@
                                                 class="mention">@User</span> to <span class="mention">Server</span>!</p>
                                         <div class="discord-embed">
                                             <div class="embed-body">
-                                                <div class="embed-title">👋 Welcome!</div>
-                                                <div class="embed-desc">Hey <span class="mention">@User</span>, glad
+                                                <div class="embed-title" id="previewEmbedTitle">👋 Welcome!</div>
+                                                <div class="embed-desc" id="previewEmbedDesc">Hey <span
+                                                        class="mention">@User</span>, glad
                                                     you're here!</div>
                                                 <div class="embed-canvas">
                                                     <div class="embed-canvas-avatar"></div>
@@ -318,7 +385,8 @@
                                 <li><i class="fa-solid fa-check" style="color:var(--green);margin-right:6px;"></i> Use
                                     <code
                                         style="background:var(--surface-2);padding:1px 5px;border-radius:4px;font-size:11px;color:var(--cyan)">{user}</code>
-                                    to ping the member</li>
+                                    to ping the member
+                                </li>
                                 <li><i class="fa-solid fa-check" style="color:var(--green);margin-right:6px;"></i>
                                     Canvas banners require Premium tier</li>
                                 <li><i class="fa-solid fa-check" style="color:var(--green);margin-right:6px;"></i>
@@ -424,7 +492,7 @@
                 </div>
 
                 <div style="margin-top:20px;">
-                    <button class="btn btn-primary" id="save-automod-btn" onclick="saveAutoMod()">
+                    <button class="btn btn-primary" id="save-automod-btn">
                         <i class="fa-solid fa-floppy-disk"></i> Save Shield Rules
                     </button>
                 </div>
@@ -487,7 +555,7 @@
                         <input type="text" id="shopItemDesc" class="form-control"
                             placeholder="Grants you the VIP Gamer role on purchase">
                     </div>
-                    <button class="btn btn-secondary" onclick="addShopItem()"><i class="fa-solid fa-plus"></i> Add
+                    <button id="btn-add-shop-item" class="btn btn-secondary"><i class="fa-solid fa-plus"></i> Add
                         Item</button>
                 </div>
 
@@ -496,7 +564,7 @@
                     <div id="shopList" style="color:var(--text-2);font-size:14px;">No shop items yet. Create one above!
                     </div>
                     <div style="margin-top:20px;">
-                        <button class="btn btn-primary" onclick="saveEconomy()"><i class="fa-solid fa-floppy-disk"></i>
+                        <button id="btn-save-economy" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i>
                             Save Shop</button>
                     </div>
                 </div>
@@ -609,18 +677,17 @@
 
                 <!-- Leveling Sub-tabs Navigation -->
                 <div class="sub-tabs-container">
-                    <button class="sub-tab-btn active" onclick="switchLevelingSubTab('overview')"><i
-                            class="fa-solid fa-chart-line"></i> Overview</button>
-                    <button class="sub-tab-btn" onclick="switchLevelingSubTab('settings')"><i
-                            class="fa-solid fa-sliders"></i> Settings</button>
-                    <button class="sub-tab-btn" onclick="switchLevelingSubTab('rewards')"><i
-                            class="fa-solid fa-award"></i> Rewards</button>
-                    <button class="sub-tab-btn" onclick="switchLevelingSubTab('boosters')"><i
-                            class="fa-solid fa-rocket"></i> Boosters</button>
-                    <button class="sub-tab-btn" onclick="switchLevelingSubTab('leaderboard')"><i
-                            class="fa-solid fa-trophy"></i> Leaderboard</button>
-                    <button class="sub-tab-btn" onclick="switchLevelingSubTab('logs')"><i
-                            class="fa-solid fa-list-ul"></i> Activity Logs</button>
+                    <button class="sub-tab-btn active" data-subtab="overview"><i class="fa-solid fa-chart-line"></i>
+                        Overview</button>
+                    <button class="sub-tab-btn" data-subtab="settings"><i class="fa-solid fa-sliders"></i>
+                        Settings</button>
+                    <button class="sub-tab-btn" data-subtab="rewards"><i class="fa-solid fa-award"></i> Rewards</button>
+                    <button class="sub-tab-btn" data-subtab="boosters"><i class="fa-solid fa-rocket"></i>
+                        Boosters</button>
+                    <button class="sub-tab-btn" data-subtab="leaderboard"><i class="fa-solid fa-trophy"></i>
+                        Leaderboard</button>
+                    <button class="sub-tab-btn" data-subtab="logs"><i class="fa-solid fa-list-ul"></i> Activity
+                        Logs</button>
                 </div>
 
                 <!-- SUBTAB: Overview -->
@@ -663,6 +730,60 @@
                                 <input type="checkbox" id="lvl-setting-enabled" style="width:18px;height:18px;"> Enable
                                 Leveling System
                             </label>
+                        </div>
+                    </div>
+
+                    <div class="glass-card" style="margin-top:20px;">
+                        <div class="form-section-title"><i class="fa-solid fa-image"></i> Custom Rank Card Background
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Rank Card Background URL (Optional)</label>
+                            <input type="url" id="lvl-setting-rank-bg" class="form-control"
+                                placeholder="https://example.com/banner.png">
+
+                            <!-- Presets Gallery -->
+                            <div class="preset-gallery-label"
+                                style="font-size: 11px; color: var(--text-3); margin-top: 8px; margin-bottom: 4px; text-transform: uppercase; font-weight: 600;">
+                                Free Card Presets</div>
+                            <div class="preset-gallery" data-target="lvl-setting-rank-bg"
+                                style="display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 8px; margin-top: 4px;">
+                                <div class="preset-item" data-url="/presets/preset1.svg"
+                                    style="cursor: pointer; border-radius: 6px; border: 1.5px solid rgba(255,255,255,0.08); overflow: hidden; height: 45px; transition: border-color 0.2s;"
+                                    title="Abstract Waves">
+                                    <img src="/presets/preset1.svg"
+                                        style="width: 100%; height: 100%; object-fit: cover;">
+                                </div>
+                                <div class="preset-item" data-url="/presets/preset2.svg"
+                                    style="cursor: pointer; border-radius: 6px; border: 1.5px solid rgba(255,255,255,0.08); overflow: hidden; height: 45px; transition: border-color 0.2s;"
+                                    title="Deep Space">
+                                    <img src="/presets/preset2.svg"
+                                        style="width: 100%; height: 100%; object-fit: cover;">
+                                </div>
+                                <div class="preset-item" data-url="/presets/preset3.svg"
+                                    style="cursor: pointer; border-radius: 6px; border: 1.5px solid rgba(255,255,255,0.08); overflow: hidden; height: 45px; transition: border-color 0.2s;"
+                                    title="Sunset Mountain">
+                                    <img src="/presets/preset3.svg"
+                                        style="width: 100%; height: 100%; object-fit: cover;">
+                                </div>
+                                <div class="preset-item" data-url="/presets/preset4.svg"
+                                    style="cursor: pointer; border-radius: 6px; border: 1.5px solid rgba(255,255,255,0.08); overflow: hidden; height: 45px; transition: border-color 0.2s;"
+                                    title="Dark Grid">
+                                    <img src="/presets/preset4.svg"
+                                        style="width: 100%; height: 100%; object-fit: cover;">
+                                </div>
+                                <div class="preset-item" data-url="/presets/preset5.svg"
+                                    style="cursor: pointer; border-radius: 6px; border: 1.5px solid rgba(255,255,255,0.08); overflow: hidden; height: 45px; transition: border-color 0.2s;"
+                                    title="Fluid Orbs">
+                                    <img src="/presets/preset5.svg"
+                                        style="width: 100%; height: 100%; object-fit: cover;">
+                                </div>
+                                <div class="preset-item" data-url="/presets/preset6.svg"
+                                    style="cursor: pointer; border-radius: 6px; border: 1.5px solid rgba(255,255,255,0.08); overflow: hidden; height: 45px; transition: border-color 0.2s;"
+                                    title="Tech Lines">
+                                    <img src="/presets/preset6.svg"
+                                        style="width: 100%; height: 100%; object-fit: cover;">
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -778,7 +899,7 @@
                         <div class="form-group">
                             <label class="form-label">Announcement Message Template</label>
                             <textarea id="lvl-setting-announce-msg" class="form-control"
-                                rows="3">🎉 Congratulations {user}! You reached Level {level}!</textarea>
+                                rows="3"><a:pink8:1337678972108148757> Congratulations {user}! You reached Level {level}!</textarea>
                             <div class="form-hint" style="color:var(--text-3);font-size:12px;margin-top:6px;">Variables:
                                 <code>{user}</code> (ping), <code>{username}</code>, <code>{level}</code>,
                                 <code>{xp}</code>, <code>{server}</code>, <code>{role}</code> (unlocked role if any)
@@ -806,9 +927,11 @@
                         </div>
                     </div>
 
-                    <div style="margin-top:24px;margin-bottom:20px;">
-                        <button class="btn btn-primary" onclick="saveLevelingConfig()"><i
-                                class="fa-solid fa-floppy-disk"></i> Save Leveling Settings</button>
+                    <div style="margin-top:24px;margin-bottom:20px;display:flex;gap:12px;flex-wrap:wrap;">
+                        <button id="btn-save-leveling-config" class="btn btn-primary"><i
+                                class="fa-solid fa-floppy-disk"></i> Apply Settings</button>
+                        <button id="btn-reset-leveling-config" class="btn btn-secondary"><i
+                                class="fa-solid fa-rotate-left"></i> Reset to Defaults</button>
                     </div>
                 </div>
 
@@ -835,7 +958,7 @@
                                 </label>
                             </div>
                         </div>
-                        <button class="btn btn-secondary" onclick="addLevelReward()"><i class="fa-solid fa-plus"></i>
+                        <button id="btn-add-level-reward" class="btn btn-secondary"><i class="fa-solid fa-plus"></i>
                             Add Reward</button>
                     </div>
 
@@ -869,7 +992,7 @@
                         <div class="form-grid-3">
                             <div class="form-group">
                                 <label class="form-label">Boost Type</label>
-                                <select id="lvl-boost-type" class="form-control" onchange="toggleBoostTargetInput()">
+                                <select id="lvl-boost-type" class="form-control">
                                     <option value="role">Role Boost</option>
                                     <option value="channel">Channel Boost</option>
                                     <option value="event">Event Boost (Global/Temporary)</option>
@@ -905,7 +1028,7 @@
                             </div>
                         </div>
 
-                        <button class="btn btn-secondary" onclick="addXPBoost()"><i class="fa-solid fa-plus"></i> Add
+                        <button id="btn-add-xp-boost" class="btn btn-secondary"><i class="fa-solid fa-plus"></i> Add
                             Booster</button>
                     </div>
 
@@ -940,7 +1063,7 @@
                             style="display:grid;grid-template-columns:2fr 1fr;gap:20px;align-items:end;">
                             <div class="form-group">
                                 <label class="form-label">Sort Metric</label>
-                                <select id="lvl-leaderboard-sort" class="form-control" onchange="loadLeaderboardData()">
+                                <select id="lvl-leaderboard-sort" class="form-control">
                                     <option value="total">Total XP (Default)</option>
                                     <option value="messages">Message Count</option>
                                     <option value="voice">Voice Active Time</option>
@@ -949,8 +1072,8 @@
                                     <option value="monthly">Monthly XP</option>
                                 </select>
                             </div>
-                            <button class="btn btn-danger" style="margin-bottom:0;"
-                                onclick="resetServerLeaderboard()"><i class="fa-solid fa-trash-can"></i> Reset
+                            <button id="btn-reset-leaderboard" class="btn btn-danger" style="margin-bottom:0;"><i
+                                    class="fa-solid fa-trash-can"></i> Reset
                                 Leaderboard</button>
                         </div>
                     </div>
@@ -1046,7 +1169,7 @@
                         <input type="number" id="giveawayDuration" class="form-control" value="60" min="1">
                     </div>
 
-                    <button class="btn btn-primary" onclick="launchGiveaway()">
+                    <button id="btn-launch-giveaway" class="btn btn-primary">
                         <i class="fa-solid fa-rocket"></i> Launch Giveaway
                     </button>
                 </div>
@@ -1081,10 +1204,11 @@
                         <textarea id="cmdReply" class="form-control" rows="4"
                             placeholder="Check our site: https://example.com — {server}"></textarea>
                         <div class="form-hint">Variables: <code>{user}</code> <code>{server}</code>
-                            <code>{memberCount}</code></div>
+                            <code>{memberCount}</code>
+                        </div>
                     </div>
 
-                    <button class="btn btn-primary" onclick="addCustomCommand()">
+                    <button id="btn-add-custom-command" class="btn btn-primary">
                         <i class="fa-solid fa-square-plus"></i> Create Command
                     </button>
                 </div>
@@ -1125,7 +1249,7 @@
                         <label class="form-label">Key Label</label>
                         <input type="text" id="apiKeyLabel" class="form-control" placeholder="Production Service">
                     </div>
-                    <button class="btn btn-primary" onclick="generateApiKey()"><i class="fa-solid fa-key"></i> Generate
+                    <button id="btn-generate-apikey" class="btn btn-primary"><i class="fa-solid fa-key"></i> Generate
                         Token</button>
                 </div>
 
@@ -1206,6 +1330,7 @@
                             <i class="fa-solid fa-circle-arrow-up"></i> Upgrade to Premium
                         </a>
                     </div>
+                </div>
             </section>
 
             <!-- ── WARN SYSTEM TAB ── -->
@@ -1247,7 +1372,7 @@
                             <option value="">Select channel…</option>
                         </select>
                     </div>
-                    <button class="btn btn-primary" onclick="saveWarn()"><i class="fa-solid fa-floppy-disk"></i> Save
+                    <button id="btn-save-warn" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Save
                         Warn Setup</button>
                 </div>
             </section>
@@ -1279,7 +1404,7 @@
                             <option value="">Select channel…</option>
                         </select>
                     </div>
-                    <button class="btn btn-primary" onclick="saveJail()"><i class="fa-solid fa-floppy-disk"></i> Save
+                    <button id="btn-save-jail" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Save
                         Jail Setup</button>
                 </div>
             </section>
@@ -1305,51 +1430,856 @@
                             <option value="">Select channel…</option>
                         </select>
                     </div>
-                    <button class="btn btn-primary" onclick="saveMute()"><i class="fa-solid fa-floppy-disk"></i> Save
+                    <button id="btn-save-mute" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Save
                         Mute Setup</button>
                 </div>
             </section>
 
-            <!-- ── VERIFICATION TAB ── -->
+            <!-- ── VERIFICATION CENTER TAB ── -->
             <section class="dash-tab" id="tab-verification">
                 <div class="page-header">
-                    <h1>Verification <span class="gradient-text">System</span></h1>
-                    <p>Configure roles assigned after member verification by staff.</p>
+                    <h1>Verification <span class="gradient-text">Center</span></h1>
+                    <p>Secure your server using manual staff screening or automated verification checks.</p>
                 </div>
-                <div class="glass-card" style="max-width:640px;">
-                    <div class="form-section-title"><i class="fa-solid fa-user-check"></i> Verification Roles</div>
-                    <div class="form-group">
-                        <label class="form-label">Verificator Role (staff who verify)</label>
-                        <select id="verVerificatorRole" class="form-control">
-                            <option value="">Select role…</option>
-                        </select>
+
+                <!-- ── OVERVIEW PAGE ── -->
+                <div class="glass-card" id="verification-type-card" style="margin-bottom: 24px; padding: 28px 24px;">
+                    <div style="margin-bottom: 20px;">
+                        <h3 style="margin:0; font-size:18px; font-weight:700; color:var(--text-1);">Verification Type
+                        </h3>
+                        <p style="margin:6px 0 0 0; font-size:13px; color:var(--text-3);">Choose between manual Staff
+                            screening or automated Security validation</p>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">Unverified Role (new members)</label>
-                        <select id="verUnverifiedRole" class="form-control">
-                            <option value="">Select role…</option>
-                        </select>
+
+                    <!-- Hidden input keeps the value for the rest of the code -->
+                    <input type="hidden" id="verificationTypeSelect" value="">
+
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;" class="ver-type-grid">
+
+                        <!-- Card: Staff Verification -->
+                        <div class="ver-type-card" id="ver-card-staff" data-value="staff" role="radio"
+                            aria-checked="false" tabindex="0" aria-label="Staff Verification"
+                            style="position:relative; border:1.5px solid rgba(255,255,255,0.07); background:rgba(255,255,255,0.02); border-radius:14px; padding:24px; cursor:pointer; transition:all 0.25s cubic-bezier(0.4,0,0.2,1); user-select:none; outline:none;">
+                            <!-- Selected badge -->
+                            <div class="ver-type-badge"
+                                style="display:none; position:absolute; top:12px; right:12px; background:linear-gradient(135deg,#5865F2,#4752c4); color:#fff; font-size:10px; font-weight:700; padding:3px 10px; border-radius:20px; letter-spacing:0.04em; text-transform:uppercase;">
+                                ✓ Selected
+                            </div>
+                            <!-- Icon -->
+                            <div
+                                style="width:48px; height:48px; border-radius:12px; background:rgba(88,101,242,0.12); display:flex; align-items:center; justify-content:center; font-size:22px; margin-bottom:16px; transition:background 0.25s;">
+                                👥
+                            </div>
+                            <!-- Title -->
+                            <div style="font-size:15px; font-weight:700; color:var(--text-1); margin-bottom:6px;">Staff
+                                Verification</div>
+                            <!-- Description -->
+                            <p style="font-size:12px; color:var(--text-3); margin:0 0 16px 0; line-height:1.5;">Human
+                                moderators manually verify new members before granting access.</p>
+                            <!-- Features -->
+                            <ul
+                                style="list-style:none; padding:0; margin:0 0 20px 0; display:flex; flex-direction:column; gap:6px;">
+                                <li
+                                    style="font-size:12px; color:var(--text-2); display:flex; align-items:center; gap:8px;">
+                                    <span style="color:#5865F2; font-size:10px;">●</span> Staff approval</li>
+                                <li
+                                    style="font-size:12px; color:var(--text-2); display:flex; align-items:center; gap:8px;">
+                                    <span style="color:#5865F2; font-size:10px;">●</span> Role assignment</li>
+                                <li
+                                    style="font-size:12px; color:var(--text-2); display:flex; align-items:center; gap:8px;">
+                                    <span style="color:#5865F2; font-size:10px;">●</span> Manual screening</li>
+                                <li
+                                    style="font-size:12px; color:var(--text-2); display:flex; align-items:center; gap:8px;">
+                                    <span style="color:#5865F2; font-size:10px;">●</span> Best for private communities
+                                </li>
+                            </ul>
+                            <!-- Button -->
+                            <button class="ver-type-btn"
+                                style="width:100%; padding:9px; border-radius:8px; border:1px solid rgba(88,101,242,0.35); background:rgba(88,101,242,0.1); color:#a5aaff; font-size:13px; font-weight:600; cursor:pointer; transition:all 0.2s; pointer-events:none;">
+                                Select
+                            </button>
+                        </div>
+
+                        <!-- Card: Automatic Verification -->
+                        <div class="ver-type-card" id="ver-card-security" data-value="security" role="radio"
+                            aria-checked="false" tabindex="0" aria-label="Automatic Verification"
+                            style="position:relative; border:1.5px solid rgba(255,255,255,0.07); background:rgba(255,255,255,0.02); border-radius:14px; padding:24px; cursor:pointer; transition:all 0.25s cubic-bezier(0.4,0,0.2,1); user-select:none; outline:none;">
+                            <!-- Selected badge -->
+                            <div class="ver-type-badge"
+                                style="display:none; position:absolute; top:12px; right:12px; background:linear-gradient(135deg,#00b4d8,#0077b6); color:#fff; font-size:10px; font-weight:700; padding:3px 10px; border-radius:20px; letter-spacing:0.04em; text-transform:uppercase;">
+                                ✓ Selected
+                            </div>
+                            <!-- Icon -->
+                            <div
+                                style="width:48px; height:48px; border-radius:12px; background:rgba(0,180,216,0.12); display:flex; align-items:center; justify-content:center; font-size:22px; margin-bottom:16px; transition:background 0.25s;">
+                                🤖
+                            </div>
+                            <!-- Title -->
+                            <div style="font-size:15px; font-weight:700; color:var(--text-1); margin-bottom:6px;">
+                                Automatic Verification</div>
+                            <!-- Description -->
+                            <p style="font-size:12px; color:var(--text-3); margin:0 0 16px 0; line-height:1.5;">
+                                Automatically verify members using buttons, captcha, rules or security checks.</p>
+                            <!-- Features -->
+                            <ul
+                                style="list-style:none; padding:0; margin:0 0 20px 0; display:flex; flex-direction:column; gap:6px;">
+                                <li
+                                    style="font-size:12px; color:var(--text-2); display:flex; align-items:center; gap:8px;">
+                                    <span style="color:#00b4d8; font-size:10px;">●</span> Instant verification</li>
+                                <li
+                                    style="font-size:12px; color:var(--text-2); display:flex; align-items:center; gap:8px;">
+                                    <span style="color:#00b4d8; font-size:10px;">●</span> Automatic role assignment</li>
+                                <li
+                                    style="font-size:12px; color:var(--text-2); display:flex; align-items:center; gap:8px;">
+                                    <span style="color:#00b4d8; font-size:10px;">●</span> Captcha support</li>
+                                <li
+                                    style="font-size:12px; color:var(--text-2); display:flex; align-items:center; gap:8px;">
+                                    <span style="color:#00b4d8; font-size:10px;">●</span> Faster onboarding</li>
+                            </ul>
+                            <!-- Button -->
+                            <button class="ver-type-btn"
+                                style="width:100%; padding:9px; border-radius:8px; border:1px solid rgba(0,180,216,0.35); background:rgba(0,180,216,0.1); color:#7edcf5; font-size:13px; font-weight:600; cursor:pointer; transition:all 0.2s; pointer-events:none;">
+                                Select
+                            </button>
+                        </div>
+
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">Verified Role (male / default)</label>
-                        <select id="verVerifiedRole" class="form-control">
-                            <option value="">Select role…</option>
-                        </select>
+                </div>
+
+                <!-- ── STATS OVERVIEW ── -->
+                <div class="glass-card" style="margin-bottom: 24px; padding: 24px;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px;">
+                        <div class="glass-card"
+                            style="display: flex; align-items: center; gap: 16px; padding: 16px; background: rgba(255,255,255,0.02);">
+                            <div
+                                style="width: 40px; height: 40px; border-radius: 50%; background: rgba(0, 245, 255, 0.08); color: var(--cyan); display: flex; align-items: center; justify-content: center; font-size: 16px;">
+                                <i class="fa-solid fa-user-check"></i>
+                            </div>
+                            <div>
+                                <div
+                                    style="font-size: 10px; color: var(--text-3); text-transform: uppercase; font-weight: 600;">
+                                    Verified Today</div>
+                                <div id="stat-ver-today"
+                                    style="font-size: 20px; font-weight: 800; color: var(--text-1); margin-top: 2px;">0
+                                </div>
+                            </div>
+                        </div>
+                        <div class="glass-card"
+                            style="display: flex; align-items: center; gap: 16px; padding: 16px; background: rgba(255,255,255,0.02);">
+                            <div
+                                style="width: 40px; height: 40px; border-radius: 50%; background: rgba(255, 0, 127, 0.08); color: #ff007f; display: flex; align-items: center; justify-content: center; font-size: 16px;">
+                                <i class="fa-solid fa-user-slash"></i>
+                            </div>
+                            <div>
+                                <div
+                                    style="font-size: 10px; color: var(--text-3); text-transform: uppercase; font-weight: 600;">
+                                    Failed Today</div>
+                                <div id="stat-ver-failed"
+                                    style="font-size: 20px; font-weight: 800; color: var(--text-1); margin-top: 2px;">0
+                                </div>
+                            </div>
+                        </div>
+                        <div class="glass-card"
+                            style="display: flex; align-items: center; gap: 16px; padding: 16px; background: rgba(255,255,255,0.02);">
+                            <div
+                                style="width: 40px; height: 40px; border-radius: 50%; background: rgba(255, 165, 0, 0.08); color: #ffa500; display: flex; align-items: center; justify-content: center; font-size: 16px;">
+                                <i class="fa-solid fa-users-viewfinder"></i>
+                            </div>
+                            <div>
+                                <div
+                                    style="font-size: 10px; color: var(--text-3); text-transform: uppercase; font-weight: 600;">
+                                    Pending Members</div>
+                                <div id="stat-ver-pending"
+                                    style="font-size: 20px; font-weight: 800; color: var(--text-1); margin-top: 2px;">0
+                                </div>
+                            </div>
+                        </div>
+                        <div class="glass-card"
+                            style="display: flex; align-items: center; gap: 16px; padding: 16px; background: rgba(255,255,255,0.02);">
+                            <div
+                                style="width: 40px; height: 40px; border-radius: 50%; background: rgba(0, 255, 127, 0.08); color: #00ff7f; display: flex; align-items: center; justify-content: center; font-size: 16px;">
+                                <i class="fa-solid fa-chart-pie"></i>
+                            </div>
+                            <div>
+                                <div
+                                    style="font-size: 10px; color: var(--text-3); text-transform: uppercase; font-weight: 600;">
+                                    Success Rate</div>
+                                <div id="stat-ver-rate"
+                                    style="font-size: 20px; font-weight: 800; color: var(--text-1); margin-top: 2px;">
+                                    100%</div>
+                            </div>
+                        </div>
+                        <div class="glass-card"
+                            style="display: flex; align-items: center; gap: 16px; padding: 16px; background: rgba(255,255,255,0.02);">
+                            <div
+                                style="width: 40px; height: 40px; border-radius: 50%; background: rgba(155, 81, 224, 0.08); color: #9b51e0; display: flex; align-items: center; justify-content: center; font-size: 16px;">
+                                <i class="fa-solid fa-stopwatch"></i>
+                            </div>
+                            <div>
+                                <div
+                                    style="font-size: 10px; color: var(--text-3); text-transform: uppercase; font-weight: 600;">
+                                    Avg Speed</div>
+                                <div id="stat-ver-speed"
+                                    style="font-size: 20px; font-weight: 800; color: var(--text-1); margin-top: 2px;">0s
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">Verified Female Role</label>
-                        <select id="verVerifiedFemaleRole" class="form-control">
-                            <option value="">Select role…</option>
-                        </select>
+                </div>
+
+                <!-- ── NO TYPE SELECTED NOTICE ── -->
+                <div id="ver-no-selection-notice" class="glass-card"
+                    style="margin-bottom:24px; padding:20px 24px; display:flex; align-items:center; gap:16px; border:1px solid rgba(255,165,0,0.2); background:rgba(255,165,0,0.05);">
+                    <div
+                        style="width:36px; height:36px; border-radius:50%; background:rgba(255,165,0,0.12); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                        <i class="fa-solid fa-circle-exclamation" style="color:#ffa500; font-size:16px;"></i>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">Verification Logs Channel</label>
-                        <select id="verLogsChannel" class="form-control">
-                            <option value="">Select channel…</option>
-                        </select>
+                    <div>
+                        <div style="font-size:13px; font-weight:600; color:#ffa500; margin-bottom:2px;">No verification
+                            type selected</div>
+                        <div style="font-size:12px; color:var(--text-3);">Choose a verification method above to continue
+                            configuring your server.</div>
                     </div>
-                    <button class="btn btn-primary" onclick="saveVerification()"><i class="fa-solid fa-floppy-disk"></i>
-                        Save Verification Setup</button>
+                </div>
+
+                <!-- ── PANELS WRAPPER (hidden until a type is chosen) ── -->
+                <div id="ver-panels-wrapper"
+                    style="display:none; opacity:0; transform:translateY(10px); transition:opacity 0.25s ease, transform 0.25s ease;">
+
+                    <!-- ── PANEL 1: STAFF VERIFICATION ── -->
+                    <div class="glass-card" id="panel-ver-staff"
+                        style="display: none; max-width: 640px; margin-bottom: 24px;">
+                        <div class="form-section-title"><i class="fa-solid fa-user-group"></i> Staff Verification
+                            Settings</div>
+                        <div class="form-group" style="margin-top: 12px;">
+                            <label class="form-label">Verificator Role (staff who screen)</label>
+                            <select id="verVerificatorRole" class="form-control">
+                                <option value="">Select role…</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Unverified Role (assigned to new joins)</label>
+                            <select id="verUnverifiedRole" class="form-control">
+                                <option value="">Select role…</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Verified Role (male / default)</label>
+                            <select id="verVerifiedRole" class="form-control">
+                                <option value="">Select role…</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Verified Female Role</label>
+                            <select id="verVerifiedFemaleRole" class="form-control">
+                                <option value="">Select role…</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Verification Logs Channel</label>
+                            <select id="verLogsChannel" class="form-control">
+                                <option value="">Select channel…</option>
+                            </select>
+                        </div>
+                        <button id="btn-save-verification" class="btn btn-primary" style="margin-top: 12px;"><i
+                                class="fa-solid fa-floppy-disk"></i> Save Setup</button>
+                    </div>
+
+                    <!-- ── PANEL 2: SECURITY VERIFICATION (NEW) ── -->
+                    <div id="panel-ver-security" style="display: none; margin-bottom: 24px;">
+
+                        <!-- SECTION 1: Verification Level -->
+                        <div class="glass-card" style="margin-bottom:24px;">
+                            <div class="form-section-title"><i class="fa-solid fa-gauge-high"></i> Section 1:
+                                Verification Level</div>
+                            <p style="font-size:12px; color:var(--text-3); margin-top:4px;">Select the screening
+                                strictness. Preset configurations will auto-populate recommended rules.</p>
+
+                            <div
+                                style="display:grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap:12px; margin-top:16px;">
+                                <label class="preset-card">
+                                    <input type="radio" name="secLevel" value="low">
+                                    <span style="font-weight:700; color:var(--cyan); font-size:14px;">LOW</span>
+                                    <span style="font-size:11px; color:var(--text-3);">3d Age, 10s Join, No
+                                        Captcha</span>
+                                </label>
+
+                                <label class="preset-card">
+                                    <input type="radio" name="secLevel" value="medium">
+                                    <span style="font-weight:700; color:#00ff7f; font-size:14px;">MEDIUM</span>
+                                    <span style="font-size:11px; color:var(--text-3);">14d Age, 1m Join, Button
+                                        Captcha</span>
+                                </label>
+
+                                <label class="preset-card">
+                                    <input type="radio" name="secLevel" value="high">
+                                    <span style="font-weight:700; color:#ffa500; font-size:14px;">HIGH</span>
+                                    <span style="font-size:11px; color:var(--text-3);">30d Age, Math Captcha, Avatar,
+                                        Basic Alt</span>
+                                </label>
+
+                                <label class="preset-card">
+                                    <input type="radio" name="secLevel" value="extreme">
+                                    <span style="font-weight:700; color:#ff007f; font-size:14px;">EXTREME</span>
+                                    <span style="font-size:11px; color:var(--text-3);">60d Age, Strict Alt, Image
+                                        Captcha, Kick</span>
+                                </label>
+
+                                <label class="preset-card">
+                                    <input type="radio" name="secLevel" value="custom">
+                                    <span style="font-weight:700; color:#9b51e0; font-size:14px;">CUSTOM</span>
+                                    <span style="font-size:11px; color:var(--text-3);">Fully customize every rule
+                                        manually</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="editor-grid">
+
+                            <!-- LEFT MAIN COLUMN -->
+                            <div style="display:flex; flex-direction:column; gap:24px;">
+
+                                <!-- SECTION 2: Verification Channel -->
+                                <div class="glass-card">
+                                    <div class="form-section-title"><i class="fa-solid fa-hashtag"></i> Section 2:
+                                        Verification Channel</div>
+                                    <div class="form-group" style="margin-top:16px;">
+                                        <label class="form-label">Verification Channel</label>
+                                        <select id="secChannelId" class="form-control">
+                                            <option value="">Select channel…</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Verification Category (optional)</label>
+                                        <select id="secCategoryId" class="form-control">
+                                            <option value="">Select category…</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Verification Logs Channel</label>
+                                        <select id="secLogChannelId" class="form-control">
+                                            <option value="">Select channel…</option>
+                                        </select>
+                                    </div>
+                                    <div class="toggle-row">
+                                        <div class="toggle-info">
+                                            <div class="toggle-title">Auto Create Channel</div>
+                                            <div class="toggle-desc">Automatically create verification channel if
+                                                missing.</div>
+                                        </div>
+                                        <input type="checkbox" id="secAutoCreateChannel"
+                                            style="width:18px; height:18px;">
+                                    </div>
+                                    <div class="toggle-row">
+                                        <div class="toggle-info">
+                                            <div class="toggle-title">Auto Permissions</div>
+                                            <div class="toggle-desc">Auto-configure read/write channel permissions.
+                                            </div>
+                                        </div>
+                                        <input type="checkbox" id="secAutoPermissions" style="width:18px; height:18px;">
+                                    </div>
+                                    <div class="toggle-row">
+                                        <div class="toggle-info">
+                                            <div class="toggle-title">Delete Previous Verification Messages</div>
+                                            <div class="toggle-desc">Clean up older bot verification messages on setup
+                                                post.</div>
+                                        </div>
+                                        <input type="checkbox" id="secDeletePreviousMsg"
+                                            style="width:18px; height:18px;">
+                                    </div>
+
+                                    <div
+                                        style="border-top:1px solid rgba(255,255,255,0.05); padding-top:16px; margin-top:16px;">
+                                        <div class="form-section-title" style="font-size:13px; margin-bottom:12px;">
+                                            Button Styling</div>
+                                        <div class="form-grid-3">
+                                            <div class="form-group">
+                                                <label class="form-label">Label</label>
+                                                <input type="text" id="secBtnLabel" class="form-control"
+                                                    value="Verify Me">
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Emoji</label>
+                                                <input type="text" id="secBtnEmoji" class="form-control"
+                                                    value="<:shield:1525735478450454550>">
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Style</label>
+                                                <select id="secBtnStyle" class="form-control">
+                                                    <option value="primary">Primary (Blue)</option>
+                                                    <option value="secondary">Secondary (Gray)</option>
+                                                    <option value="success">Success (Green)</option>
+                                                    <option value="danger">Danger (Red)</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div
+                                        style="display:flex; gap:12px; margin-top:20px; border-top:1px solid rgba(255,255,255,0.05); padding-top:16px;">
+                                        <button id="btn-sec-post-message" class="btn btn-secondary" style="flex:1;"><i
+                                                class="fa-solid fa-paper-plane"></i> Send Verification Message</button>
+                                    </div>
+                                </div>
+
+                                <!-- SECTION 3: Verification Roles -->
+                                <div class="glass-card">
+                                    <div class="form-section-title"><i class="fa-solid fa-id-card"></i> Section 3:
+                                        Verification Roles</div>
+                                    <div class="form-group" style="margin-top:16px;">
+                                        <label class="form-label">Verified Role (assigned on success)</label>
+                                        <select id="secVerifiedRoleId" class="form-control">
+                                            <option value="">Select role…</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Unverified Role (assigned on join / removed on
+                                            success)</label>
+                                        <select id="secUnverifiedRoleId" class="form-control">
+                                            <option value="">Select role…</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Failure Role (optional, given on check
+                                            failure)</label>
+                                        <select id="secFailureRoleId" class="form-control">
+                                            <option value="">Select role (none)…</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- SECTION 4: Security Rules (Visible only when CUSTOM level is selected) -->
+                                <div class="glass-card" id="panel-sec-custom-rules" style="display:none;">
+                                    <div class="form-section-title"><i class="fa-solid fa-shield-halved"></i> Section 4:
+                                        Security Rules (Custom Config)</div>
+
+                                    <div style="display:flex; flex-direction:column; gap:16px; margin-top:16px;">
+
+                                        <!-- Rule: Min Account Age -->
+                                        <div class="rule-block"
+                                            style="border-bottom:1px solid rgba(255,255,255,0.03); padding-bottom:12px;">
+                                            <div
+                                                style="display:flex; justify-content:space-between; align-items:center;">
+                                                <div>
+                                                    <div style="font-weight:600; color:var(--text-1); font-size:14px;">
+                                                        Minimum Account Age</div>
+                                                    <div style="font-size:11px; color:var(--text-3); margin-top:2px;">
+                                                        Disallow accounts newer than configured days.</div>
+                                                </div>
+                                                <input type="checkbox" id="secRuleMinAccountAgeEnabled"
+                                                    style="width:16px; height:16px;">
+                                            </div>
+                                            <div id="wrapper-rule-min-age" style="margin-top:8px; display:none;">
+                                                <input type="number" id="secRuleMinAccountAgeVal" class="form-control"
+                                                    style="max-width:120px;" placeholder="Days" value="3">
+                                            </div>
+                                        </div>
+
+                                        <!-- Rule: Min Join Time -->
+                                        <div class="rule-block"
+                                            style="border-bottom:1px solid rgba(255,255,255,0.03); padding-bottom:12px;">
+                                            <div
+                                                style="display:flex; justify-content:space-between; align-items:center;">
+                                                <div>
+                                                    <div style="font-weight:600; color:var(--text-1); font-size:14px;">
+                                                        Minimum Join Time</div>
+                                                    <div style="font-size:11px; color:var(--text-3); margin-top:2px;">
+                                                        Force user to wait in server before verifying.</div>
+                                                </div>
+                                                <input type="checkbox" id="secRuleMinJoinTimeEnabled"
+                                                    style="width:16px; height:16px;">
+                                            </div>
+                                            <div id="wrapper-rule-min-join" style="margin-top:8px; display:none;">
+                                                <input type="number" id="secRuleMinJoinTimeVal" class="form-control"
+                                                    style="max-width:120px;" placeholder="Seconds" value="10">
+                                            </div>
+                                        </div>
+
+                                        <!-- Rule: Require Avatar -->
+                                        <div class="rule-block"
+                                            style="border-bottom:1px solid rgba(255,255,255,0.03); padding-bottom:12px;">
+                                            <div
+                                                style="display:flex; justify-content:space-between; align-items:center;">
+                                                <div>
+                                                    <div style="font-weight:600; color:var(--text-1); font-size:14px;">
+                                                        Require Avatar</div>
+                                                    <div style="font-size:11px; color:var(--text-3); margin-top:2px;">
+                                                        Blocks default avatars.</div>
+                                                </div>
+                                                <input type="checkbox" id="secRuleRequireAvatarEnabled"
+                                                    style="width:16px; height:16px;">
+                                            </div>
+                                        </div>
+
+                                        <!-- Rule: Captcha -->
+                                        <div class="rule-block"
+                                            style="border-bottom:1px solid rgba(255,255,255,0.03); padding-bottom:12px;">
+                                            <div
+                                                style="display:flex; justify-content:space-between; align-items:center;">
+                                                <div>
+                                                    <div style="font-weight:600; color:var(--text-1); font-size:14px;">
+                                                        Captcha Security</div>
+                                                    <div style="font-size:11px; color:var(--text-3); margin-top:2px;">
+                                                        Prompt buttons, math, or image captchas on click.</div>
+                                                </div>
+                                                <input type="checkbox" id="secRuleCaptchaEnabled"
+                                                    style="width:16px; height:16px;">
+                                            </div>
+                                            <div id="wrapper-rule-captcha" style="margin-top:8px; display:none;">
+                                                <select id="secRuleCaptchaType" class="form-control"
+                                                    style="max-width:200px;">
+                                                    <option value="button">Button Challenge</option>
+                                                    <option value="math">Math Challenge</option>
+                                                    <option value="image">Image Challenge</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <!-- Rule: Anti Alt -->
+                                        <div class="rule-block"
+                                            style="border-bottom:1px solid rgba(255,255,255,0.03); padding-bottom:12px;">
+                                            <div
+                                                style="display:flex; justify-content:space-between; align-items:center;">
+                                                <div>
+                                                    <div style="font-weight:600; color:var(--text-1); font-size:14px;">
+                                                        Anti Alt Detection</div>
+                                                    <div style="font-size:11px; color:var(--text-3); margin-top:2px;">
+                                                        Identify potential alt accounts.</div>
+                                                </div>
+                                                <input type="checkbox" id="secRuleAntiAltEnabled"
+                                                    style="width:16px; height:16px;">
+                                            </div>
+                                            <div id="wrapper-rule-anti-alt" style="margin-top:8px; display:none;">
+                                                <select id="secRuleAntiAltType" class="form-control"
+                                                    style="max-width:200px;">
+                                                    <option value="basic">Basic (Age threshold)</option>
+                                                    <option value="strict">Strict (Database fingerprint check)</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <!-- Rule: Cooldown -->
+                                        <div class="rule-block"
+                                            style="border-bottom:1px solid rgba(255,255,255,0.03); padding-bottom:12px;">
+                                            <div
+                                                style="display:flex; justify-content:space-between; align-items:center;">
+                                                <div>
+                                                    <div style="font-weight:600; color:var(--text-1); font-size:14px;">
+                                                        Verification Cooldown</div>
+                                                    <div style="font-size:11px; color:var(--text-3); margin-top:2px;">
+                                                        Wait seconds between verification clicks.</div>
+                                                </div>
+                                                <input type="checkbox" id="secRuleCooldownEnabled"
+                                                    style="width:16px; height:16px;">
+                                            </div>
+                                            <div id="wrapper-rule-cooldown" style="margin-top:8px; display:none;">
+                                                <input type="number" id="secRuleCooldownVal" class="form-control"
+                                                    style="max-width:120px;" placeholder="Seconds" value="10">
+                                            </div>
+                                        </div>
+
+                                        <!-- Rule: Max Attempts -->
+                                        <div class="rule-block"
+                                            style="border-bottom:1px solid rgba(255,255,255,0.03); padding-bottom:12px;">
+                                            <div
+                                                style="display:flex; justify-content:space-between; align-items:center;">
+                                                <div>
+                                                    <div style="font-weight:600; color:var(--text-1); font-size:14px;">
+                                                        Maximum Attempts</div>
+                                                    <div style="font-size:11px; color:var(--text-3); margin-top:2px;">
+                                                        Kick/ban thresholds on failure count.</div>
+                                                </div>
+                                                <input type="checkbox" id="secRuleMaxAttemptsEnabled"
+                                                    style="width:16px; height:16px;">
+                                            </div>
+                                            <div id="wrapper-rule-max-attempts" style="margin-top:8px; display:none;">
+                                                <input type="number" id="secRuleMaxAttemptsVal" class="form-control"
+                                                    style="max-width:120px;" placeholder="Attempts" value="3">
+                                            </div>
+                                        </div>
+
+                                        <!-- Rule Auto actions & messages -->
+                                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+                                            <label class="form-label"
+                                                style="display:flex; align-items:center; gap:8px; cursor:pointer;"><input
+                                                    type="checkbox" id="secRuleAutoKickEnabled"> Auto Kick on
+                                                Failure</label>
+                                            <label class="form-label"
+                                                style="display:flex; align-items:center; gap:8px; cursor:pointer;"><input
+                                                    type="checkbox" id="secRuleAutoBanEnabled"> Auto Ban on
+                                                Failure</label>
+                                            <label class="form-label"
+                                                style="display:flex; align-items:center; gap:8px; cursor:pointer;"><input
+                                                    type="checkbox" id="secRuleSendDmEnabled"> Send DM on
+                                                Failure</label>
+                                            <label class="form-label"
+                                                style="display:flex; align-items:center; gap:8px; cursor:pointer;"><input
+                                                    type="checkbox" id="secRuleWelcomeMessageEnabled"> Send Welcome
+                                                Message</label>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <!-- RIGHT MAIN COLUMN (Embed customizer, actions, logs) -->
+                            <div style="display:flex; flex-direction:column; gap:24px;">
+
+                                <!-- Embed message customizer -->
+                                <div class="glass-card">
+                                    <div class="form-section-title"><i class="fa-solid fa-palette"></i> Verification
+                                        Embed Editor</div>
+                                    <div class="form-group" style="margin-top:16px;">
+                                        <label class="form-label">Embed Title</label>
+                                        <input type="text" id="secEmbedTitle" class="form-control"
+                                            value="Verification Required">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Description</label>
+                                        <textarea id="secEmbedDesc" class="form-control"
+                                            style="height: 60px;">Click the button below to verify and access the server.</textarea>
+                                    </div>
+                                    <div class="form-grid-2">
+                                        <div class="form-group">
+                                            <label class="form-label">Color</label>
+                                            <input type="color" id="secEmbedColor" class="form-control"
+                                                style="padding: 0 4px; height: 38px; cursor: pointer;" value="#0099ff">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Thumbnail URL</label>
+                                            <input type="url" id="secEmbedThumbnail" class="form-control"
+                                                placeholder="https://">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Footer Text</label>
+                                        <input type="text" id="secEmbedFooter" class="form-control"
+                                            placeholder="Server Security Check">
+                                    </div>
+
+                                    <div class="discord-preview-header"
+                                        style="font-size:10px; color:var(--text-3); text-transform:uppercase; font-weight:700; margin-top:20px; margin-bottom:8px;">
+                                        Live Preview</div>
+                                    <div class="discord-preview"
+                                        style="background:#313338; border-radius:8px; padding:12px; font-family:sans-serif;">
+                                        <div style="display:flex; gap:12px;">
+                                            <div
+                                                style="width:36px; height:36px; border-radius:50%; background:#5865F2; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:bold; font-size:14px;">
+                                                V</div>
+                                            <div style="flex:1;">
+                                                <div style="display:flex; align-items:center; gap:6px;">
+                                                    <span
+                                                        style="color:#ffffff; font-weight:600; font-size:14px;">Vivy</span>
+                                                    <span
+                                                        style="background:#5865F2; color:#ffffff; font-size:9px; padding:1px 3px; border-radius:3px; font-weight:600; text-transform:uppercase;">BOT</span>
+                                                </div>
+                                                <div id="secPreviewEmbedBox"
+                                                    style="margin-top:6px; border-left:4px solid #0099ff; background:#1e1f22; border-radius:4px; padding:12px 16px; display:flex; flex-direction:column; gap:12px; max-width:520px; box-sizing:border-box; width:100%;">
+                                                    <div style="display:flex; justify-content:space-between; gap:16px;">
+                                                        <div style="flex:1; min-width:0;">
+                                                            <div id="secPreviewTitle"
+                                                                style="color:#ffffff; font-weight:700; font-size:16px; margin-bottom:4px; font-family:'Outfit', sans-serif;">
+                                                                Verification Required</div>
+                                                            <div id="secPreviewDesc"
+                                                                style="color:#dbdee1; font-size:13px; white-space:pre-wrap; line-height:1.4;">
+                                                                Click the button below to verify and access the server.
+                                                            </div>
+                                                        </div>
+                                                        <div id="secPreviewThumb"
+                                                            style="display:none; width:48px; height:48px; border-radius:4px; overflow:hidden; flex-shrink:0;">
+                                                            <img src=""
+                                                                style="width:100%; height:100%; object-fit:cover;">
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Action Row inside the V2 container -->
+                                                    <div style="margin-top:4px;">
+                                                        <button id="secPreviewButton"
+                                                            style="background:#5865F2; color:#ffffff; border:none; padding:8px 16px; border-radius:4px; font-size:13px; font-weight:500; display:flex; align-items:center; gap:6px; cursor:pointer;">
+                                                            <span
+                                                                id="secPreviewBtnEmoji">&lt;:shield:1525735478450454550&gt;</span>
+                                                            <span id="secPreviewBtnText">Verify Me</span>
+                                                        </button>
+                                                    </div>
+
+                                                    <div id="secPreviewFooter"
+                                                        style="color:#949ba4; font-size:11px; opacity:0.8; margin-top:4px;">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- SECTION 5: Verification Actions -->
+                                <div class="glass-card">
+                                    <div class="form-section-title"><i class="fa-solid fa-play"></i> Section 5:
+                                        Verification Actions</div>
+
+                                    <div style="margin-top:16px; display:flex; flex-direction:column; gap:16px;">
+                                        <div>
+                                            <div
+                                                style="font-weight:700; font-size:12px; color:var(--cyan); text-transform:uppercase; letter-spacing:0.5px; border-bottom:1px solid rgba(255,255,255,0.04); padding-bottom:4px; margin-bottom:12px;">
+                                                After Success</div>
+                                            <div style="display:flex; flex-direction:column; gap:8px;">
+                                                <label class="form-label"
+                                                    style="display:flex; align-items:center; gap:8px; cursor:pointer;"><input
+                                                        type="checkbox" id="secActionSuccessRemoveUnverified" checked>
+                                                    Remove Unverified Role</label>
+                                                <label class="form-label"
+                                                    style="display:flex; align-items:center; gap:8px; cursor:pointer;"><input
+                                                        type="checkbox" id="secActionSuccessGiveVerified" checked> Give
+                                                    Verified Role</label>
+                                                <label class="form-label"
+                                                    style="display:flex; align-items:center; gap:8px; cursor:pointer;"><input
+                                                        type="checkbox" id="secActionSuccessSendDm"> Send Welcome
+                                                    DM</label>
+                                                <label class="form-label"
+                                                    style="display:flex; align-items:center; gap:8px; cursor:pointer;"><input
+                                                        type="checkbox" id="secActionSuccessLog" checked> Log
+                                                    Success</label>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <div
+                                                style="font-weight:700; font-size:12px; color:#ff007f; text-transform:uppercase; letter-spacing:0.5px; border-bottom:1px solid rgba(255,255,255,0.04); padding-bottom:4px; margin-bottom:12px;">
+                                                After Failure</div>
+                                            <div style="display:flex; flex-direction:column; gap:8px;">
+                                                <label class="form-label"
+                                                    style="display:flex; align-items:center; gap:8px; cursor:pointer;"><input
+                                                        type="checkbox" id="secActionFailRetry" checked> Allow
+                                                    Retry</label>
+                                                <div
+                                                    style="display:flex; align-items:center; gap:8px; margin-left:22px;">
+                                                    <span style="font-size:11px; color:var(--text-3);">Retry
+                                                        Cooldown</span>
+                                                    <input type="number" id="secActionFailCooldown" class="form-control"
+                                                        style="max-width:80px; height:28px; padding:0 4px;" value="60">
+                                                    <span style="font-size:11px; color:var(--text-3);">seconds</span>
+                                                </div>
+                                                <label class="form-label"
+                                                    style="display:flex; align-items:center; gap:8px; cursor:pointer;"><input
+                                                        type="checkbox" id="secActionFailNotifyStaff"> Notify Staff via
+                                                    Log Channel</label>
+                                                <label class="form-label"
+                                                    style="display:flex; align-items:center; gap:8px; cursor:pointer;"><input
+                                                        type="checkbox" id="secActionFailKick"> Kick Member</label>
+                                                <label class="form-label"
+                                                    style="display:flex; align-items:center; gap:8px; cursor:pointer;"><input
+                                                        type="checkbox" id="secActionFailBan"> Ban Member</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- SECTION 6: Verification Logs -->
+                                <div class="glass-card">
+                                    <div class="form-section-title"><i class="fa-solid fa-list-check"></i> Section 6:
+                                        Verification Logs</div>
+                                    <div class="form-group" style="margin-top:16px;">
+                                        <label class="form-label">Log Level</label>
+                                        <select id="secLogLevel" class="form-control">
+                                            <option value="info">Info (All actions & checks)</option>
+                                            <option value="warn">Warn (Failures and retries only)</option>
+                                            <option value="error">Error (Bans and kicks only)</option>
+                                        </select>
+                                    </div>
+                                    <div class="toggle-row">
+                                        <div class="toggle-info">
+                                            <div class="toggle-title">Verbose Mode</div>
+                                            <div class="toggle-desc">Include exact check evaluations and duration.</div>
+                                        </div>
+                                        <input type="checkbox" id="secLogVerbose" style="width:18px; height:18px;">
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div style="margin-top:24px; display:flex; gap:12px;">
+                            <button id="btn-save-security-verification" class="btn btn-primary"><i
+                                    class="fa-solid fa-floppy-disk"></i> Save Security Settings</button>
+                        </div>
+
+                    </div>
+                </div><!-- /ver-panels-wrapper -->
+            </section>
+
+            <!-- ── DEDICATED VERIFICATION HISTORY TAB (STANDALONE) ── -->
+            <section class="dash-tab" id="tab-verification-history">
+                <div class="page-header">
+                    <h1>Verification <span class="gradient-text">History Log</span></h1>
+                    <p>Audit and export logs of all recent member verification screening attempts.</p>
+                </div>
+
+                <div class="glass-card">
+                    <div
+                        style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+                        <h3 style="margin:0; font-size:16px; color:var(--text-1);"><i
+                                class="fa-solid fa-clock-rotate-left"></i> Historic Audit Log</h3>
+                        <div style="display:flex; gap:8px;">
+                            <button id="btn-export-ver-json" class="btn btn-secondary btn-sm"><i
+                                    class="fa-solid fa-file-code"></i> Export JSON</button>
+                            <button id="btn-export-ver-csv" class="btn btn-secondary btn-sm"><i
+                                    class="fa-solid fa-file-csv"></i> Export CSV</button>
+                        </div>
+                    </div>
+
+                    <div
+                        style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-top:20px; margin-bottom:20px;">
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label class="form-label" style="font-size:11px;">Status Filter</label>
+                            <select id="verHistoryFilterStatus" class="form-control">
+                                <option value="all">All Results</option>
+                                <option value="passed">Passed</option>
+                                <option value="failed">Failed</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label class="form-label" style="font-size:11px;">Timeframe Filter</label>
+                            <select id="verHistoryFilterTime" class="form-control">
+                                <option value="all">All Time</option>
+                                <option value="today">Today</option>
+                                <option value="week">This Week</option>
+                                <option value="month">This Month</option>
+                            </select>
+                        </div>
+                        <div class="form-group"
+                            style="margin-bottom:0; display:flex; flex-direction:column; justify-content:flex-end; grid-column: span 2;">
+                            <label class="form-label" style="font-size:11px;">Search User</label>
+                            <div style="display:flex; gap:8px;">
+                                <input type="text" id="verHistorySearch" class="form-control"
+                                    placeholder="Search by Username or User ID…">
+                                <button id="btn-ver-history-search" class="btn btn-secondary"
+                                    style="white-space:nowrap;"><i class="fa-solid fa-magnifying-glass"></i>
+                                    Search</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="overflow-x:auto;">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th>Timestamp</th>
+                                    <th>Method</th>
+                                    <th>Status</th>
+                                    <th>Checks Passed</th>
+                                    <th>Checks Failed</th>
+                                    <th>Details / Reason</th>
+                                </tr>
+                            </thead>
+                            <tbody id="verHistoryTableBody">
+                                <tr>
+                                    <td colspan="7" style="text-align:center; color:var(--text-2); padding:32px;">No
+                                        verification records found.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </section>
 
@@ -1379,7 +2309,7 @@
                                 <option value="ban">🔨 Ban Member</option>
                             </select>
                         </div>
-                        <button class="btn btn-primary" onclick="saveAntiLink()"><i class="fa-solid fa-floppy-disk"></i>
+                        <button id="btn-save-antilink" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i>
                             Save Anti-Link</button>
                     </div>
                     <div class="glass-card">
@@ -1473,8 +2403,7 @@
                                 style="background-color: #313338; border-radius: 8px; padding: 16px; font-family: 'Inter', sans-serif; color: #dbdee1; font-size: 14px; line-height: 1.375; text-align: left; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
                                 <div style="display: flex; gap: 14px; align-items: flex-start;">
                                     <img src="/logo.png"
-                                        style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;"
-                                        onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png'">
+                                        style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
                                     <div style="display: flex; flex-direction: column; width: 100%;">
                                         <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
                                             <strong style="color: #f2f3f5; font-weight: 600;">Vivy</strong>
@@ -1515,7 +2444,7 @@
                                             <!-- Footer -->
                                             <div id="previewFooter"
                                                 style="color: #949ba4; font-size: 11px; margin-top: 4px; opacity: 0.8;">
-                                                -# Powered by Zero Lab #LoadingToFuture • Staff Recruitment</div>
+                                                -# Powered by ZeroLab Studio • Staff Recruitment</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1557,7 +2486,7 @@
                             </div>
                             <div class="form-group" style="margin-top: 12px;">
                                 <label class="form-label">Panel Component Style</label>
-                                <select id="applyPanelStyle" class="form-control" onchange="updateApplyPreview()">
+                                <select id="applyPanelStyle" class="form-control">
                                     <option value="menu">Dropdown Menu (Recommended for many roles)</option>
                                     <option value="buttons">Individual Buttons (Classic)</option>
                                 </select>
@@ -1571,18 +2500,18 @@
                             <div class="form-group">
                                 <label class="form-label">Panel Title</label>
                                 <input type="text" id="applyPanelTitle" class="form-control"
-                                    placeholder="e.g. Server • Staff Applications" oninput="updateApplyPreview()">
+                                    placeholder="e.g. Server • Staff Applications">
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Panel Description</label>
                                 <textarea id="applyPanelDescription" class="form-control" rows="4"
-                                    placeholder="Description markdown..." oninput="updateApplyPreview()"
+                                    placeholder="Description markdown..."
                                     style="resize: vertical; min-height: 80px;"></textarea>
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Banner Image URL</label>
                                 <input type="url" id="applyBanner" class="form-control"
-                                    placeholder="https://example.com/banner.png" oninput="updateApplyPreview()">
+                                    placeholder="https://example.com/banner.png">
                             </div>
                         </div>
 
@@ -1600,12 +2529,12 @@
                                 <!-- Dynamic Department Cards will be inserted here -->
                             </div>
 
-                            <button type="button" class="btn btn-secondary btn-sm" onclick="addDepartment()"
+                            <button id="btn-add-department" type="button" class="btn btn-secondary btn-sm"
                                 style="width: 100%; border-style: dashed; border-width: 1.5px; background: rgba(255,255,255,0.02); margin-bottom: 20px;">
                                 <i class="fa-solid fa-plus"></i> Add New Department
                             </button>
 
-                            <button class="btn btn-primary" onclick="saveApply()" style="width: 100%;"><i
+                            <button id="btn-save-apply" class="btn btn-primary" style="width: 100%;"><i
                                     class="fa-solid fa-floppy-disk"></i> Save Apply Panel</button>
                         </div>
                     </div>
@@ -1626,7 +2555,7 @@
                         <div class="form-hint">Select roles from the list. New members will automatically receive these
                             roles. You can type to filter.</div>
                     </div>
-                    <button class="btn btn-primary" onclick="saveAutoRole()"><i class="fa-solid fa-floppy-disk"></i>
+                    <button id="btn-save-autorole" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i>
                         Save Auto Role</button>
                 </div>
             </section>
@@ -1637,31 +2566,36 @@
                     <h1>Security & <span class="gradient-text">Prefix</span></h1>
                     <p>Manage server prefix, Anti-Nuke shields, whitelists, and log channels.</p>
                 </div>
-                
+
                 <div style="display:flex; flex-wrap:wrap; gap:20px; align-items:flex-start;">
-                    
+
                     <!-- Left column: Settings Forms -->
                     <div style="flex:1; min-width:320px; display:flex; flex-direction:column; gap:20px;">
-                        
+
                         <!-- General settings card -->
                         <div class="glass-card">
                             <div class="form-section-title"><i class="fa-solid fa-hashtag"></i> General Settings</div>
                             <div class="form-group">
                                 <label class="form-label">Command Prefix</label>
-                                <input type="text" id="guildPrefix" class="form-control" maxLength="5" placeholder="e.g. &">
+                                <input type="text" id="guildPrefix" class="form-control" maxLength="5"
+                                    placeholder="e.g. &">
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Security Owner Roles</label>
-                                <select id="guildOwnerRoles" class="form-control" multiple style="height: 100px;"></select>
-                                <div class="form-hint">Roles that bypass security checks and can manage security settings.</div>
+                                <select id="guildOwnerRoles" class="form-control" multiple
+                                    style="height: 100px;"></select>
+                                <div class="form-hint">Roles that bypass security checks and can manage security
+                                    settings.</div>
                             </div>
-                            <button class="btn btn-primary" onclick="saveGuildSettings()"><i class="fa-solid fa-floppy-disk"></i> Save General Settings</button>
+                            <button id="btn-save-guildsettings" class="btn btn-primary"><i
+                                    class="fa-solid fa-floppy-disk"></i> Save General Settings</button>
                         </div>
 
                         <!-- Anti-Nuke Shields Card -->
                         <div class="glass-card">
-                            <div class="form-section-title"><i class="fa-solid fa-shield-halved"></i> Anti-Nuke Shields</div>
-                            
+                            <div class="form-section-title"><i class="fa-solid fa-shield-halved"></i> Anti-Nuke Shields
+                            </div>
+
                             <!-- Logs Channel -->
                             <div class="form-group">
                                 <label class="form-label">Security Logs Channel</label>
@@ -1674,95 +2608,112 @@
 
                             <!-- Anti-Bot -->
                             <div style="margin-bottom:15px;">
-                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                                <div
+                                    style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
                                     <label class="checkbox-container">
                                         <input type="checkbox" id="sec_antiBotEnabled">
                                         <span class="checkmark"></span>
                                         <strong>Anti-Bot Shield</strong>
                                     </label>
-                                    <select id="sec_antiBotPunishment" class="form-control" style="width:120px; padding:4px 8px; font-size:12px; height:auto;">
+                                    <select id="sec_antiBotPunishment" class="form-control"
+                                        style="width:120px; padding:4px 8px; font-size:12px; height:auto;">
                                         <option value="kick">Kick Bot</option>
                                         <option value="ban">Ban Bot</option>
                                     </select>
                                 </div>
-                                <p style="font-size:12px; color:var(--text-2); margin-left:28px;">Blocks and punishes unauthorized bot joins.</p>
+                                <p style="font-size:12px; color:var(--text-2); margin-left:28px;">Blocks and punishes
+                                    unauthorized bot joins.</p>
                             </div>
 
                             <!-- Anti-Webhook -->
                             <div style="margin-bottom:15px;">
-                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                                <div
+                                    style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
                                     <label class="checkbox-container">
                                         <input type="checkbox" id="sec_antiWebhookEnabled">
                                         <span class="checkmark"></span>
                                         <strong>Anti-Webhook Shield</strong>
                                     </label>
-                                    <select id="sec_antiWebhookPunishment" class="form-control" style="width:120px; padding:4px 8px; font-size:12px; height:auto;">
+                                    <select id="sec_antiWebhookPunishment" class="form-control"
+                                        style="width:120px; padding:4px 8px; font-size:12px; height:auto;">
                                         <option value="none">None</option>
                                         <option value="timeout">Timeout</option>
                                         <option value="kick">Kick</option>
                                         <option value="ban">Ban</option>
                                     </select>
                                 </div>
-                                <p style="font-size:12px; color:var(--text-2); margin-left:28px;">Deletes unauthorized webhooks and punishes the executor.</p>
+                                <p style="font-size:12px; color:var(--text-2); margin-left:28px;">Deletes unauthorized
+                                    webhooks and punishes the executor.</p>
                             </div>
 
                             <!-- Role Protection -->
                             <div style="margin-bottom:15px;">
-                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                                <div
+                                    style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
                                     <label class="checkbox-container">
                                         <input type="checkbox" id="sec_roleProtectionEnabled">
                                         <span class="checkmark"></span>
                                         <strong>Role Protection</strong>
                                     </label>
-                                    <select id="sec_roleProtectionPunishment" class="form-control" style="width:120px; padding:4px 8px; font-size:12px; height:auto;">
+                                    <select id="sec_roleProtectionPunishment" class="form-control"
+                                        style="width:120px; padding:4px 8px; font-size:12px; height:auto;">
                                         <option value="none">None</option>
                                         <option value="timeout">Timeout</option>
                                         <option value="kick">Kick</option>
                                         <option value="ban">Ban</option>
                                     </select>
                                 </div>
-                                <p style="font-size:12px; color:var(--text-2); margin-left:28px;">Restores deleted roles / dangerous modifications and punishes the executor.</p>
+                                <p style="font-size:12px; color:var(--text-2); margin-left:28px;">Restores deleted roles
+                                    / dangerous modifications and punishes the executor.</p>
                             </div>
 
                             <!-- Channel Protection -->
                             <div style="margin-bottom:20px;">
-                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                                <div
+                                    style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
                                     <label class="checkbox-container">
                                         <input type="checkbox" id="sec_channelProtectionEnabled">
                                         <span class="checkmark"></span>
                                         <strong>Channel Protection</strong>
                                     </label>
-                                    <select id="sec_channelProtectionPunishment" class="form-control" style="width:120px; padding:4px 8px; font-size:12px; height:auto;">
+                                    <select id="sec_channelProtectionPunishment" class="form-control"
+                                        style="width:120px; padding:4px 8px; font-size:12px; height:auto;">
                                         <option value="none">None</option>
                                         <option value="timeout">Timeout</option>
                                         <option value="kick">Kick</option>
                                         <option value="ban">Ban</option>
                                     </select>
                                 </div>
-                                <p style="font-size:12px; color:var(--text-2); margin-left:28px;">Restores deleted channels / permissions and punishes the executor.</p>
+                                <p style="font-size:12px; color:var(--text-2); margin-left:28px;">Restores deleted
+                                    channels / permissions and punishes the executor.</p>
                             </div>
 
-                            <button class="btn btn-primary" onclick="saveSecuritySettings()"><i class="fa-solid fa-floppy-disk"></i> Save Anti-Nuke Shields</button>
+                            <button id="btn-save-securitysettings" class="btn btn-primary"><i
+                                    class="fa-solid fa-floppy-disk"></i> Save Anti-Nuke Shields</button>
                         </div>
                     </div>
 
                     <!-- Right column: Trusted Whitelist -->
                     <div style="flex:1; min-width:320px; display:flex; flex-direction:column; gap:20px;">
                         <div class="glass-card">
-                            <div class="form-section-title"><i class="fa-solid fa-user-check"></i> Trusted Whitelist</div>
+                            <div class="form-section-title"><i class="fa-solid fa-user-check"></i> Trusted Whitelist
+                            </div>
                             <p style="font-size:13px; color:var(--text-2); margin-bottom:15px;">
                                 Add trusted users, roles, or bot IDs that are allowed to bypass Anti-Nuke checks.
                             </p>
-                            
+
                             <div style="display:flex; gap:8px; margin-bottom:16px;">
-                                <input type="text" id="whitelistEntityId" class="form-control" placeholder="ID (User / Role / Bot)">
+                                <input type="text" id="whitelistEntityId" class="form-control"
+                                    placeholder="ID (User / Role / Bot)">
                                 <select id="whitelistType" class="form-control" style="width:100px;">
                                     <option value="user">User</option>
                                     <option value="role">Role</option>
                                     <option value="bot">Bot</option>
                                 </select>
-                                <input type="text" id="whitelistLabel" class="form-control" placeholder="Label (optional)">
-                                <button class="btn btn-primary" onclick="addWhitelistEntity()"><i class="fa-solid fa-plus"></i></button>
+                                <input type="text" id="whitelistLabel" class="form-control"
+                                    placeholder="Label (optional)">
+                                <button id="btn-add-whitelist-entity" class="btn btn-primary"><i
+                                        class="fa-solid fa-plus"></i></button>
                             </div>
 
                             <div style="max-height: 300px; overflow-y: auto;">
@@ -1776,7 +2727,9 @@
                                     </thead>
                                     <tbody id="whitelistTableBody">
                                         <tr>
-                                            <td colspan="3" style="text-align:center; color:var(--text-2); padding:20px;">No whitelisted entities yet.</td>
+                                            <td colspan="3"
+                                                style="text-align:center; color:var(--text-2); padding:20px;">No
+                                                whitelisted entities yet.</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -1793,10 +2746,11 @@
                     <h1>Raid <span class="gradient-text">Protection</span></h1>
                     <p>Detect and lock down server during invite floods, mass mentions, and join raids.</p>
                 </div>
-                
+
                 <div class="glass-card" style="max-width:650px;">
-                    <div class="form-section-title"><i class="fa-solid fa-triangle-exclamation"></i> Raid Shield Configuration</div>
-                    
+                    <div class="form-section-title"><i class="fa-solid fa-triangle-exclamation"></i> Raid Shield
+                        Configuration</div>
+
                     <div class="form-group">
                         <label class="checkbox-container">
                             <input type="checkbox" id="raidEnabled">
@@ -1856,11 +2810,13 @@
                             <strong>Lock Server on Raid Detection</strong>
                         </label>
                         <p style="font-size:12px; color:var(--text-2); margin-left:28px; margin-top:4px;">
-                            Denies SendMessages permission for @everyone to prevent spamming until server is manually unlocked.
+                            Denies SendMessages permission for @everyone to prevent spamming until server is manually
+                            unlocked.
                         </p>
                     </div>
 
-                    <button class="btn btn-primary" onclick="saveRaidSettings()"><i class="fa-solid fa-floppy-disk"></i> Save Raid Shield Settings</button>
+                    <button id="btn-save-raidsettings" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i>
+                        Save Raid Shield Settings</button>
                 </div>
             </section>
 
@@ -1872,18 +2828,23 @@
                 </div>
 
                 <div style="display:flex; flex-direction:column; gap:20px;">
-                    <div class="glass-card" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px;">
+                    <div class="glass-card"
+                        style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px;">
                         <div>
-                            <div class="form-section-title" style="margin:0;"><i class="fa-solid fa-folder-open"></i> Full Server Snapshot Backup</div>
+                            <div class="form-section-title" style="margin:0;"><i class="fa-solid fa-folder-open"></i>
+                                Full Server Snapshot Backup</div>
                             <p style="font-size:13px; color:var(--text-2); margin:4px 0 0 0;">
-                                Serializes roles, categories, and channels. Restores them in case of accidental server damage or migration.
+                                Serializes roles, categories, and channels. Restores them in case of accidental server
+                                damage or migration.
                             </p>
                         </div>
-                        <button class="btn btn-primary" onclick="createBackup()"><i class="fa-solid fa-circle-plus"></i> Create Backup Snapshot</button>
+                        <button id="btn-create-backup" class="btn btn-primary"><i class="fa-solid fa-circle-plus"></i>
+                            Create Backup Snapshot</button>
                     </div>
 
                     <div class="glass-card">
-                        <div class="form-section-title"><i class="fa-solid fa-history"></i> Backup Snapshots History</div>
+                        <div class="form-section-title"><i class="fa-solid fa-history"></i> Backup Snapshots History
+                        </div>
                         <div style="overflow-x:auto;">
                             <table class="data-table">
                                 <thead>
@@ -1898,7 +2859,8 @@
                                 </thead>
                                 <tbody id="backupsTableBody">
                                     <tr>
-                                        <td colspan="6" style="text-align:center; color:var(--text-2); padding:32px;">No backup instances found. Click create to start.</td>
+                                        <td colspan="6" style="text-align:center; color:var(--text-2); padding:32px;">No
+                                            backup instances found. Click create to start.</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -1911,7 +2873,8 @@
             <section class="dash-tab" id="tab-security-logs">
                 <div class="page-header">
                     <h1>Security Shield <span class="gradient-text">Logs</span></h1>
-                    <p>Real-time audit history of unauthorized actions blocked, configurations reverted, and executors punished.</p>
+                    <p>Real-time audit history of unauthorized actions blocked, configurations reverted, and executors
+                        punished.</p>
                 </div>
 
                 <div class="glass-card">
@@ -1930,7 +2893,8 @@
                             </thead>
                             <tbody id="securityLogsTableBody">
                                 <tr>
-                                    <td colspan="6" style="text-align:center; color:var(--text-2); padding:32px;">No security logs recorded.</td>
+                                    <td colspan="6" style="text-align:center; color:var(--text-2); padding:32px;">No
+                                        security logs recorded.</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -2139,7 +3103,7 @@
                         </div>
                     </div>
 
-                    <button class="btn btn-primary" onclick="saveLogs()"><i class="fa-solid fa-floppy-disk"></i> Save
+                    <button id="btn-save-logs" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Save
                         Server Logs</button>
                 </div>
             </section>
@@ -2183,7 +3147,7 @@
                             <option value="">Select role…</option>
                         </select>
                     </div>
-                    <button class="btn btn-primary" onclick="saveRooms()"><i class="fa-solid fa-floppy-disk"></i> Save
+                    <button id="btn-save-rooms" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Save
                         Room Setup</button>
                 </div>
             </section>
@@ -2197,83 +3161,9 @@
     <!-- JS -->
     <script type="module" src="/dashboard.js"></script>
     <script type="module" src="/leveling.js"></script>
+    <script type="module" src="/livepreview.js"></script>
 
-    <!-- Security & Prefix Access Control -->
-    <script>
-        (function() {
-            // Toast notification helper
-            const notifyError = (msg) => {
-                const toastWrap = document.getElementById('toastWrap');
-                if (toastWrap) {
-                    const toast = document.createElement('div');
-                    toast.className = 'toast error';
-                    toast.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> ${msg}`;
-                    toastWrap.appendChild(toast);
-                    setTimeout(() => {
-                        toast.style.opacity = '0';
-                        toast.style.transform = 'translateY(-10px)';
-                        setTimeout(() => toast.remove(), 400);
-                    }, 3500);
-                } else {
-                    alert(msg);
-                }
-            };
 
-            // Intercept fetch API to capture owner/developer flags from backend response
-            const originalFetch = window.fetch;
-            window.fetch = async function(...args) {
-                const res = await originalFetch.apply(this, args);
-                const url = args[0];
-                if (typeof url === 'string' && url.includes('/api/guilds/')) {
-                    try {
-                        const clone = res.clone();
-                        const data = await clone.json();
-                        
-                        const isOwner = data.isOwner === true;
-                        const isDeveloper = data.isDeveloper === true;
-                        
-                        if (!isOwner && !isDeveloper) {
-                            window.__isSecurityBlocked = true;
-                            
-                            // Hide the nav tab on the sidebar
-                            const navSecurity = document.getElementById('nav-security');
-                            if (navSecurity) navSecurity.style.display = 'none';
-
-                            // If on the security tab, redirect back to overview
-                            const pathParts = window.location.pathname.split('/').filter(Boolean);
-                            const currentTab = pathParts[2] || new URLSearchParams(window.location.search).get('tab') || 'overview';
-                            if (currentTab === 'security' || currentTab === 'guildsettings') {
-                                if (window.switchTab) {
-                                    window.switchTab('overview');
-                                } else {
-                                    window.location.href = `/servers/${data.guildId || pathParts[1]}/overview`;
-                                }
-                            }
-                        }
-                    } catch (e) {
-                        console.error("Fetch intercept error:", e);
-                    }
-                }
-                return res;
-            };
-
-            // Intercept switchTab function once dashboard.js registers it
-            const hookSwitchTab = () => {
-                if (window.switchTab && !window.switchTab.__hooked) {
-                    const originalSwitchTab = window.switchTab;
-                    window.switchTab = function(tabName, saveHistory) {
-                        if ((tabName === 'security' || tabName === 'guildsettings') && window.__isSecurityBlocked) {
-                            notifyError('Access Denied: Only server owners and bot developers can manage Security & Prefix settings.');
-                            return;
-                        }
-                        return originalSwitchTab.apply(this, arguments);
-                    };
-                    window.switchTab.__hooked = true;
-                }
-            };
-            setInterval(hookSwitchTab, 100);
-        })();
-    </script>
 </body>
 
 </html>

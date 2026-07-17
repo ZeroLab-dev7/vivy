@@ -12,7 +12,6 @@ module.exports = {
         const container = UI.createContainer({
             title: 'Gender Guesser',
             description: `I think **${target.username}** is a **${random}**!`,
-            footer: `Requested by ${message.author.tag}`
         });
 
         message.reply({

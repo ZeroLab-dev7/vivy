@@ -10,11 +10,11 @@ module.exports = {
         try {
             const filterType = args[0] ? args[0].toLowerCase() : 'total';
             const allowedFilters = ['total', 'messages', 'voice', 'daily', 'weekly', 'monthly'];
-            
+
             if (args[0] && !allowedFilters.includes(filterType)) {
                 return message.reply({
                     components: [UI.createContainer({
-                        description: `❌ Invalid filter. Allowed filters: \`${allowedFilters.join(', ')}\``
+                        description: `<:no:1526496561188831244>Invalid filter. Allowed filters: \`${allowedFilters.join(', ')}\``
                     })]
                 });
             }
@@ -43,7 +43,7 @@ module.exports = {
                 const record = leaderboard[i];
                 const user = await message.client.users.fetch(record.user_id).catch(() => null);
                 const tag = user ? user.username : `Unknown User (\`${record.user_id}\`)`;
-                
+
                 let scoreText = '';
                 if (filterType === 'messages') {
                     scoreText = `\`${record.messages_count}\` messages`;
@@ -72,7 +72,7 @@ module.exports = {
                 title: `🏆 Leveling Leaderboard (${typeLabel})`,
                 description: `Here are the top active members in **${message.guild.name}**`,
                 fields: fields,
-                footer: `Filter used: ${filterType} | Requested by ${message.author.username}`
+                footer: `Filter used: ${filterType}`
             });
 
             await message.reply({
@@ -84,7 +84,7 @@ module.exports = {
             console.error('Error in leaderboard command:', error);
             await message.reply({
                 components: [UI.createContainer({
-                    description: '❌ An error occurred while fetching the leaderboard.',
+                    description: '<:no:1526496561188831244>An error occurred while fetching the leaderboard.',
                     color: 0xff0000
                 })]
             });

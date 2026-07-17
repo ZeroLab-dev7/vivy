@@ -28,7 +28,7 @@ module.exports = {
     async execute(message, args) {
         if (!message.member.permissions.has('Administrator')) {
             return message.reply({
-                components: [UI.createContainer({ description: '- ❌ You need `Administrator` permission to use this command.' })],
+                components: [UI.createContainer({ description: '- <:no:1526496561188831244>You need `Administrator` permission to use this command.' })],
                 flags: MessageFlags.IsComponentsV2
             });
         }
@@ -108,7 +108,7 @@ module.exports = {
         if (!['name', 'avatar', 'banner'].includes(type)) {
             return message.reply({
                 components: [UI.createContainer({
-                    description: `- ❌ Invalid type \`${type}\`. Use \`name\`, \`avatar\`, or \`banner\`.`
+                    description: `- <:no:1526496561188831244>Invalid type \`${type}\`. Use \`name\`, \`avatar\`, or \`banner\`.`
                 })],
                 flags: MessageFlags.IsComponentsV2
             });
@@ -137,7 +137,7 @@ module.exports = {
                 console.error('[setup-profile] Nickname error:', err);
                 return message.reply({
                     components: [UI.createContainer({
-                        description: `- ❌ Failed to set nickname. Make sure the bot has **Change Nickname** permission.\n\`\`\`${err.message}\`\`\``
+                        description: `- <:no:1526496561188831244>Failed to set nickname. Make sure the bot has **Change Nickname** permission.\n\`\`\`${err.message}\`\`\``
                     })],
                     flags: MessageFlags.IsComponentsV2
                 });
@@ -154,7 +154,7 @@ module.exports = {
             if (!value.startsWith('http')) {
                 return message.reply({
                     components: [UI.createContainer({
-                        description: `- ❌ Please provide a valid image URL (must start with \`https://\`) or attach an image directly.`
+                        description: `- <:no:1526496561188831244>Please provide a valid image URL (must start with \`https://\`) or attach an image directly.`
                     })],
                     flags: MessageFlags.IsComponentsV2
                 });
@@ -168,7 +168,7 @@ module.exports = {
         if (!imageSource && !isReset) {
             return message.reply({
                 components: [UI.createContainer({
-                    description: `- ❌ Please provide an image URL or attach an image, or type \`reset\` to remove the current one.`
+                    description: `- <:no:1526496561188831244>Please provide an image URL or attach an image, or type \`reset\` to remove the current one.`
                 })],
                 flags: MessageFlags.IsComponentsV2
             });
@@ -191,16 +191,16 @@ module.exports = {
                 await message.guild.members.editMe({ avatar: base64Data });
 
                 // FIX #6: Force fetch to bypass cache
-                const updatedMe = await message.guild.members.fetch({ 
-                    user: message.client.user.id, 
-                    force: true 
+                const updatedMe = await message.guild.members.fetch({
+                    user: message.client.user.id,
+                    force: true
                 });
                 resultURL = updatedMe.avatarURL({ size: 512 });
             } else if (type === 'banner') {
                 // FIX #3: Discord.js editMe() does NOT support banner for guild members
                 // You need to use the REST API directly. This is a limitation of Discord's API
                 // for bot guild profiles. Uncomment below if you want to try via REST:
-                
+
                 /*
                 const { REST } = require('@discordjs/rest');
                 const { Routes } = require('discord-api-types/v10');
@@ -212,7 +212,7 @@ module.exports = {
                     { body: { banner: base64Data } }
                 );
                 */
-               
+
                 // For now, throw informative error since standard Discord.js doesn't support this
                 throw new Error(
                     'Guild banner editing for bots is not supported via Discord.js editMe(). ' +
@@ -239,7 +239,7 @@ module.exports = {
             await processingMsg.edit({
                 components: [UI.createContainer({
                     description:
-                        `- ❌ Failed to update guild ${type}.\n` +
+                        `- <:no:1526496561188831244>Failed to update guild ${type}.\n` +
                         `\`\`\`${err.message}\`\`\`\n\n` +
                         `-# Make sure the image is a valid PNG/JPG/GIF and under 8MB.`,
                     color: 0xED4245

@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <script type="module" crossorigin src="/assets/developer.QoAyluoR.js"></script>
+  <script type="module" crossorigin src="/assets/developer.SAu9lriV.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill.axk1WA_r.js">
   <link rel="stylesheet" crossorigin href="/assets/developer.DboArYJi.css">
 </head>
@@ -56,49 +56,49 @@
         <!-- Sidebar -->
         <aside class="dev-sidebar">
             <span class="sidebar-section-label">Monitoring</span>
-            <div class="sidebar-item active" id="nav-dashboard" onclick="switchTab('dashboard')">
+            <div class="sidebar-item active" id="nav-dashboard" data-tab="dashboard">
                 <i class="fa-solid fa-chart-pie"></i> Dashboard
             </div>
-            <div class="sidebar-item" id="nav-analytics" onclick="switchTab('analytics')">
+            <div class="sidebar-item" id="nav-analytics" data-tab="analytics">
                 <i class="fa-solid fa-chart-line"></i> Analytics
             </div>
-            <div class="sidebar-item" id="nav-status" onclick="switchTab('status')">
+            <div class="sidebar-item" id="nav-status" data-tab="status">
                 <i class="fa-solid fa-heart-pulse"></i> System Status
             </div>
 
             <span class="sidebar-section-label">Management</span>
-            <div class="sidebar-item" id="nav-servers" onclick="switchTab('servers')">
+            <div class="sidebar-item" id="nav-servers" data-tab="servers">
                 <i class="fa-solid fa-server"></i> Server Manager
             </div>
-            <div class="sidebar-item" id="nav-users" onclick="switchTab('users')">
+            <div class="sidebar-item" id="nav-users" data-tab="users">
                 <i class="fa-solid fa-users-gear"></i> User Manager
             </div>
-            <div class="sidebar-item" id="nav-premium" onclick="switchTab('premium')">
+            <div class="sidebar-item" id="nav-premium" data-tab="premium">
                 <i class="fa-solid fa-gem"></i> Premium
             </div>
-            <div class="sidebar-item" id="nav-notes" onclick="switchTab('notes')">
+            <div class="sidebar-item" id="nav-notes" data-tab="notes">
                 <i class="fa-solid fa-pen-to-square"></i> Developer Notes
             </div>
 
             <span class="sidebar-section-label">Administration</span>
-            <div class="sidebar-item" id="nav-commands" onclick="switchTab('commands')">
+            <div class="sidebar-item" id="nav-commands" data-tab="commands">
                 <i class="fa-solid fa-terminal"></i> Commands
             </div>
-            <div class="sidebar-item" id="nav-broadcasts" onclick="switchTab('broadcasts')">
+            <div class="sidebar-item" id="nav-broadcasts" data-tab="broadcasts">
                 <i class="fa-solid fa-bullhorn"></i> Broadcasts
             </div>
-            <div class="sidebar-item" id="nav-audit" onclick="switchTab('audit')">
+            <div class="sidebar-item" id="nav-audit" data-tab="audit">
                 <i class="fa-solid fa-receipt"></i> Audit Logs
             </div>
-            <div class="sidebar-item" id="nav-errors" onclick="switchTab('errors')">
+            <div class="sidebar-item" id="nav-errors" data-tab="errors">
                 <i class="fa-solid fa-bug"></i> Error Tracking
             </div>
 
             <span class="sidebar-section-label">Operations</span>
-            <div class="sidebar-item" id="nav-controls" onclick="switchTab('controls')">
+            <div class="sidebar-item" id="nav-controls" data-tab="controls">
                 <i class="fa-solid fa-sliders"></i> Bot Controls
             </div>
-            <div class="sidebar-item" id="nav-settings" onclick="switchTab('settings')">
+            <div class="sidebar-item" id="nav-settings" data-tab="settings">
                 <i class="fa-solid fa-gear"></i> Settings
             </div>
         </aside>
@@ -318,7 +318,7 @@
                     <div class="panel-header-search">
                         <div class="search-input-wrapper">
                             <i class="fa-solid fa-magnifying-glass"></i>
-                            <input type="text" id="serverSearch" placeholder="Search servers by name or ID..." onkeyup="loadServersList()">
+                            <input type="text" id="serverSearch" placeholder="Search servers by name or ID..." >
                         </div>
                     </div>
 
@@ -355,7 +355,7 @@
                             <i class="fa-solid fa-magnifying-glass"></i>
                             <input type="text" id="userSearchId" placeholder="Enter Discord User ID to search (e.g. 396729124464492565)">
                         </div>
-                        <button class="btn btn-primary" onclick="lookupUser()">Search User</button>
+                        <button id="btn-lookup-user" class="btn btn-primary" >Search User</button>
                     </div>
 
                     <div id="userDataContainer" style="display:none; margin-top:24px;">
@@ -400,7 +400,7 @@
                             <span class="help-text">Leave blank for lifetime/unlimited premium.</span>
                         </div>
                         <div style="display:flex; align-items:flex-end">
-                            <button class="btn btn-primary" onclick="grantPremium()">Grant Premium</button>
+                            <button id="btn-grant-premium" class="btn btn-primary" >Grant Premium</button>
                         </div>
                     </div>
 
@@ -482,7 +482,7 @@
                             <input type="datetime-local" id="broadcastSchedule">
                             <span class="help-text">Leave blank to broadcast instantly.</span>
                         </div>
-                        <button class="btn btn-primary" onclick="sendBroadcast()">Send Broadcast</button>
+                        <button id="btn-send-broadcast" class="btn btn-primary" >Send Broadcast</button>
                     </div>
 
                     <div class="dev-panel flex-1">
@@ -532,7 +532,7 @@
                 <div class="dev-panel">
                     <div class="panel-header" style="justify-content: space-between; display: flex; align-items: center;">
                         <h2>Caught Exceptions</h2>
-                        <button class="btn btn-danger btn-sm" onclick="clearErrorLogs()">Clear Error Logs</button>
+                        <button id="btn-clear-errors" class="btn btn-danger btn-sm" >Clear Error Logs</button>
                     </div>
 
                     <div class="list-container" id="errorsContainer" style="margin-top:16px">
@@ -554,7 +554,7 @@
                             <h3>Reload Bot Commands</h3>
                             <p>Clears require memory cache and loads prefix and slash command handlers instantly.</p>
                         </div>
-                        <button class="btn btn-warning" onclick="confirmBotAction('reload-commands', 'Reload all bot commands? This hot-reloads all prefix & slash command modules.')">Reload Commands</button>
+                        <button class="btn btn-warning" data-bot-action="reload-commands" data-bot-prompt="Reload all bot commands? This hot-reloads all prefix & slash command modules." class="btn-bot-action ">Reload Commands</button>
                     </div>
 
                     <div class="control-row">
@@ -562,7 +562,7 @@
                             <h3>Reload Bot Events</h3>
                             <p>Unregisters active client listeners and triggers event handlers loading from disk.</p>
                         </div>
-                        <button class="btn btn-warning" onclick="confirmBotAction('reload-events', 'Reload all bot events? This clears and re-registers listeners.')">Reload Events</button>
+                        <button class="btn btn-warning" data-bot-action="reload-events" data-bot-prompt="Reload all bot events? This clears and re-registers listeners." class="btn-bot-action ">Reload Events</button>
                     </div>
 
                     <div class="control-row">
@@ -570,7 +570,7 @@
                             <h3>Clear Client cache</h3>
                             <p>Flushes internal maps (Guilds, Users, Channels) and re-fetches active instances from Discord.</p>
                         </div>
-                        <button class="btn btn-warning" onclick="confirmBotAction('clear-cache', 'Clear bot caches? This flushes memory cache and re-caches active states.')">Clear Cache</button>
+                        <button class="btn btn-warning" data-bot-action="clear-cache" data-bot-prompt="Clear bot caches? This flushes memory cache and re-caches active states." class="btn-bot-action ">Clear Cache</button>
                     </div>
 
                     <div class="control-row">
@@ -578,7 +578,7 @@
                             <h3>Sync Slash Commands Globally</h3>
                             <p>Syncs slash command array to the global Discord Application endpoint.</p>
                         </div>
-                        <button class="btn btn-warning" onclick="confirmBotAction('sync-slash', 'Sync slash commands globally? This sends command manifests to Discord.')">Sync Slash Commands</button>
+                        <button class="btn btn-warning" data-bot-action="sync-slash" data-bot-prompt="Sync slash commands globally? This sends command manifests to Discord." class="btn-bot-action ">Sync Slash Commands</button>
                     </div>
 
                     <div class="control-row">
@@ -586,7 +586,7 @@
                             <h3>Toggle Global Maintenance Mode</h3>
                             <p>Stops normal bot interactions. Only developers can continue to execute instructions.</p>
                         </div>
-                        <button class="btn id-maintenance-btn btn-danger" onclick="toggleMaintenance()">Toggle Maintenance</button>
+                        <button id="btn-toggle-maintenance" class="btn id-maintenance-btn btn-danger" >Toggle Maintenance</button>
                     </div>
                 </div>
             </section>
@@ -609,7 +609,7 @@
                         <label>Custom Maintenance Message</label>
                         <textarea id="maintenanceMessageInput" rows="4" placeholder="Enter custom message to show when maintenance mode is active..."></textarea>
                     </div>
-                    <button class="btn btn-primary" onclick="saveSettings()">
+                    <button id="btn-save-settings" class="btn btn-primary" >
                         <i class="fa-solid fa-save"></i> Save Configurations
                     </button>
                 </div>
@@ -626,14 +626,14 @@
                     <div class="panel-header-search" style="display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 0;">
                         <div class="search-input-wrapper" style="flex: 2; min-width: 250px;">
                             <i class="fa-solid fa-magnifying-glass"></i>
-                            <input type="text" id="noteSearchInput" placeholder="Search title or content..." onkeyup="filterNotes()">
+                            <input type="text" id="noteSearchInput" placeholder="Search title or content..." >
                         </div>
                         <div class="form-group" style="margin-bottom: 0; min-width: 200px; flex: 1;">
-                            <select id="noteAuthorFilter" onchange="filterNotes()" style="padding: 14px 16px; background: rgba(0, 0, 0, 0.45); border: 1px solid var(--border-hover); border-radius: var(--radius-sm); color: var(--text);">
+                            <select id="noteAuthorFilter"  style="padding: 14px 16px; background: rgba(0, 0, 0, 0.45); border: 1px solid var(--border-hover); border-radius: var(--radius-sm); color: var(--text);">
                                 <option value="">All Authors</option>
                             </select>
                         </div>
-                        <button class="btn btn-primary" onclick="openCreateNoteModal()">
+                        <button id="btn-create-note" class="btn btn-primary" >
                             <i class="fa-solid fa-plus"></i> New Note
                         </button>
                     </div>
@@ -653,7 +653,7 @@
             <h3 class="modal-title">Confirm Action</h3>
             <p class="modal-message" id="confirmModalMsg">Are you sure you want to perform this developer action?</p>
             <div class="modal-actions">
-                <button class="btn btn-secondary" onclick="closeConfirmModal()">Cancel</button>
+                <button id="btn-close-confirm" class="btn btn-secondary" >Cancel</button>
                 <button class="btn btn-primary" id="confirmModalBtn">Confirm</button>
             </div>
         </div>
@@ -672,8 +672,8 @@
                 <textarea id="noteContentInput" rows="8" placeholder="Type note details here..."></textarea>
             </div>
             <div class="modal-actions" style="justify-content: flex-end; margin-top: 24px;">
-                <button class="btn btn-secondary" onclick="closeNoteModal()">Cancel</button>
-                <button class="btn btn-primary" id="noteModalSaveBtn" onclick="saveNote()">Save Note</button>
+                <button id="btn-close-note" class="btn btn-secondary" >Cancel</button>
+                <button class="btn btn-primary" id="noteModalSaveBtn" >Save Note</button>
             </div>
         </div>
     </div>

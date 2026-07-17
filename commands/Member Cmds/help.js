@@ -10,7 +10,9 @@ const {
   MessageFlags,
   SeparatorSpacingSize,
   MediaGalleryBuilder,
-  MediaGalleryItemBuilder
+  MediaGalleryItemBuilder,
+  SectionBuilder,
+  ThumbnailBuilder
 } = require('discord.js');
 const Emojis = require("../../utils/emojis");
 const config = require("../../config");
@@ -25,6 +27,7 @@ module.exports = {
     const supportServerLink = "https://discord.gg/YcF9Q3ntqb";
     const botInviteLink = `https://discord.com/api/oauth2/authorize?client_id=${message.client.user.id}&permissions=8&scope=bot%20applications.commands`;
     const prefix = await getPrefix(message.guild.id);
+    const botAvatarURL = message.client.user.displayAvatarURL({ extension: 'png', size: 1024 });
 
     // Category Data (Synced with actual files)
     const categories = {
@@ -47,7 +50,9 @@ module.exports = {
           "`?invites` - User invites count.",
           "`?topinvites` - Server invite leaderboard.",
           "`?boosters` - Show server boosters.",
-          "`?firstmsj` - Show the first message in a channel."
+          "`?firstmsj` - Show the first message in a channel.",
+          "`?support` - Get the support server link.",
+          "`/support` - Get the support server link (Slash)."
         ]
       },
       admin: {
@@ -110,7 +115,7 @@ module.exports = {
       },
       fun: {
         name: 'Fun',
-        emoji: '🎮',
+        emoji: '<a:pink8:1337678972108148757>',
         description: 'Interactive, mini-games, and fun commands',
         commands: [
           "`?cat` - Random cat.",
@@ -125,6 +130,22 @@ module.exports = {
           "`?slap` - Slap user.",
           "`?smile` - Smile.",
           "`?mcstats` - Get Minecraft server stats."
+        ]
+      },
+      games: {
+        name: 'Games',
+        emoji: '🎮',
+        description: 'Play interactive games like Blackjack, Slots, RPS, and Guess',
+        commands: [
+          "`?blackjack` - Play Blackjack.",
+          "`?slots` - Play Slot machine.",
+          "`?roulette` - Play Roulette.",
+          "`?rps` - Play Rock Paper Scissors.",
+          "`?guess` - Play Guess the Number.",
+          "`?tictactoe` - Play Tic-Tac-Toe.",
+          "`?connect4` - Play Connect 4.",
+          "`?hangman` - Play Hangman.",
+          "`?memory` - Play Memory match."
         ]
       },
       voice: {
@@ -158,12 +179,20 @@ module.exports = {
       },
       marriage: {
         name: 'Marriage',
-        emoji: '💍',
-        description: 'Marry, divorce, or check marriage status',
+        emoji: '<:ring:1526494769050816512>',
+        description: 'Marry, divorce, adopt, or check marriage/family details',
         commands: [
-          "`?marry` - Marry a user.",
+          "`?marry` - Propose marriage to another user.",
           "`?divorce` - Divorce your partner.",
-          "`?marry-stats` - Check marriage stats."
+          "`?marrystats` - Show Marry Stats.",
+          "`?adopt` - Adopt a child with your partner.",
+          "`?children` - Name Of Children.",
+          "`?anniversary` - Check your marriage anniversary.",
+          "`?familylb` - Family leaderboard - see who has the biggest family.",
+          "`?familytree` - View your complete family tree.",
+          "`?marriedcount` - Show the number of users who are married.",
+          "`?removechildren` - Remove children.",
+          "`?renamechild` - Rename one of your children."
         ]
       },
       leveling: {
@@ -202,7 +231,6 @@ module.exports = {
           "`?pname` - Rename your plan.",
           "`?pcolor` - Change plan role color.",
           "`?picon` - Change plan role icon.",
-          "`?pdebug` - Debug premium system.",
           "`?temprole` - Give temporary roles to users."
         ]
       },
@@ -230,7 +258,7 @@ module.exports = {
     async function sendErrorMessage(msg, content) {
       const errorContainer = new ContainerBuilder()
         .setAccentColor(0x00FFFF)
-        .addTextDisplayComponents(td => td.setContent(`❌ **Error**\n${content}`));
+        .addTextDisplayComponents(td => td.setContent(`<:no:1526496561188831244>**Error**\n${content}`));
 
       return msg.channel.send({
         components: [errorContainer],
@@ -254,23 +282,28 @@ module.exports = {
         .setPlaceholder('Select a category to view commands')
         .addOptions(selectMenuOptions);
 
-      // Build main container
+      // Build main container header section with bot avatar thumbnail
+      const headerSection = new SectionBuilder()
+        .setThumbnailAccessory(new ThumbnailBuilder().setURL(botAvatarURL))
+        .addTextDisplayComponents(td => td.setContent(
+          `<:vivy:1510334908562804856> **__Hello, I'm Vivy!__** an all-in-one Discord companion designed to make managing your community simple, enjoyable, and effortless—always ready to help, protect, and entertain. <:wchydrangeaflower:1516951730745770025>\n\n` +
+          `• Use </dashboard:1522761049915527289> to manage your server.\n• Need help? Use </support:1526443917573230703> anytime`
+        ));
+
       const mainContainer = new ContainerBuilder()
         .setAccentColor(0x00FFFF)
-        .addTextDisplayComponents(td => td.setContent(`## <:vivy:1510334908562804856> __${message.client.user.username} Help__`))
-        .addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Large))
-        .addTextDisplayComponents(td => td.setContent(`## > <:wchydrangeaflower:1516951730745770025> Welcome to **Vivy**!\n## > <a:21261cyan:1516952984389685399> Current Prefix: \`${prefix}\``))
+        .addSectionComponents(headerSection)
         .addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Large))
         .addMediaGalleryComponents(
           new MediaGalleryBuilder().addItems(
-            new MediaGalleryItemBuilder().setURL("https://media.discordapp.net/attachments/1340097259391684628/1515101316530049166/9f48cf138b8b7962ec611b986ac7b527.gif?ex=6a2dc78f&is=6a2c760f&hm=7eb19c0ebd9e711a0aa8580d21381d18b114e3259b0c713f9dce60a17e2f615d&=")
+            new MediaGalleryItemBuilder().setURL("https://media.discordapp.net/attachments/1329547343791525989/1526438110601416724/image.png?ex=6a5705c5&is=6a55b445&hm=08966965f453254d28cb0d0a5eb4a10e69873397666b167d82b47835ef66fe2b&=&format=webp&quality=lossless")
           )
         )
         .addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Large))
         .addTextDisplayComponents(td => td.setContent(`## <:category:1509401226012393543> Select a category to view commands`))
-        .addActionRowComponents(row => row.setComponents(selectMenu))
-        .addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Large))
+        .addActionRowComponents(row => row.setComponents(selectMenu));
 
+      let currentContainer = mainContainer;
       let initialComponents = [mainContainer];
 
       if (args.length > 0) {
@@ -279,10 +312,13 @@ module.exports = {
 
         if (foundCategoryKey) {
           const category = categories[foundCategoryKey];
+          const categorySection = new SectionBuilder()
+            .setThumbnailAccessory(new ThumbnailBuilder().setURL(botAvatarURL))
+            .addTextDisplayComponents(td => td.setContent(category.emoji ? `# ${category.emoji} ${category.name} Commands` : `# ${category.name} Commands`));
+
           const categoryContainer = new ContainerBuilder()
             .setAccentColor(0x00FFFF)
-            .addTextDisplayComponents(td => td.setContent(category.emoji ? `# ${category.emoji} ${category.name} Commands` : `# ${category.name} Commands`))
-            .addTextDisplayComponents(td => td.setContent(`*Requested by ${message.author.tag}*`))
+            .addSectionComponents(categorySection)
             .addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small))
             .addTextDisplayComponents(td => td.setContent(`## Available Commands`))
             .addTextDisplayComponents(td => td.setContent(category.commands.join('\n')))
@@ -298,6 +334,7 @@ module.exports = {
                 .setDisabled(false)
             ))
             .addTextDisplayComponents(td => td.setContent(`-# © Powered by: Zero Lab`));
+          currentContainer = categoryContainer;
           initialComponents = [categoryContainer];
         }
       }
@@ -319,8 +356,7 @@ module.exports = {
         try {
           if (interaction.customId === 'help_home') {
             // Reset to Home
-            // Rebuild Main Container but with Home button disabled
-            // (The mainContainer above already has it disabled, so we can reuse logic)
+            currentContainer = mainContainer;
             await interaction.update({
               components: [mainContainer],
               flags: MessageFlags.IsComponentsV2
@@ -333,11 +369,14 @@ module.exports = {
 
           if (!category) return;
 
+          const categorySection = new SectionBuilder()
+            .setThumbnailAccessory(new ThumbnailBuilder().setURL(botAvatarURL))
+            .addTextDisplayComponents(td => td.setContent(category.emoji ? `# ${category.emoji} ${category.name} Commands` : `# ${category.name} Commands`));
+
           // Build category response
           const categoryContainer = new ContainerBuilder()
             .setAccentColor(0x00FFFF)
-            .addTextDisplayComponents(td => td.setContent(category.emoji ? `# ${category.emoji} ${category.name} Commands` : `# ${category.name} Commands`))
-            .addTextDisplayComponents(td => td.setContent(`*Requested by ${interaction.user.tag}*`))
+            .addSectionComponents(categorySection)
             .addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small))
             .addTextDisplayComponents(td => td.setContent(`## Available Commands`))
             .addTextDisplayComponents(td => td.setContent(category.commands.join('\n')))
@@ -354,6 +393,8 @@ module.exports = {
             ))
             .addTextDisplayComponents(td => td.setContent(`-# © Powered by: Zero Lab`));
 
+          currentContainer = categoryContainer;
+
           await interaction.update({
             components: [categoryContainer],
             flags: MessageFlags.IsComponentsV2
@@ -367,15 +408,25 @@ module.exports = {
       collector.on('end', async () => {
         // Disable components
         try {
-          const disabledMenu = StringSelectMenuBuilder.from(selectMenu).setDisabled(true).setPlaceholder('❌ Menu Expired');
-          const expiredContainer = new ContainerBuilder()
-            .setAccentColor(0x00FFFF)
-            .addTextDisplayComponents(td => td.setContent(`# Help Menu Expired`))
-            .addTextDisplayComponents(td => td.setContent(`Please run \`?help\` again to view commands.`))
-            .addActionRowComponents(row => row.setComponents(disabledMenu));
+          if (currentContainer && currentContainer.components) {
+            for (const component of currentContainer.components) {
+              if (component.components && Array.isArray(component.components)) {
+                for (const child of component.components) {
+                  if (typeof child.setDisabled === 'function') {
+                    child.setDisabled(true);
+                  }
+                }
+              }
+            }
+          }
+
+          if (selectMenu && typeof selectMenu.setDisabled === 'function') {
+            selectMenu.setDisabled(true);
+            selectMenu.setPlaceholder('<:no:1526496561188831244>Menu Expired');
+          }
 
           await reply.edit({
-            components: [expiredContainer],
+            components: [currentContainer],
             flags: MessageFlags.IsComponentsV2
           }).catch(() => { });
         } catch (err) { }

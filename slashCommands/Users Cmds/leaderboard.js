@@ -49,7 +49,7 @@ module.exports = {
                 const record = leaderboard[i];
                 const user = await interaction.client.users.fetch(record.user_id).catch(() => null);
                 const tag = user ? user.username : `Unknown User (\`${record.user_id}\`)`;
-                
+
                 let scoreText = '';
                 if (filterType === 'messages') {
                     scoreText = `\`${record.messages_count}\` messages`;
@@ -78,7 +78,7 @@ module.exports = {
                 title: `🏆 Leveling Leaderboard (${typeLabel})`,
                 description: `Here are the top active members in **${interaction.guild.name}**`,
                 fields: fields,
-                footer: `Filter used: ${filterType} | Requested by ${interaction.user.username}`
+                footer: `Filter used: ${filterType}`
             });
 
             await interaction.editReply({
@@ -90,7 +90,7 @@ module.exports = {
             console.error('Error in slash leaderboard command:', error);
             await interaction.editReply({
                 components: [UI.createContainer({
-                    description: '❌ An error occurred while fetching the leaderboard.',
+                    description: '<:no:1526496561188831244>An error occurred while fetching the leaderboard.',
                     color: 0xff0000
                 })],
                 flags: MessageFlags.IsComponentsV2

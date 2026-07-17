@@ -34,7 +34,6 @@ module.exports = {
             const guideContainer = UI.createContainer({
                 title: 'Command : AddPrefix',
                 description: 'Set a custom prefix for the bot in this server.',
-                footer: `Requested by ${message.author.tag}`,
                 fields: [
                     { name: "Aliases:", value: "addprefix, setprefix, prefix" },
                     { name: "Current Prefix:", value: `\`${currentPrefix}\`` },
@@ -83,7 +82,7 @@ module.exports = {
                 flags: MessageFlags.IsComponentsV2
             });
         } catch (err) {
-            console.error('❌ Error setting prefix:', err.message);
+            console.error('<:no:1526496561188831244>Error setting prefix:', err.message);
             return message.reply({
                 components: [UI.createContainer({ description: '- An error occurred while updating the prefix.' })],
                 flags: MessageFlags.IsComponentsV2

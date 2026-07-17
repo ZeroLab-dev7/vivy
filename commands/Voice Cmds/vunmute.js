@@ -44,7 +44,6 @@ module.exports = {
                         { name: "Usage:", value: "- ?vunmute @user/id", inline: false },
                         { name: "Example:", value: `- ?vunmute <@${message.author.id}>\n- ?vunmute ${message.author.id}`, inline: false }
                     ],
-                    footer: `Requested by ${message.author.tag}`
                 })],
                 flags: MessageFlags.IsComponentsV2
             });

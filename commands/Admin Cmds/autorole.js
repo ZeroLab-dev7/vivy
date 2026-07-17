@@ -198,7 +198,7 @@ async function handleView(message) {
             title: '🔰 Auto-Role Configuration',
             description: [
                 `- **Auto-Role:** ${roleDisplay}`,
-                `- **Status:** ${role ? '✅ Active' : '❌ Role Missing'}`
+                `- **Status:** ${role ? '✅ Active' : '<:no:1526496561188831244>Role Missing'}`
             ].join('\n')
         });
 

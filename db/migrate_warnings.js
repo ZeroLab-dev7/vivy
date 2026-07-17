@@ -13,7 +13,7 @@ async function migrate() {
     const legacyDbPath = path.join(__dirname, '../warnings.db');
     const db = new sqlite3.Database(legacyDbPath, sqlite3.OPEN_READONLY, (err) => {
         if (err) {
-            console.error('❌ Could not open warnings.db:', err.message);
+            console.error('<:no:1526496561188831244>Could not open warnings.db:', err.message);
             process.exit(1);
         }
     });
@@ -21,7 +21,7 @@ async function migrate() {
     // 3. Read and Migrate
     db.all("SELECT * FROM warn_setup", [], async (err, rows) => {
         if (err) {
-            console.error('❌ Error reading legacy DB:', err);
+            console.error('<:no:1526496561188831244>Error reading legacy DB:', err);
             return;
         }
 
@@ -47,7 +47,7 @@ async function migrate() {
                 });
                 successCount++;
             } catch (error) {
-                console.error(`❌ Failed to migrate guild ${row.guild_id}:`, error);
+                console.error(`<:no:1526496561188831244>Failed to migrate guild ${row.guild_id}:`, error);
                 failCount++;
             }
         }

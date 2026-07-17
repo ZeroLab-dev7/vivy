@@ -16,7 +16,7 @@ module.exports = {
             });
             return true;
         } catch (error) {
-            console.error('❌ Error in WarnSetup.setRoles:', error);
+            console.error('<:no:1526496561188831244>Error in WarnSetup.setRoles:', error);
             throw error;
         }
     },
@@ -29,7 +29,7 @@ module.exports = {
             const data = await WarnSetup.findByPk(guildId);
             return data ? data.toJSON() : undefined;
         } catch (error) {
-            console.error('❌ Error in WarnSetup.getRoles:', error);
+            console.error('<:no:1526496561188831244>Error in WarnSetup.getRoles:', error);
             throw error;
         }
     },

@@ -2,6 +2,14 @@ const { BackupInstance } = require('../db/models');
 
 class BackupService {
     static async createBackup(guild, creatorId) {
+        // Ensure the cache is fully populated by fetching roles and channels from the Discord API
+        try {
+            await guild.roles.fetch();
+            await guild.channels.fetch();
+        } catch (e) {
+            console.error('[BackupService] Pre-fetch error:', e);
+        }
+
         const backupData = {
             name: guild.name,
             icon: guild.iconURL(),
@@ -9,20 +17,19 @@ class BackupService {
             channels: []
         };
 
-        // Serialize roles
+        // Serialize roles (not snapshotting permissions)
         guild.roles.cache.forEach(role => {
             if (role.name !== '@everyone' && !role.managed) {
                 backupData.roles.push({
                     name: role.name,
                     color: role.color,
                     hoist: role.hoist,
-                    permissions: role.permissions.bitfield.toString(),
                     mentionable: role.mentionable
                 });
             }
         });
 
-        // Serialize channels
+        // Serialize channels (not snapshotting permissions)
         guild.channels.cache.forEach(channel => {
             backupData.channels.push({
                 name: channel.name,
@@ -61,7 +68,7 @@ class BackupService {
                 name: roleData.name,
                 color: roleData.color,
                 hoist: roleData.hoist,
-                permissions: BigInt(roleData.permissions),
+                permissions: roleData.permissions ? BigInt(roleData.permissions) : undefined,
                 mentionable: roleData.mentionable,
                 reason: 'Restoring backup'
             }).catch(() => {});

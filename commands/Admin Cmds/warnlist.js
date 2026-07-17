@@ -23,7 +23,6 @@ module.exports = {
                     components: [UI.createContainer({
                         title: 'Command: warnlist',
                         description: "View a user's warning history.",
-                        footer: `Requested by ${message.author.tag}`,
                         fields: [
                             { name: "Usage:", value: "- ?warnlist @user/id" },
                             { name: "Examples:", value: `- ?warnlist <@${message.author.id}>\n- ?warnlist ${message.author.id}` }
@@ -92,7 +91,6 @@ module.exports = {
                 title: `Warnings for ${target.user.username}`,
                 description: `**Total Warnings:** ${totalWarnings}`,
                 fields: warningFields,
-                footer: `Requested by ${message.author.tag}`
             });
 
             await message.reply({

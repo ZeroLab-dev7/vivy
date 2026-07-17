@@ -74,7 +74,7 @@ module.exports = {
             // FIX #6: Redundant but safe — API already restricts this, but double-check doesn't hurt
             if (!interaction.member.permissions.has(PermissionFlagsBits.Administrator)) {
                 return interaction.editReply({
-                    components: [UI.createContainer({ description: '- ❌ You need `Administrator` permission to use this command.' })],
+                    components: [UI.createContainer({ description: '- <:no:1526496561188831244>You need `Administrator` permission to use this command.' })],
                     flags: MessageFlags.IsComponentsV2
                 });
             }
@@ -140,7 +140,7 @@ module.exports = {
                     console.error('[setup-profile slash] Nickname error:', err);
                     return interaction.editReply({
                         components: [UI.createContainer({
-                            description: `- ❌ Failed to set nickname. Make sure the bot has **Change Nickname** permission.\n\`\`\`${err.message}\`\`\``
+                            description: `- <:no:1526496561188831244>Failed to set nickname. Make sure the bot has **Change Nickname** permission.\n\`\`\`${err.message}\`\`\``
                         })],
                         flags: MessageFlags.IsComponentsV2
                     });
@@ -160,7 +160,7 @@ module.exports = {
                 if (!url.startsWith('http')) {
                     return interaction.editReply({
                         components: [UI.createContainer({
-                            description: `- ❌ Please provide a valid image URL starting with http/https.`
+                            description: `- <:no:1526496561188831244>Please provide a valid image URL starting with http/https.`
                         })],
                         flags: MessageFlags.IsComponentsV2
                     });
@@ -173,7 +173,7 @@ module.exports = {
             if (!imageSource && !isReset) {
                 return interaction.editReply({
                     components: [UI.createContainer({
-                        description: `- ❌ Please provide an image URL, attach an image, or set reset to True.`
+                        description: `- <:no:1526496561188831244>Please provide an image URL, attach an image, or set reset to True.`
                     })],
                     flags: MessageFlags.IsComponentsV2
                 });
@@ -204,7 +204,7 @@ module.exports = {
                 } else if (type === 'banner') {
                     // FIX #2: Discord.js editMe() does NOT support banner for guild members
                     // You must use the REST API directly. Uncomment below if you have the required setup:
-                    
+
                     /*
                     const { REST } = require('@discordjs/rest');
                     const { Routes } = require('discord-api-types/v10');
@@ -216,7 +216,7 @@ module.exports = {
                         { body: { banner: base64Data } }
                     );
                     */
-                    
+
                     // Throw informative error since standard Discord.js doesn't support this
                     throw new Error(
                         'Guild banner editing for bots is not supported via Discord.js editMe(). ' +
@@ -244,7 +244,7 @@ module.exports = {
                 await interaction.editReply({
                     components: [UI.createContainer({
                         description:
-                            `- ❌ Failed to update guild ${type}.\n` +
+                            `- <:no:1526496561188831244>Failed to update guild ${type}.\n` +
                             `\`\`\`${err.message}\`\`\`\n\n` +
                             `-# Make sure the image is a valid PNG/JPG/GIF and under 8MB.`,
                         color: 0xED4245
@@ -255,12 +255,12 @@ module.exports = {
 
         } catch (error) {
             console.error('Error in slash setup-profile command:', error);
-            
+
             // Try to edit reply, but if interaction already failed, reply instead
             try {
                 await interaction.editReply({
                     components: [UI.createContainer({
-                        description: '❌ Failed to process setup-profile command.',
+                        description: '<:no:1526496561188831244>Failed to process setup-profile command.',
                         color: 0xff0000
                     })],
                     flags: MessageFlags.IsComponentsV2

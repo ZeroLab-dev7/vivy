@@ -33,7 +33,6 @@ module.exports = {
             const guideContainer = UI.createContainer({
                 title: 'Command : addemoji',
                 description: "Add emoji to the server",
-                footer: `Requested by ${message.author.tag}`,
                 fields: [
                     { name: "Aliases:", value: "- ae, addemojis" },
                     { name: "Usage:", value: "- ?addemoji <emoji> <name>" },

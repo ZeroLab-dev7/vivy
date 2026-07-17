@@ -36,7 +36,6 @@ module.exports = {
             const guideContainer = UI.createContainer({
                 title: 'Command: clear',
                 description: 'Clear messages in the channel.',
-                footer: `Requested by ${message.author.tag}`,
                 fields: [
                     { name: "Aliases:", value: "- clear, ms7, Msa7, msa7, mse7, msh" },
                     { name: "Usage:", value: "- ?clear (number of messages)" },

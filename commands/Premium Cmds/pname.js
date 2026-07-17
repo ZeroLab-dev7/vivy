@@ -11,7 +11,7 @@ module.exports = {
             const plan = await PremiumPlan.findOne({ where: { owner_id: message.author.id, guild_id: message.guild.id } });
             if (!plan) {
                 return message.reply({
-                    components: [UI.createContainer({ color: 0xFF0000, description: "❌ **Access Denied**\nYou do not own a premium plan." })],
+                    components: [UI.createContainer({ color: 0xFF0000, description: "<:no:1526496561188831244>**Access Denied**\nYou do not own a premium plan." })],
                     flags: MessageFlags.IsComponentsV2
                 });
             }
@@ -41,7 +41,7 @@ module.exports = {
                     return message.reply({
                         components: [UI.createContainer({
                             color: 0xFF0000,
-                            description: `❌ **Permission Error**\nMy role is not high enough to rename the role **${role.name}**.`
+                            description: `<:no:1526496561188831244>**Permission Error**\nMy role is not high enough to rename the role **${role.name}**.`
                         })],
                         flags: MessageFlags.IsComponentsV2
                     });
@@ -58,7 +58,7 @@ module.exports = {
         } catch (error) {
             console.error("pname Error:", error);
             message.reply({
-                components: [UI.createContainer({ color: 0xFF0000, description: "❌ **Internal Error**\nFailed to rename the plan." })],
+                components: [UI.createContainer({ color: 0xFF0000, description: "<:no:1526496561188831244>**Internal Error**\nFailed to rename the plan." })],
                 flags: MessageFlags.IsComponentsV2
             });
         }

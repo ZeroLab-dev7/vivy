@@ -11,7 +11,7 @@ module.exports = {
             const settings = await PremiumSetup.findByPk(message.guild.id);
             if (!settings) {
                 return message.reply({
-                    components: [UI.createContainer({ color: 0xFF0000, description: "❌ **Premium system not set up.**" })],
+                    components: [UI.createContainer({ color: 0xFF0000, description: "<:no:1526496561188831244>**Premium system not set up.**" })],
                     flags: MessageFlags.IsComponentsV2
                 });
             }
@@ -29,7 +29,7 @@ module.exports = {
                 return message.reply({
                     components: [UI.createContainer({
                         color: 0xFF0000,
-                        description: "❌ **Access Denied**\nOnly **Managers** or **Administrators** can delete premium plans."
+                        description: "<:no:1526496561188831244>**Access Denied**\nOnly **Managers** or **Administrators** can delete premium plans."
                     })],
                     flags: MessageFlags.IsComponentsV2
                 });
@@ -42,13 +42,13 @@ module.exports = {
                 plan = await PremiumPlan.findOne({ where: { owner_id: targetId, guild_id: message.guild.id } });
                 if (!plan) {
                     return message.reply({
-                        components: [UI.createContainer({ color: 0xFF0000, description: "❌ **Plan not found for that user.**" })],
+                        components: [UI.createContainer({ color: 0xFF0000, description: "<:no:1526496561188831244>**Plan not found for that user.**" })],
                         flags: MessageFlags.IsComponentsV2
                     });
                 }
             } else {
                 return message.reply({
-                    components: [UI.createContainer({ color: 0xFF0000, description: "❌ **Specify a user.**\nUsage: `?pdelete <user_id/mention>`" })],
+                    components: [UI.createContainer({ color: 0xFF0000, description: "<:no:1526496561188831244>**Specify a user.**\nUsage: `?pdelete <user_id/mention>`" })],
                     flags: MessageFlags.IsComponentsV2
                 });
             }
@@ -74,7 +74,7 @@ module.exports = {
         } catch (error) {
             console.error("pdelete Error:", error);
             message.reply({
-                components: [UI.createContainer({ color: 0xFF0000, description: "❌ **Internal Error**\nAn error occurred while deleting the plan." })],
+                components: [UI.createContainer({ color: 0xFF0000, description: "<:no:1526496561188831244>**Internal Error**\nAn error occurred while deleting the plan." })],
                 flags: MessageFlags.IsComponentsV2
             });
         }

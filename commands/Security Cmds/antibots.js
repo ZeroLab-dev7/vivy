@@ -18,7 +18,7 @@ module.exports = {
             return message.reply({
                 components: [UI.createContainer({
                     color: 0xFF0000,
-                    description: '❌ **Access Denied**\nYou need the **Owner Role** to use this command.'
+                    description: '<:no:1526496561188831244>**Access Denied**\nYou need the **Owner Role** to use this command.'
                 })],
                 flags: MessageFlags.IsComponentsV2
             });
@@ -29,7 +29,7 @@ module.exports = {
 
         if (mode === 'on') {
             const channelMention = message.mentions.channels.first() || (args[1] ? message.guild.channels.cache.get(args[1]) : null);
-            
+
             // First time setup check: If no log channel in DB and no channel provided, error.
             if (!setup?.log_channel_id && !channelMention) {
                 return message.reply({

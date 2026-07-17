@@ -64,7 +64,7 @@ module.exports = {
                 if (channel) {
                     // Map slash command option name (kebab-case) to internal log type
                     const key = opt.name.replace('logs-', '');
-                    
+
                     if (currentChannels[key] === channel.id) {
                         updates.push(`⚠️ **${opt.description}** is already set to ${channel}`);
                     } else {
@@ -106,7 +106,7 @@ module.exports = {
             }
         } catch (error) {
             console.error('Setup Logs Error:', error);
-            const errorOptions = { embeds: [UI.createEmbed({ title: 'Error', description: '❌ Failed to configure logs.', color: 'Red' })], ephemeral: true };
+            const errorOptions = { embeds: [UI.createEmbed({ title: 'Error', description: '<:no:1526496561188831244>Failed to configure logs.', color: 'Red' })], ephemeral: true };
             if (interaction.deferred || interaction.replied) {
                 await interaction.editReply(errorOptions).catch(() => { });
             } else {

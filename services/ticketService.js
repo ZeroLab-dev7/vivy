@@ -75,14 +75,14 @@ class TicketService {
 
     static async claimTicket(interaction, channelId) {
         const ticket = await TicketInstance.findOne({ where: { channel_id: channelId, status: 'open' } });
-        if (!ticket) return interaction.reply({ content: '❌ Ticket not found or already closed.', ephemeral: true });
+        if (!ticket) return interaction.reply({ content: '<:no:1526496561188831244>Ticket not found or already closed.', ephemeral: true });
 
         const config = await this.getOrCreateConfig(interaction.guild.id);
         const staffRoles = JSON.parse(config.staff_roles || '[]');
         const isStaff = staffRoles.some(roleId => interaction.member.roles.cache.has(roleId)) ||
             interaction.member.permissions.has(PermissionFlagsBits.Administrator);
 
-        if (!isStaff) return interaction.reply({ content: '❌ Only staff members can claim tickets.', ephemeral: true });
+        if (!isStaff) return interaction.reply({ content: '<:no:1526496561188831244>Only staff members can claim tickets.', ephemeral: true });
 
         ticket.status = 'claimed';
         ticket.claimed_by = interaction.user.id;
@@ -99,15 +99,15 @@ class TicketService {
 
     static async closeTicket(interaction, channelId) {
         const ticket = await TicketInstance.findOne({ where: { channel_id: channelId } });
-        if (!ticket || ticket.status === 'closed') return interaction.reply({ content: '❌ Ticket not found or already closed.', ephemeral: true });
+        if (!ticket || ticket.status === 'closed') return interaction.reply({ content: '<:no:1526496561188831244>Ticket not found or already closed.', ephemeral: true });
 
         const config = await this.getOrCreateConfig(interaction.guild.id);
-        
+
         // 1. Generate Transcript
         let transcriptContent = `Ticket Transcript for #${interaction.channel.name}\n\n`;
         const messages = await interaction.channel.messages.fetch({ limit: 100 });
         const sorted = messages.sort((a, b) => a.createdTimestamp - b.createdTimestamp);
-        
+
         sorted.forEach(msg => {
             transcriptContent += `[${new Date(msg.createdTimestamp).toISOString()}] ${msg.author.tag}: ${msg.content}\n`;
             if (msg.attachments.size > 0) {
@@ -127,7 +127,7 @@ class TicketService {
             if (logsChannel) {
                 const buffer = Buffer.from(transcriptContent, 'utf-8');
                 const file = { attachment: buffer, name: `transcript-${interaction.channel.name}.txt` };
-                
+
                 const logEmbed = new EmbedBuilder()
                     .setTitle(`🔒 Ticket Closed`)
                     .setDescription(`**Ticket:** ${interaction.channel.name}\n**Closed By:** ${interaction.user.tag}`)
@@ -141,7 +141,7 @@ class TicketService {
         await interaction.reply({ content: '✅ Ticket is being closed and archived. Channel will be deleted in 5 seconds.' });
 
         setTimeout(async () => {
-            await interaction.channel.delete().catch(() => {});
+            await interaction.channel.delete().catch(() => { });
         }, 5000);
     }
 }

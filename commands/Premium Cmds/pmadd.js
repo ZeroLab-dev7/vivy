@@ -12,7 +12,7 @@ module.exports = {
 
             if (!plan) {
                 return message.reply({
-                    components: [UI.createContainer({ color: 0xFF0000, description: "❌ **Access Denied**\nYou do not own a premium plan." })],
+                    components: [UI.createContainer({ color: 0xFF0000, description: "<:no:1526496561188831244>**Access Denied**\nYou do not own a premium plan." })],
                     flags: MessageFlags.IsComponentsV2
                 });
             }
@@ -36,14 +36,14 @@ module.exports = {
 
             if (!targetUser) {
                 return message.reply({
-                    components: [UI.createContainer({ color: 0xFF0000, description: "❌ **User not found.**" })],
+                    components: [UI.createContainer({ color: 0xFF0000, description: "<:no:1526496561188831244>**User not found.**" })],
                     flags: MessageFlags.IsComponentsV2
                 });
             }
 
             if (targetUser.id === message.author.id) {
                 return message.reply({
-                    components: [UI.createContainer({ color: 0xFF0000, description: "❌ **You are already the owner of this plan.**" })],
+                    components: [UI.createContainer({ color: 0xFF0000, description: "<:no:1526496561188831244>**You are already the owner of this plan.**" })],
                     flags: MessageFlags.IsComponentsV2
                 });
             }
@@ -53,14 +53,14 @@ module.exports = {
 
             if (managers.includes(targetUser.id)) {
                 return message.reply({
-                    components: [UI.createContainer({ color: 0xFF0000, description: "❌ **This user is already a manager.**" })],
+                    components: [UI.createContainer({ color: 0xFF0000, description: "<:no:1526496561188831244>**This user is already a manager.**" })],
                     flags: MessageFlags.IsComponentsV2
                 });
             }
 
             if (managers.length >= 3) {
                 return message.reply({
-                    components: [UI.createContainer({ color: 0xFF0000, description: "❌ **Manager Limit Reached**\nYou can only have a maximum of **3** managers." })],
+                    components: [UI.createContainer({ color: 0xFF0000, description: "<:no:1526496561188831244>**Manager Limit Reached**\nYou can only have a maximum of **3** managers." })],
                     flags: MessageFlags.IsComponentsV2
                 });
             }
@@ -76,7 +76,7 @@ module.exports = {
         } catch (error) {
             console.error("pmadd Error:", error);
             message.reply({
-                components: [UI.createContainer({ color: 0xFF0000, description: "❌ **Internal Error**\nFailed to add manager." })],
+                components: [UI.createContainer({ color: 0xFF0000, description: "<:no:1526496561188831244>**Internal Error**\nFailed to add manager." })],
                 flags: MessageFlags.IsComponentsV2
             });
         }

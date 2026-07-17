@@ -42,7 +42,6 @@ module.exports = {
             const guideContainer = UI.createContainer({
                 title: 'Command : AddRole',
                 description: 'Add a role to a user.',
-                footer: `Requested by ${message.author.tag}`,
                 fields: [
                     { name: "Aliases:", value: "addrole, roleadd" },
                     { name: "Usage:", value: "?addrole @user/id <role name/id/mention>" },
@@ -134,7 +133,7 @@ module.exports = {
                 flags: MessageFlags.IsComponentsV2
             });
         } catch (err) {
-            console.error('❌ Error adding role:', err.message);
+            console.error('<:no:1526496561188831244>Error adding role:', err.message);
             return message.reply({
                 components: [UI.createContainer({ description: '- An error occurred while adding the role.' })],
                 flags: MessageFlags.IsComponentsV2

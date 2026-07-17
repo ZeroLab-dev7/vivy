@@ -11,7 +11,7 @@ const WelcomeSettings = sequelize.define('WelcomeSettings', {
     welcome_bg_image: { type: DataTypes.STRING, allowNull: true },
     welcome_dm_enabled: { type: DataTypes.BOOLEAN, defaultValue: false },
     welcome_dm_message: { type: DataTypes.TEXT, defaultValue: 'Welcome {user} to {server}!' },
-    
+
     leave_enabled: { type: DataTypes.BOOLEAN, defaultValue: false },
     leave_channel: { type: DataTypes.STRING, allowNull: true },
     leave_message: { type: DataTypes.TEXT, defaultValue: '{user} has left {server}.' },
@@ -91,8 +91,50 @@ const VerificationConfig = sequelize.define('VerificationConfig', {
     type: { type: DataTypes.ENUM('button', 'captcha'), defaultValue: 'button' },
     role_id: { type: DataTypes.STRING, allowNull: true },
     min_account_age_days: { type: DataTypes.INTEGER, defaultValue: 0 },
-    min_join_age_days: { type: DataTypes.INTEGER, defaultValue: 0 }
+    min_join_age_days: { type: DataTypes.INTEGER, defaultValue: 0 },
+
+    // Expanded Security Verification fields
+    mode: { type: DataTypes.STRING, defaultValue: 'staff' }, // 'staff' or 'security'
+    sec_unverified_role: { type: DataTypes.STRING, allowNull: true },
+    sec_verified_role: { type: DataTypes.STRING, allowNull: true },
+    sec_failure_role: { type: DataTypes.STRING, allowNull: true },
+    sec_min_account_age: { type: DataTypes.INTEGER, defaultValue: 0 }, // in days
+    sec_min_join_time: { type: DataTypes.INTEGER, defaultValue: 0 }, // in seconds
+    sec_require_avatar: { type: DataTypes.BOOLEAN, defaultValue: false },
+    sec_require_verified_account: { type: DataTypes.BOOLEAN, defaultValue: false },
+    sec_anti_alt: { type: DataTypes.STRING, defaultValue: 'disabled' }, // 'disabled', 'basic', 'strict'
+    sec_captcha: { type: DataTypes.STRING, defaultValue: 'disabled' }, // 'disabled', 'button', 'math', 'image'
+    sec_cooldown: { type: DataTypes.INTEGER, defaultValue: 10 }, // in seconds
+    sec_auto_kick_limit: { type: DataTypes.INTEGER, defaultValue: 0 }, // 0 = disabled
+    sec_auto_ban: { type: DataTypes.BOOLEAN, defaultValue: false },
+
+    // Embed customization fields
+    msg_embed_title: { type: DataTypes.STRING, defaultValue: 'Verification Required' },
+    msg_embed_desc: { type: DataTypes.TEXT, defaultValue: 'Click the button below to verify and access the server.' },
+    msg_embed_color: { type: DataTypes.STRING, defaultValue: '#0099ff' },
+    msg_embed_thumbnail: { type: DataTypes.STRING, allowNull: true },
+    msg_embed_footer: { type: DataTypes.STRING, allowNull: true },
+    msg_btn_text: { type: DataTypes.STRING, defaultValue: 'Verify Me' },
+    msg_btn_emoji: { type: DataTypes.STRING, defaultValue: '🛡️' },
+    msg_btn_style: { type: DataTypes.STRING, defaultValue: 'primary' }
 }, { tableName: 'verification_config' });
+
+// 7b. Verification Log History
+const VerificationLog = sequelize.define('VerificationLog', {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    guild_id: { type: DataTypes.STRING, allowNull: false },
+    user_id: { type: DataTypes.STRING, allowNull: false },
+    username: { type: DataTypes.STRING, allowNull: false },
+    user_avatar: { type: DataTypes.STRING, allowNull: true },
+    method: { type: DataTypes.ENUM('staff', 'security'), defaultValue: 'security' },
+    status: { type: DataTypes.ENUM('passed', 'failed'), allowNull: false },
+    checks_passed: { type: DataTypes.TEXT, defaultValue: '[]' },
+    checks_failed: { type: DataTypes.TEXT, defaultValue: '[]' },
+    moderator_id: { type: DataTypes.STRING, allowNull: true },
+    duration_ms: { type: DataTypes.INTEGER, defaultValue: 0 },
+    failure_reason: { type: DataTypes.TEXT, allowNull: true },
+    timestamp: { type: DataTypes.DATE, defaultValue: DataTypes.NOW }
+}, { tableName: 'verification_logs_history', timestamps: true });
 
 // 8. Giveaway Instance
 const GiveawayInstance = sequelize.define('GiveawayInstance', {
@@ -157,28 +199,28 @@ const LevelConfig = sequelize.define('LevelConfig', {
     reward_roles: { type: DataTypes.TEXT, defaultValue: '[]' }, // JSON [{ level: 5, role_id: "..." }]
     rank_card_background: { type: DataTypes.STRING, allowNull: true },
     rank_card_font: { type: DataTypes.STRING, defaultValue: 'Outfit' },
-    
+
     // Custom formulas
     xp_formula_base: { type: DataTypes.INTEGER, defaultValue: 100 },
     xp_formula_exponent: { type: DataTypes.FLOAT, defaultValue: 1.8 },
     xp_formula_offset: { type: DataTypes.INTEGER, defaultValue: 100 },
-    
+
     // Voice XP Configuration
     voice_xp_interval_min: { type: DataTypes.INTEGER, defaultValue: 5 },
     voice_xp_amount: { type: DataTypes.INTEGER, defaultValue: 10 },
-    
+
     // Limits
     daily_xp_limit: { type: DataTypes.INTEGER, defaultValue: 0 },
     weekly_xp_limit: { type: DataTypes.INTEGER, defaultValue: 0 },
-    
+
     // Announcements
     announce_enabled: { type: DataTypes.BOOLEAN, defaultValue: true },
     announce_channel: { type: DataTypes.STRING, allowNull: true },
-    announce_message: { type: DataTypes.TEXT, defaultValue: '🎉 Congratulations {user}! You reached Level {level}!' },
+    announce_message: { type: DataTypes.TEXT, defaultValue: '<a:pink8:1337678972108148757> Congratulations {user}! You reached Level {level}!' },
     announce_embed: { type: DataTypes.BOOLEAN, defaultValue: true },
     announce_color: { type: DataTypes.STRING, defaultValue: '#5865F2' },
     announce_image_url: { type: DataTypes.STRING, allowNull: true },
-    
+
     // Rewards behaviour
     stack_rewards: { type: DataTypes.BOOLEAN, defaultValue: true },
     remove_rewards_on_demote: { type: DataTypes.BOOLEAN, defaultValue: true }
@@ -195,11 +237,11 @@ const UserXP = sequelize.define('UserXP', {
     voice_xp: { type: DataTypes.INTEGER, defaultValue: 0 },
     voice_level: { type: DataTypes.INTEGER, defaultValue: 0 },
     last_xp_time: { type: DataTypes.DATE, allowNull: true },
-    
+
     // Extended counters
     messages_count: { type: DataTypes.INTEGER, defaultValue: 0 },
     voice_time_min: { type: DataTypes.INTEGER, defaultValue: 0 },
-    
+
     // Cooldown tracking limits
     xp_today: { type: DataTypes.INTEGER, defaultValue: 0 },
     xp_week: { type: DataTypes.INTEGER, defaultValue: 0 },
@@ -463,7 +505,7 @@ const LevelReward = sequelize.define('LevelReward', {
     level: { type: DataTypes.INTEGER, allowNull: false },
     role_id: { type: DataTypes.STRING, allowNull: false },
     is_enabled: { type: DataTypes.BOOLEAN, defaultValue: true }
-}, { 
+}, {
     tableName: 'level_rewards',
     indexes: [{ fields: ['guild_id'] }]
 });
@@ -478,7 +520,7 @@ const XPBoost = sequelize.define('XPBoost', {
     start_time: { type: DataTypes.DATE, allowNull: true },
     end_time: { type: DataTypes.DATE, allowNull: true },
     is_enabled: { type: DataTypes.BOOLEAN, defaultValue: true }
-}, { 
+}, {
     tableName: 'xp_boosts',
     indexes: [{ fields: ['guild_id'] }]
 });
@@ -491,7 +533,7 @@ const VoiceSession = sequelize.define('VoiceSession', {
     channel_id: { type: DataTypes.STRING, allowNull: false },
     joined_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
     last_xp_grant: { type: DataTypes.DATE, defaultValue: DataTypes.NOW }
-}, { 
+}, {
     tableName: 'voice_sessions',
     indexes: [{ fields: ['guild_id', 'user_id'] }]
 });
@@ -507,7 +549,7 @@ const LevelHistory = sequelize.define('LevelHistory', {
     level_after: { type: DataTypes.INTEGER, defaultValue: 0 },
     details: { type: DataTypes.TEXT, allowNull: true },
     timestamp: { type: DataTypes.DATE, defaultValue: DataTypes.NOW }
-}, { 
+}, {
     tableName: 'level_histories',
     indexes: [{ fields: ['guild_id', 'timestamp'] }]
 });
@@ -521,12 +563,75 @@ const LevelLeaderboardCache = sequelize.define('LevelLeaderboardCache', {
     xp: { type: DataTypes.INTEGER, allowNull: false },
     level: { type: DataTypes.INTEGER, allowNull: false },
     cached_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW }
-}, { 
+}, {
     tableName: 'level_leaderboard_caches',
     indexes: [{ fields: ['guild_id'] }]
 });
 
+// 43. Security Verification Setup
+const SecurityVerificationSetup = sequelize.define('SecurityVerificationSetup', {
+    guild_id: { type: DataTypes.STRING, primaryKey: true, allowNull: false },
+    is_enabled: { type: DataTypes.BOOLEAN, defaultValue: false },
+    level: { type: DataTypes.STRING, defaultValue: 'low' }, // low, medium, high, extreme, custom
+
+    // Section 2: Channel Settings
+    channel_id: { type: DataTypes.STRING, allowNull: true },
+    category_id: { type: DataTypes.STRING, allowNull: true },
+    auto_create_channel: { type: DataTypes.BOOLEAN, defaultValue: false },
+    auto_permissions: { type: DataTypes.BOOLEAN, defaultValue: false },
+    delete_previous_msg: { type: DataTypes.BOOLEAN, defaultValue: false },
+    btn_label: { type: DataTypes.STRING, defaultValue: 'Verify Me' },
+    btn_emoji: { type: DataTypes.STRING, defaultValue: '<:shield:1525735478450454550>' },
+    btn_style: { type: DataTypes.STRING, defaultValue: 'primary' },
+    embed_title: { type: DataTypes.STRING, defaultValue: 'Verification Required' },
+    embed_desc: { type: DataTypes.TEXT, defaultValue: 'Click the button below to verify and access the server.' },
+    embed_color: { type: DataTypes.STRING, defaultValue: '#0099ff' },
+    embed_thumbnail: { type: DataTypes.STRING, allowNull: true },
+    embed_footer: { type: DataTypes.STRING, allowNull: true },
+
+    // Section 3: Roles
+    verified_role_id: { type: DataTypes.STRING, allowNull: true },
+    unverified_role_id: { type: DataTypes.STRING, allowNull: true },
+    failure_role_id: { type: DataTypes.STRING, allowNull: true },
+
+    // Section 4: Custom Security Rules
+    rule_min_account_age_enabled: { type: DataTypes.BOOLEAN, defaultValue: false },
+    rule_min_account_age_val: { type: DataTypes.INTEGER, defaultValue: 3 }, // days
+    rule_min_join_time_enabled: { type: DataTypes.BOOLEAN, defaultValue: false },
+    rule_min_join_time_val: { type: DataTypes.INTEGER, defaultValue: 10 }, // seconds
+    rule_require_avatar_enabled: { type: DataTypes.BOOLEAN, defaultValue: false },
+    rule_captcha_enabled: { type: DataTypes.BOOLEAN, defaultValue: false },
+    rule_captcha_type: { type: DataTypes.STRING, defaultValue: 'button' }, // button, math, image
+    rule_anti_alt_enabled: { type: DataTypes.BOOLEAN, defaultValue: false },
+    rule_anti_alt_type: { type: DataTypes.STRING, defaultValue: 'basic' }, // basic, strict
+    rule_cooldown_enabled: { type: DataTypes.BOOLEAN, defaultValue: false },
+    rule_cooldown_val: { type: DataTypes.INTEGER, defaultValue: 10 }, // seconds
+    rule_max_attempts_enabled: { type: DataTypes.BOOLEAN, defaultValue: false },
+    rule_max_attempts_val: { type: DataTypes.INTEGER, defaultValue: 3 },
+    rule_auto_kick_enabled: { type: DataTypes.BOOLEAN, defaultValue: false },
+    rule_auto_ban_enabled: { type: DataTypes.BOOLEAN, defaultValue: false },
+    rule_send_dm_enabled: { type: DataTypes.BOOLEAN, defaultValue: false },
+    rule_welcome_message_enabled: { type: DataTypes.BOOLEAN, defaultValue: false },
+
+    // Section 5: Actions
+    action_success_remove_unverified: { type: DataTypes.BOOLEAN, defaultValue: true },
+    action_success_give_verified: { type: DataTypes.BOOLEAN, defaultValue: true },
+    action_success_send_dm: { type: DataTypes.BOOLEAN, defaultValue: false },
+    action_success_log: { type: DataTypes.BOOLEAN, defaultValue: true },
+    action_fail_retry: { type: DataTypes.BOOLEAN, defaultValue: true },
+    action_fail_cooldown: { type: DataTypes.INTEGER, defaultValue: 60 }, // seconds
+    action_fail_notify_staff: { type: DataTypes.BOOLEAN, defaultValue: false },
+    action_fail_kick: { type: DataTypes.BOOLEAN, defaultValue: false },
+    action_fail_ban: { type: DataTypes.BOOLEAN, defaultValue: false },
+
+    // Section 6: Logs
+    log_channel_id: { type: DataTypes.STRING, allowNull: true },
+    log_level: { type: DataTypes.STRING, defaultValue: 'info' }, // info, warn, error
+    log_verbose: { type: DataTypes.BOOLEAN, defaultValue: false }
+}, { tableName: 'security_verification_setup', timestamps: true });
+
 module.exports = {
+    SecurityVerificationSetup,
     WelcomeSettings,
     AutoModSettings,
     ReactionRolePanel,
@@ -534,6 +639,7 @@ module.exports = {
     TicketConfig,
     TicketInstance,
     VerificationConfig,
+    VerificationLog,
     GiveawayInstance,
     TempVoiceConfig,
     TempVoiceChannel,

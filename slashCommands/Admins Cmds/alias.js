@@ -10,7 +10,7 @@ module.exports = {
         .addSubcommand(subcommand =>
             subcommand.setName('add')
                 .setDescription('Bind a custom trigger to a command')
-                .addStringOption(option => 
+                .addStringOption(option =>
                     option.setName('command')
                         .setDescription('The command to bind to (e.g. avatar)')
                         .setRequired(true))
@@ -32,7 +32,7 @@ module.exports = {
         .addSubcommand(subcommand =>
             subcommand.setName('list')
                 .setDescription('List all custom aliases in this server')),
-    
+
     async execute(interaction) {
         try {
             await interaction.deferReply();
@@ -41,7 +41,7 @@ module.exports = {
             if (!interaction.member.permissions.has(PermissionFlagsBits.Administrator) && interaction.user.id !== interaction.guild.ownerId) {
                 return interaction.editReply({
                     components: [UI.createContainer({
-                        description: '❌ Only **Administrators** or the **Server Owner** can use this command.'
+                        description: '<:no:1526496561188831244>Only **Administrators** or the **Server Owner** can use this command.'
                     })],
                     flags: MessageFlags.IsComponentsV2
                 });
@@ -64,7 +64,7 @@ module.exports = {
                 if (!cmd) {
                     return interaction.editReply({
                         components: [UI.createContainer({
-                            description: `❌ Command \`${commandName}\` not found.`
+                            description: `<:no:1526496561188831244>Command \`${commandName}\` not found.`
                         })],
                         flags: MessageFlags.IsComponentsV2
                     });
@@ -90,7 +90,7 @@ module.exports = {
                     if (e.name === 'SequelizeUniqueConstraintError') {
                         return interaction.editReply({
                             components: [UI.createContainer({
-                                description: `❌ The alias **${trigger}** already exists in this server.`
+                                description: `<:no:1526496561188831244>The alias **${trigger}** already exists in this server.`
                             })],
                             flags: MessageFlags.IsComponentsV2
                         });
@@ -98,7 +98,7 @@ module.exports = {
                     console.error('[alias slash] Error adding alias:', e);
                     return interaction.editReply({
                         components: [UI.createContainer({
-                            description: '❌ Failed to add alias.'
+                            description: '<:no:1526496561188831244>Failed to add alias.'
                         })],
                         flags: MessageFlags.IsComponentsV2
                     });
@@ -123,7 +123,7 @@ module.exports = {
                 } else {
                     return interaction.editReply({
                         components: [UI.createContainer({
-                            description: `❌ Alias \`${trigger}\` not found.`
+                            description: `<:no:1526496561188831244>Alias \`${trigger}\` not found.`
                         })],
                         flags: MessageFlags.IsComponentsV2
                     });
@@ -158,7 +158,7 @@ module.exports = {
             console.error('Error in slash alias command:', error);
             await interaction.editReply({
                 components: [UI.createContainer({
-                    description: '❌ Failed to process alias command.',
+                    description: '<:no:1526496561188831244>Failed to process alias command.',
                     color: 0xff0000
                 })],
                 flags: MessageFlags.IsComponentsV2

@@ -4,7 +4,7 @@ class AntiBotDB {
     constructor() {
         this.db = new sqlite3.Database("./database.sqlite", (err) => {
             if (err) {
-                console.error("❌ Error connecting to SQLite database:", err.message);
+                console.error("<:no:1526496561188831244>Error connecting to SQLite database:", err.message);
             } else {
                 console.log("✅ Connected to SQLite database.");
                 this.init();
@@ -21,7 +21,7 @@ class AntiBotDB {
                 log_channel TEXT
             )`,
             (err) => {
-                if (err) console.error("❌ Error creating table:", err.message);
+                if (err) console.error("<:no:1526496561188831244>Error creating table:", err.message);
             }
         );
 
@@ -35,7 +35,7 @@ class AntiBotDB {
                 timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
             )`,
             (err) => {
-                if (err) console.error("❌ Error creating message logs table:", err.message);
+                if (err) console.error("<:no:1526496561188831244>Error creating message logs table:", err.message);
             }
         );
     }

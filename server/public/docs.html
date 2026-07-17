@@ -567,7 +567,7 @@
 <header class="docs-header">
     <div style="display:flex;align-items:center;gap:12px">
         <button class="mobile-sidebar-btn" id="mobileSidebarBtn"><i class="fa-solid fa-bars"></i></button>
-        <div class="logo-wrap" onclick="navigate('home')">
+        <div class="logo-wrap" data-nav="home">
             <img src="/logo.png" alt="Vivy logo">
             <span>Vivy Docs</span>
         </div>
@@ -588,62 +588,62 @@
 <aside class="docs-sidebar" id="docsSidebar">
     <div class="sidebar-section">
         <div class="sidebar-section-title">Getting Started</div>
-        <a class="sidebar-link active" data-page="home" onclick="navigate('home')"><i class="fa-solid fa-house"></i> Home</a>
-        <a class="sidebar-link" data-page="getting-started" onclick="navigate('getting-started')"><i class="fa-solid fa-rocket"></i> Quick Start</a>
-        <a class="sidebar-link" data-page="invite" onclick="navigate('invite')"><i class="fa-solid fa-link"></i> Inviting Vivy</a>
-        <a class="sidebar-link" data-page="permissions" onclick="navigate('permissions')"><i class="fa-solid fa-shield-halved"></i> Permissions Guide</a>
-        <a class="sidebar-link" data-page="login" onclick="navigate('login')"><i class="fa-solid fa-right-to-bracket"></i> Logging In</a>
-        <a class="sidebar-link" data-page="basic-config" onclick="navigate('basic-config')"><i class="fa-solid fa-sliders"></i> Basic Config</a>
+        <a class="sidebar-link active" data-page="home"><i class="fa-solid fa-house"></i> Home</a>
+        <a class="sidebar-link" data-page="getting-started"><i class="fa-solid fa-rocket"></i> Quick Start</a>
+        <a class="sidebar-link" data-page="invite"><i class="fa-solid fa-link"></i> Inviting Vivy</a>
+        <a class="sidebar-link" data-page="permissions"><i class="fa-solid fa-shield-halved"></i> Permissions Guide</a>
+        <a class="sidebar-link" data-page="login"><i class="fa-solid fa-right-to-bracket"></i> Logging In</a>
+        <a class="sidebar-link" data-page="basic-config"><i class="fa-solid fa-sliders"></i> Basic Config</a>
     </div>
     <div class="sidebar-section">
         <div class="sidebar-section-title">Dashboard Setup</div>
-        <a class="sidebar-link" data-page="dashboard-overview" onclick="navigate('dashboard-overview')"><i class="fa-solid fa-gauge"></i> Overview</a>
-        <a class="sidebar-link" data-page="welcome" onclick="navigate('welcome')"><i class="fa-solid fa-door-open"></i> Welcome Messages</a>
-        <a class="sidebar-link" data-page="autorole" onclick="navigate('autorole')"><i class="fa-solid fa-user-plus"></i> Auto Role</a>
-        <a class="sidebar-link" data-page="security" onclick="navigate('security')"><i class="fa-solid fa-user-shield"></i> Security & Prefix</a>
-        <a class="sidebar-link" data-page="antilink" onclick="navigate('antilink')"><i class="fa-solid fa-link-slash"></i> Anti-Link Shield</a>
-        <a class="sidebar-link" data-page="automod" onclick="navigate('automod')"><i class="fa-solid fa-robot"></i> Auto Moderation</a>
-        <a class="sidebar-link" data-page="warn-dash" onclick="navigate('warn-dash')"><i class="fa-solid fa-triangle-exclamation"></i> Warnings Setup</a>
-        <a class="sidebar-link" data-page="mute-dash" onclick="navigate('mute-dash')"><i class="fa-solid fa-microphone-slash"></i> Mute Setup</a>
-        <a class="sidebar-link" data-page="jail-dash" onclick="navigate('jail-dash')"><i class="fa-solid fa-lock"></i> Jail Setup</a>
-        <a class="sidebar-link" data-page="logging" onclick="navigate('logging')"><i class="fa-solid fa-scroll"></i> Server Logs</a>
-        <a class="sidebar-link" data-page="audit-logs" onclick="navigate('audit-logs')"><i class="fa-solid fa-list-check"></i> Audit Logs</a>
-        <a class="sidebar-link" data-page="verification" onclick="navigate('verification')"><i class="fa-solid fa-user-check"></i> Verification System</a>
-        <a class="sidebar-link" data-page="applications" onclick="navigate('applications')"><i class="fa-solid fa-file-lines"></i> Apply Panel</a>
-        <a class="sidebar-link" data-page="economy" onclick="navigate('economy')"><i class="fa-solid fa-coins"></i> Economy Setup</a>
-        <a class="sidebar-link" data-page="leveling" onclick="navigate('leveling')"><i class="fa-solid fa-chart-line"></i> Leveling Setup</a>
-        <a class="sidebar-link" data-page="giveaways" onclick="navigate('giveaways')"><i class="fa-solid fa-gift"></i> Giveaways</a>
-        <a class="sidebar-link" data-page="rooms" onclick="navigate('rooms')"><i class="fa-solid fa-microphone"></i> Need Help Rooms</a>
-        <a class="sidebar-link" data-page="custom-commands" onclick="navigate('custom-commands')"><i class="fa-solid fa-terminal"></i> Custom Commands</a>
-        <a class="sidebar-link" data-page="api-keys" onclick="navigate('api-keys')"><i class="fa-solid fa-key"></i> Developer API Keys</a>
-        <a class="sidebar-link" data-page="billing" onclick="navigate('billing')"><i class="fa-solid fa-star"></i> Premium Plan <span class="badge badge-premium">PRO</span></a>
+        <a class="sidebar-link" data-page="dashboard-overview"><i class="fa-solid fa-gauge"></i> Overview</a>
+        <a class="sidebar-link" data-page="welcome"><i class="fa-solid fa-door-open"></i> Welcome Messages</a>
+        <a class="sidebar-link" data-page="autorole"><i class="fa-solid fa-user-plus"></i> Auto Role</a>
+        <a class="sidebar-link" data-page="security"><i class="fa-solid fa-user-shield"></i> Security & Prefix</a>
+        <a class="sidebar-link" data-page="antilink"><i class="fa-solid fa-link-slash"></i> Anti-Link Shield</a>
+        <a class="sidebar-link" data-page="automod"><i class="fa-solid fa-robot"></i> Auto Moderation</a>
+        <a class="sidebar-link" data-page="warn-dash"><i class="fa-solid fa-triangle-exclamation"></i> Warnings Setup</a>
+        <a class="sidebar-link" data-page="mute-dash"><i class="fa-solid fa-microphone-slash"></i> Mute Setup</a>
+        <a class="sidebar-link" data-page="jail-dash"><i class="fa-solid fa-lock"></i> Jail Setup</a>
+        <a class="sidebar-link" data-page="logging"><i class="fa-solid fa-scroll"></i> Server Logs</a>
+        <a class="sidebar-link" data-page="audit-logs"><i class="fa-solid fa-list-check"></i> Audit Logs</a>
+        <a class="sidebar-link" data-page="verification"><i class="fa-solid fa-user-check"></i> Verification System</a>
+        <a class="sidebar-link" data-page="applications"><i class="fa-solid fa-file-lines"></i> Apply Panel</a>
+        <a class="sidebar-link" data-page="economy"><i class="fa-solid fa-coins"></i> Economy Setup</a>
+        <a class="sidebar-link" data-page="leveling"><i class="fa-solid fa-chart-line"></i> Leveling Setup</a>
+        <a class="sidebar-link" data-page="giveaways"><i class="fa-solid fa-gift"></i> Giveaways</a>
+        <a class="sidebar-link" data-page="rooms"><i class="fa-solid fa-microphone"></i> Need Help Rooms</a>
+        <a class="sidebar-link" data-page="custom-commands"><i class="fa-solid fa-terminal"></i> Custom Commands</a>
+        <a class="sidebar-link" data-page="api-keys"><i class="fa-solid fa-key"></i> Developer API Keys</a>
+        <a class="sidebar-link" data-page="billing"><i class="fa-solid fa-star"></i> Premium Plan <span class="badge badge-premium">PRO</span></a>
     </div>
     <div class="sidebar-section">
         <div class="sidebar-section-title">Bot Commands</div>
-        <a class="sidebar-link" data-page="cmd-moderation" onclick="navigate('cmd-moderation')"><i class="fa-solid fa-gavel"></i> Moderation</a>
-        <a class="sidebar-link" data-page="cmd-security" onclick="navigate('cmd-security')"><i class="fa-solid fa-shield-halved"></i> Security</a>
-        <a class="sidebar-link" data-page="cmd-utility" onclick="navigate('cmd-utility')"><i class="fa-solid fa-wrench"></i> Utility</a>
-        <a class="sidebar-link" data-page="cmd-leveling" onclick="navigate('cmd-leveling')"><i class="fa-solid fa-chart-line"></i> Leveling</a>
-        <a class="sidebar-link" data-page="cmd-economy" onclick="navigate('cmd-economy')"><i class="fa-solid fa-coins"></i> Economy</a>
-        <a class="sidebar-link" data-page="cmd-voice" onclick="navigate('cmd-voice')"><i class="fa-solid fa-microphone"></i> Voice</a>
-        <a class="sidebar-link" data-page="cmd-fun" onclick="navigate('cmd-fun')"><i class="fa-solid fa-face-smile"></i> Fun</a>
-        <a class="sidebar-link" data-page="cmd-marriage" onclick="navigate('cmd-marriage')"><i class="fa-solid fa-heart"></i> Marriage</a>
-        <a class="sidebar-link" data-page="cmd-giveaways" onclick="navigate('cmd-giveaways')"><i class="fa-solid fa-gift"></i> Giveaways</a>
-        <a class="sidebar-link" data-page="cmd-premium" onclick="navigate('cmd-premium')"><i class="fa-solid fa-star"></i> Premium Rooms</a>
+        <a class="sidebar-link" data-page="cmd-moderation"><i class="fa-solid fa-gavel"></i> Moderation</a>
+        <a class="sidebar-link" data-page="cmd-security"><i class="fa-solid fa-shield-halved"></i> Security</a>
+        <a class="sidebar-link" data-page="cmd-utility"><i class="fa-solid fa-wrench"></i> Utility</a>
+        <a class="sidebar-link" data-page="cmd-leveling"><i class="fa-solid fa-chart-line"></i> Leveling</a>
+        <a class="sidebar-link" data-page="cmd-economy"><i class="fa-solid fa-coins"></i> Economy</a>
+        <a class="sidebar-link" data-page="cmd-voice"><i class="fa-solid fa-microphone"></i> Voice</a>
+        <a class="sidebar-link" data-page="cmd-fun"><i class="fa-solid fa-face-smile"></i> Fun</a>
+        <a class="sidebar-link" data-page="cmd-marriage"><i class="fa-solid fa-heart"></i> Marriage</a>
+        <a class="sidebar-link" data-page="cmd-giveaways"><i class="fa-solid fa-gift"></i> Giveaways</a>
+        <a class="sidebar-link" data-page="cmd-premium"><i class="fa-solid fa-star"></i> Premium Rooms</a>
     </div>
     <div class="sidebar-section">
         <div class="sidebar-section-title">Developer</div>
-        <a class="sidebar-link" data-page="dev-portal" onclick="navigate('dev-portal')"><i class="fa-solid fa-code"></i> Developer Portal</a>
-        <a class="sidebar-link" data-page="rest-api" onclick="navigate('rest-api')"><i class="fa-solid fa-plug"></i> REST API</a>
-        <a class="sidebar-link" data-page="auth-api" onclick="navigate('auth-api')"><i class="fa-solid fa-key"></i> Authentication</a>
-        <a class="sidebar-link" data-page="webhooks" onclick="navigate('webhooks')"><i class="fa-solid fa-bolt"></i> Webhooks</a>
-        <a class="sidebar-link" data-page="rate-limits" onclick="navigate('rate-limits')"><i class="fa-solid fa-gauge-high"></i> Rate Limits</a>
+        <a class="sidebar-link" data-page="dev-portal"><i class="fa-solid fa-code"></i> Developer Portal</a>
+        <a class="sidebar-link" data-page="rest-api"><i class="fa-solid fa-plug"></i> REST API</a>
+        <a class="sidebar-link" data-page="auth-api"><i class="fa-solid fa-key"></i> Authentication</a>
+        <a class="sidebar-link" data-page="webhooks"><i class="fa-solid fa-bolt"></i> Webhooks</a>
+        <a class="sidebar-link" data-page="rate-limits"><i class="fa-solid fa-gauge-high"></i> Rate Limits</a>
     </div>
     <div class="sidebar-section">
         <div class="sidebar-section-title">Support</div>
-        <a class="sidebar-link" data-page="faq" onclick="navigate('faq')"><i class="fa-solid fa-circle-question"></i> FAQ</a>
-        <a class="sidebar-link" data-page="troubleshooting" onclick="navigate('troubleshooting')"><i class="fa-solid fa-bug"></i> Troubleshooting</a>
-        <a class="sidebar-link" data-page="changelog" onclick="navigate('changelog')"><i class="fa-solid fa-clock-rotate-left"></i> Changelog</a>
+        <a class="sidebar-link" data-page="faq"><i class="fa-solid fa-circle-question"></i> FAQ</a>
+        <a class="sidebar-link" data-page="troubleshooting"><i class="fa-solid fa-bug"></i> Troubleshooting</a>
+        <a class="sidebar-link" data-page="changelog"><i class="fa-solid fa-clock-rotate-left"></i> Changelog</a>
     </div>
 </aside>
 
@@ -657,25 +657,25 @@
             <h1 class="docs-hero-title">Everything you need to<br><span>master Vivy.</span></h1>
             <p class="docs-hero-sub">Complete guides, command references, dashboard walkthroughs, API documentation, and troubleshooting. Find answers instantly.</p>
             <div class="docs-hero-btns">
-                <a class="hero-btn-primary" onclick="navigate('getting-started')"><i class="fa-solid fa-rocket"></i> Get Started</a>
+                <a class="hero-btn-primary"><i class="fa-solid fa-rocket"></i> Get Started</a>
                 <a href="/auth/discord/login" class="hero-btn-ghost"><i class="fa-brands fa-discord"></i> Open Dashboard</a>
             </div>
         </div>
         <div class="docs-category-grid">
-            <div class="docs-cat-card" onclick="navigate('getting-started')"><span class="cat-icon">🚀</span><div class="cat-title">Getting Started</div><div class="cat-desc">Invite, configure, and go live in minutes</div></div>
-            <div class="docs-cat-card" onclick="navigate('dashboard-overview')"><span class="cat-icon">🎛️</span><div class="cat-title">Dashboard</div><div class="cat-desc">Configure every feature from your browser</div></div>
-            <div class="docs-cat-card" onclick="navigate('cmd-moderation')"><span class="cat-icon">⚙️</span><div class="cat-title">Bot Commands</div><div class="cat-desc">Full command reference with examples</div></div>
-            <div class="docs-cat-card" onclick="navigate('automod')"><span class="cat-icon">🛡️</span><div class="cat-title">AutoMod</div><div class="cat-desc">Smart spam and safety automation</div></div>
-            <div class="docs-cat-card" onclick="navigate('leveling')"><span class="cat-icon">📈</span><div class="cat-title">Leveling</div><div class="cat-desc">XP, rank cards, and leaderboards</div></div>
-            <div class="docs-cat-card" onclick="navigate('economy')"><span class="cat-icon">💰</span><div class="cat-title">Economy</div><div class="cat-desc">Coins, balances, and server economy</div></div>
-            <div class="docs-cat-card" onclick="navigate('giveaways')"><span class="cat-icon">🎁</span><div class="cat-title">Giveaways</div><div class="cat-desc">Create and manage server giveaways</div></div>
-            <div class="docs-cat-card" onclick="navigate('rooms')"><span class="cat-icon">🎙️</span><div class="cat-title">Voice Rooms</div><div class="cat-desc">Private dynamic support channels</div></div>
-            <div class="docs-cat-card" onclick="navigate('logging')"><span class="cat-icon">📋</span><div class="cat-title">Logging</div><div class="cat-desc">Track every action in your server</div></div>
-            <div class="docs-cat-card" onclick="navigate('cmd-marriage')"><span class="cat-icon">💍</span><div class="cat-title">Marriage</div><div class="cat-desc">Server marriage system</div></div>
-            <div class="docs-cat-card" onclick="navigate('dev-portal')"><span class="cat-icon">👨‍💻</span><div class="cat-title">Developers</div><div class="cat-desc">REST API, webhooks, and API keys</div></div>
-            <div class="docs-cat-card" onclick="navigate('faq')"><span class="cat-icon">❓</span><div class="cat-title">FAQ</div><div class="cat-desc">Answers to the most common questions</div></div>
-            <div class="docs-cat-card" onclick="navigate('troubleshooting')"><span class="cat-icon">🔧</span><div class="cat-title">Troubleshooting</div><div class="cat-desc">Diagnose and fix common issues</div></div>
-            <div class="docs-cat-card" onclick="navigate('changelog')"><span class="cat-icon">📝</span><div class="cat-title">Changelog</div><div class="cat-desc">Latest updates and improvements</div></div>
+            <div class="docs-cat-card"><span class="cat-icon">🚀</span><div class="cat-title">Getting Started</div><div class="cat-desc">Invite, configure, and go live in minutes</div></div>
+            <div class="docs-cat-card"><span class="cat-icon">🎛️</span><div class="cat-title">Dashboard</div><div class="cat-desc">Configure every feature from your browser</div></div>
+            <div class="docs-cat-card"><span class="cat-icon">⚙️</span><div class="cat-title">Bot Commands</div><div class="cat-desc">Full command reference with examples</div></div>
+            <div class="docs-cat-card"><span class="cat-icon">🛡️</span><div class="cat-title">AutoMod</div><div class="cat-desc">Smart spam and safety automation</div></div>
+            <div class="docs-cat-card"><span class="cat-icon">📈</span><div class="cat-title">Leveling</div><div class="cat-desc">XP, rank cards, and leaderboards</div></div>
+            <div class="docs-cat-card"><span class="cat-icon">💰</span><div class="cat-title">Economy</div><div class="cat-desc">Coins, balances, and server economy</div></div>
+            <div class="docs-cat-card"><span class="cat-icon">🎁</span><div class="cat-title">Giveaways</div><div class="cat-desc">Create and manage server giveaways</div></div>
+            <div class="docs-cat-card"><span class="cat-icon">🎙️</span><div class="cat-title">Voice Rooms</div><div class="cat-desc">Private dynamic support channels</div></div>
+            <div class="docs-cat-card"><span class="cat-icon">📋</span><div class="cat-title">Logging</div><div class="cat-desc">Track every action in your server</div></div>
+            <div class="docs-cat-card"><span class="cat-icon">💍</span><div class="cat-title">Marriage</div><div class="cat-desc">Server marriage system</div></div>
+            <div class="docs-cat-card"><span class="cat-icon">👨‍💻</span><div class="cat-title">Developers</div><div class="cat-desc">REST API, webhooks, and API keys</div></div>
+            <div class="docs-cat-card"><span class="cat-icon">❓</span><div class="cat-title">FAQ</div><div class="cat-desc">Answers to the most common questions</div></div>
+            <div class="docs-cat-card"><span class="cat-icon">🔧</span><div class="cat-title">Troubleshooting</div><div class="cat-desc">Diagnose and fix common issues</div></div>
+            <div class="docs-cat-card"><span class="cat-icon">📝</span><div class="cat-title">Changelog</div><div class="cat-desc">Latest updates and improvements</div></div>
         </div>
     </div>
 
@@ -699,8 +699,8 @@
             <div class="step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Login to Dashboard</div><div class="step-desc">Open the dashboard at <a href="/auth/discord/login" style="color:var(--cyan)">/auth/discord/login</a>, select your server, and start configuring.</div></div></div>
         </div>
         <div class="doc-nav-footer">
-            <div class="doc-nav-card" onclick="navigate('home')"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Home</div></div>
-            <div class="doc-nav-card next" onclick="navigate('invite')"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Invite Vivy →</div></div>
+            <div class="doc-nav-card" data-nav="home"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Home</div></div>
+            <div class="doc-nav-card next" data-nav="invite"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Invite Vivy →</div></div>
         </div>
     </div>
 
@@ -715,7 +715,7 @@
         <div class="doc-divider"></div>
         <h2 class="doc-heading" id="invite-link">Invite Link</h2>
         <div class="code-block">
-            <div class="code-header"><div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div><span class="code-lang">URL</span><button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy"></i> Copy</button></div>
+            <div class="code-header"><div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div><span class="code-lang">URL</span><button class="copy-btn"><i class="fa-regular fa-copy"></i> Copy</button></div>
             <pre><code>https://discord.com/oauth2/authorize?client_id=1481773011668434975&permissions=8&scope=bot%20applications.commands</code></pre>
         </div>
         <h2 class="doc-heading" id="required-perms">Required Permissions</h2>
@@ -735,8 +735,8 @@
         </div>
         <div class="callout warning"><i class="fa-solid fa-triangle-exclamation callout-icon"></i><div class="callout-body"><strong>Role Hierarchy:</strong> Vivy's role must be placed <em>above</em> any role it needs to manage in Server Settings → Roles.</div></div>
         <div class="doc-nav-footer">
-            <div class="doc-nav-card" onclick="navigate('getting-started')"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Quick Start</div></div>
-            <div class="doc-nav-card next" onclick="navigate('permissions')"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Permissions →</div></div>
+            <div class="doc-nav-card" data-nav="getting-started"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Quick Start</div></div>
+            <div class="doc-nav-card next" data-nav="permissions"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Permissions →</div></div>
         </div>
     </div>
 
@@ -765,8 +765,8 @@
         </tbody></table></div>
         <div class="callout success"><i class="fa-solid fa-circle-check callout-icon"></i><div class="callout-body"><strong>Pro Tip:</strong> Grant Vivy Administrator permissions and place its role near the top of your role list for maximum functionality.</div></div>
         <div class="doc-nav-footer">
-            <div class="doc-nav-card" onclick="navigate('invite')"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Invite Vivy</div></div>
-            <div class="doc-nav-card next" onclick="navigate('login')"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Logging In →</div></div>
+            <div class="doc-nav-card" data-nav="invite"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Invite Vivy</div></div>
+            <div class="doc-nav-card next" data-nav="login"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Logging In →</div></div>
         </div>
     </div>
 
@@ -787,8 +787,8 @@
             <div class="step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Server list</div><div class="step-desc">You are redirected back to the dashboard server list to pick your guild.</div></div></div>
         </div>
         <div class="doc-nav-footer">
-            <div class="doc-nav-card" onclick="navigate('permissions')"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Permissions Guide</div></div>
-            <div class="doc-nav-card next" onclick="navigate('basic-config')"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Basic Config →</div></div>
+            <div class="doc-nav-card" data-nav="permissions"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Permissions Guide</div></div>
+            <div class="doc-nav-card next" data-nav="basic-config"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Basic Config →</div></div>
         </div>
     </div>
 
@@ -808,8 +808,8 @@
             <li><strong>Admin Safeguards:</strong> Set up your Security Owner Role under <strong>Security & Prefix</strong> tab to secure configurations.</li>
         </ul>
         <div class="doc-nav-footer">
-            <div class="doc-nav-card" onclick="navigate('login')"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Logging In</div></div>
-            <div class="doc-nav-card next" onclick="navigate('dashboard-overview')"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Dashboard Overview →</div></div>
+            <div class="doc-nav-card" data-nav="login"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Logging In</div></div>
+            <div class="doc-nav-card next" data-nav="dashboard-overview"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Dashboard Overview →</div></div>
         </div>
     </div>
 
@@ -846,8 +846,8 @@
             <tr><td>Premium Plan</td><td>Unlock custom premium features</td></tr>
         </tbody></table></div>
         <div class="doc-nav-footer">
-            <div class="doc-nav-card" onclick="navigate('basic-config')"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Basic Config</div></div>
-            <div class="doc-nav-card next" onclick="navigate('welcome')"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Welcome Messages →</div></div>
+            <div class="doc-nav-card" data-nav="basic-config"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Basic Config</div></div>
+            <div class="doc-nav-card next" data-nav="welcome"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Welcome Messages →</div></div>
         </div>
     </div>
 
@@ -867,8 +867,8 @@
             <li><strong>DM Welcome:</strong> Send direct message alerts to newly joining members.</li>
         </ul>
         <div class="doc-nav-footer">
-            <div class="doc-nav-card" onclick="navigate('dashboard-overview')"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Dashboard Overview</div></div>
-            <div class="doc-nav-card next" onclick="navigate('autorole')"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Auto Role →</div></div>
+            <div class="doc-nav-card" data-nav="dashboard-overview"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Dashboard Overview</div></div>
+            <div class="doc-nav-card next" data-nav="autorole"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Auto Role →</div></div>
         </div>
     </div>
 
@@ -883,8 +883,8 @@
         <div class="doc-divider"></div>
         <p class="doc-p">Ensure new members receive default roles immediately on join (e.g. "Member"). You can also configure separate roles for bot accounts.</p>
         <div class="doc-nav-footer">
-            <div class="doc-nav-card" onclick="navigate('welcome')"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Welcome Messages</div></div>
-            <div class="doc-nav-card next" onclick="navigate('security')"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Security & Prefix →</div></div>
+            <div class="doc-nav-card" data-nav="welcome"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Welcome Messages</div></div>
+            <div class="doc-nav-card next" data-nav="security"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Security & Prefix →</div></div>
         </div>
     </div>
 
@@ -907,8 +907,8 @@
             <li><strong>Anti-Webhook:</strong> Automatically destroy newly created webhooks to prevent token-leaks spam.</li>
         </ul>
         <div class="doc-nav-footer">
-            <div class="doc-nav-card" onclick="navigate('autorole')"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Auto Role</div></div>
-            <div class="doc-nav-card next" onclick="navigate('antilink')"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Anti-Link Shield →</div></div>
+            <div class="doc-nav-card" data-nav="autorole"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Auto Role</div></div>
+            <div class="doc-nav-card next" data-nav="antilink"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Anti-Link Shield →</div></div>
         </div>
     </div>
 
@@ -924,8 +924,8 @@
         <h2 class="doc-heading" id="antilink-whitelist">Whitelist & Filters</h2>
         <p class="doc-p">Enable the Link Filter shield to delete link messages. You can configure whitelisted roles that bypass this shield, as well as whitelisted domains (e.g. <code>youtube.com</code>, <code>spotify.com</code>).</p>
         <div class="doc-nav-footer">
-            <div class="doc-nav-card" onclick="navigate('security')"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Security & Prefix</div></div>
-            <div class="doc-nav-card next" onclick="navigate('automod')"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Auto Moderation →</div></div>
+            <div class="doc-nav-card" data-nav="security"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Security & Prefix</div></div>
+            <div class="doc-nav-card next" data-nav="automod"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Auto Moderation →</div></div>
         </div>
     </div>
 
@@ -941,8 +941,8 @@
         <h2 class="doc-heading" id="automod-filters">Filters Configuration</h2>
         <p class="doc-p">Set limits for caps percentage, repeat messages (spam), emoji spam, and mass mentions. Configure punishments like deletion, warning, or automatic temp-mutes.</p>
         <div class="doc-nav-footer">
-            <div class="doc-nav-card" onclick="navigate('antilink')"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Anti-Link Shield</div></div>
-            <div class="doc-nav-card next" onclick="navigate('warn-dash')"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Warnings Setup →</div></div>
+            <div class="doc-nav-card" data-nav="antilink"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Anti-Link Shield</div></div>
+            <div class="doc-nav-card next" data-nav="warn-dash"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Warnings Setup →</div></div>
         </div>
     </div>
 
@@ -957,8 +957,8 @@
         <div class="doc-divider"></div>
         <p class="doc-p">Set a role to assign to warned members, select a log channel, and create escalation thresholds (e.g. 3 warnings = temp mute, 5 warnings = server kick, 7 warnings = perm ban).</p>
         <div class="doc-nav-footer">
-            <div class="doc-nav-card" onclick="navigate('automod')"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Auto Moderation</div></div>
-            <div class="doc-nav-card next" onclick="navigate('mute-dash')"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Mute Setup →</div></div>
+            <div class="doc-nav-card" data-nav="automod"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Auto Moderation</div></div>
+            <div class="doc-nav-card next" data-nav="mute-dash"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Mute Setup →</div></div>
         </div>
     </div>
 
@@ -973,8 +973,8 @@
         <div class="doc-divider"></div>
         <p class="doc-p">Select the muted role assigned during a mute command. Ensure the role has Send Messages permissions denied in all channels. Logs are routed to the specified mute logs channel.</p>
         <div class="doc-nav-footer">
-            <div class="doc-nav-card" onclick="navigate('warn-dash')"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Warnings Setup</div></div>
-            <div class="doc-nav-card next" onclick="navigate('jail-dash')"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Jail Setup →</div></div>
+            <div class="doc-nav-card" data-nav="warn-dash"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Warnings Setup</div></div>
+            <div class="doc-nav-card next" data-nav="jail-dash"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Jail Setup →</div></div>
         </div>
     </div>
 
@@ -989,8 +989,8 @@
         <div class="doc-divider"></div>
         <p class="doc-p">Assign the jail role and set the default jail channel. While jailed, members lose all regular roles and can only view and type in the jail channel to submit appeals.</p>
         <div class="doc-nav-footer">
-            <div class="doc-nav-card" onclick="navigate('mute-dash')"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Mute Setup</div></div>
-            <div class="doc-nav-card next" onclick="navigate('logging')"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Server Logs →</div></div>
+            <div class="doc-nav-card" data-nav="mute-dash"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Mute Setup</div></div>
+            <div class="doc-nav-card next" data-nav="logging"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Server Logs →</div></div>
         </div>
     </div>
 
@@ -1012,8 +1012,8 @@
             <tr><td>Moderation Logs</td><td>Bans, kicks, mutes, warnings, jail isolation</td></tr>
         </tbody></table></div>
         <div class="doc-nav-footer">
-            <div class="doc-nav-card" onclick="navigate('jail-dash')"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Jail Setup</div></div>
-            <div class="doc-nav-card next" onclick="navigate('audit-logs')"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Audit Logs →</div></div>
+            <div class="doc-nav-card" data-nav="jail-dash"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Jail Setup</div></div>
+            <div class="doc-nav-card next" data-nav="audit-logs"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Audit Logs →</div></div>
         </div>
     </div>
 
@@ -1028,8 +1028,8 @@
         <div class="doc-divider"></div>
         <p class="doc-p">Browse all past warnings, mutes, timeouts, bans, kicks, and jails. Filter entries by action type, moderator name, or targeted user.</p>
         <div class="doc-nav-footer">
-            <div class="doc-nav-card" onclick="navigate('logging')"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Server Logs</div></div>
-            <div class="doc-nav-card next" onclick="navigate('verification')"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Verification System →</div></div>
+            <div class="doc-nav-card" data-nav="logging"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Server Logs</div></div>
+            <div class="doc-nav-card next" data-nav="verification"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Verification System →</div></div>
         </div>
     </div>
 
@@ -1052,8 +1052,8 @@
             <li><strong>Verification Logs Channel:</strong> Channel routing verification events.</li>
         </ul>
         <div class="doc-nav-footer">
-            <div class="doc-nav-card" onclick="navigate('audit-logs')"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Audit Logs</div></div>
-            <div class="doc-nav-card next" onclick="navigate('applications')"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Apply Panel →</div></div>
+            <div class="doc-nav-card" data-nav="audit-logs"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Audit Logs</div></div>
+            <div class="doc-nav-card next" data-nav="applications"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Apply Panel →</div></div>
         </div>
     </div>
 
@@ -1068,8 +1068,8 @@
         <div class="doc-divider"></div>
         <p class="doc-p">Post custom application panels in channels. Users click <strong>Apply</strong>, answer questions in a Discord modal, and their application is routed to review channels where staff can accept or decline with a button.</p>
         <div class="doc-nav-footer">
-            <div class="doc-nav-card" onclick="navigate('verification')"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Verification System</div></div>
-            <div class="doc-nav-card next" onclick="navigate('economy')"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Economy Setup →</div></div>
+            <div class="doc-nav-card" data-nav="verification"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Verification System</div></div>
+            <div class="doc-nav-card next" data-nav="economy"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Economy Setup →</div></div>
         </div>
     </div>
 
@@ -1084,8 +1084,8 @@
         <div class="doc-divider"></div>
         <p class="doc-p">Configure server coin multipliers, daily coin rewards, and transaction tax rates (e.g. 5% coin tax on transfers). Set up items in the Server Shop that users buy using their virtual balance.</p>
         <div class="doc-nav-footer">
-            <div class="doc-nav-card" onclick="navigate('applications')"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Apply Panel</div></div>
-            <div class="doc-nav-card next" onclick="navigate('leveling')"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Leveling Setup →</div></div>
+            <div class="doc-nav-card" data-nav="applications"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Apply Panel</div></div>
+            <div class="doc-nav-card next" data-nav="leveling"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Leveling Setup →</div></div>
         </div>
     </div>
 
@@ -1103,8 +1103,8 @@
         <h2 class="doc-heading" id="level-roles">Level Up Rewards</h2>
         <p class="doc-p">Create automatic role rewards assigned to users once they reach specific levels (e.g. level 10 grants "Veteran" role).</p>
         <div class="doc-nav-footer">
-            <div class="doc-nav-card" onclick="navigate('economy')"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Economy Setup</div></div>
-            <div class="doc-nav-card next" onclick="navigate('giveaways')"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Giveaways →</div></div>
+            <div class="doc-nav-card" data-nav="economy"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Economy Setup</div></div>
+            <div class="doc-nav-card next" data-nav="giveaways"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Giveaways →</div></div>
         </div>
     </div>
 
@@ -1119,8 +1119,8 @@
         <div class="doc-divider"></div>
         <p class="doc-p">Create, monitor, and cancel server giveaways from the dashboard. Whitelist specific roles to permit entries or set blacklisted members (using the <code>?vb</code> command) to forbid entries.</p>
         <div class="doc-nav-footer">
-            <div class="doc-nav-card" onclick="navigate('leveling')"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Leveling Setup</div></div>
-            <div class="doc-nav-card next" onclick="navigate('rooms')"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Need Help Rooms →</div></div>
+            <div class="doc-nav-card" data-nav="leveling"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Leveling Setup</div></div>
+            <div class="doc-nav-card next" data-nav="rooms"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Need Help Rooms →</div></div>
         </div>
     </div>
 
@@ -1143,8 +1143,8 @@
             <li><strong>Manager Role:</strong> Notified in logs when channels are generated.</li>
         </ul>
         <div class="doc-nav-footer">
-            <div class="doc-nav-card" onclick="navigate('giveaways')"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Giveaways</div></div>
-            <div class="doc-nav-card next" onclick="navigate('custom-commands')"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Custom Commands →</div></div>
+            <div class="doc-nav-card" data-nav="giveaways"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Giveaways</div></div>
+            <div class="doc-nav-card next" data-nav="custom-commands"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Custom Commands →</div></div>
         </div>
     </div>
 
@@ -1159,8 +1159,8 @@
         <div class="doc-divider"></div>
         <p class="doc-p">Create text triggers and responses. When a member invokes the trigger (e.g. <code>?ip</code>), the bot sends the custom response text. Perfect for providing quick links, rules, and server FAQs.</p>
         <div class="doc-nav-footer">
-            <div class="doc-nav-card" onclick="navigate('rooms')"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Need Help Rooms</div></div>
-            <div class="doc-nav-card next" onclick="navigate('api-keys')"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Developer API Keys →</div></div>
+            <div class="doc-nav-card" data-nav="rooms"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Need Help Rooms</div></div>
+            <div class="doc-nav-card next" data-nav="api-keys"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Developer API Keys →</div></div>
         </div>
     </div>
 
@@ -1176,8 +1176,8 @@
         <p class="doc-p">Generate, scope, and revoke secure API keys. Keys permit REST API access (e.g. reading logs, warning tables, or leveling statistics) on behalf of your guild.</p>
         <div class="callout danger"><i class="fa-solid fa-triangle-exclamation callout-icon"></i><div class="callout-body">Keep API keys secret. Anyone with access to the key can access server data and perform moderation actions.</div></div>
         <div class="doc-nav-footer">
-            <div class="doc-nav-card" onclick="navigate('custom-commands')"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Custom Commands</div></div>
-            <div class="doc-nav-card next" onclick="navigate('billing')"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Premium Plan →</div></div>
+            <div class="doc-nav-card" data-nav="custom-commands"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Custom Commands</div></div>
+            <div class="doc-nav-card next" data-nav="billing"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Premium Plan →</div></div>
         </div>
     </div>
 
@@ -1193,8 +1193,8 @@
         <h2 class="doc-heading" id="premium-features">Premium Perks</h2>
         <p class="doc-p">Enabling Premium activates advanced commands allowing users to spin up personal premium voice rooms. Premium rooms can be renamed, customized with emoji icons, assigned custom colors, and whitelist specific users.</p>
         <div class="doc-nav-footer">
-            <div class="doc-nav-card" onclick="navigate('api-keys')"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Developer API Keys</div></div>
-            <div class="doc-nav-card next" onclick="navigate('cmd-moderation')"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Moderation Commands →</div></div>
+            <div class="doc-nav-card" data-nav="api-keys"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Developer API Keys</div></div>
+            <div class="doc-nav-card next" data-nav="cmd-moderation"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Moderation Commands →</div></div>
         </div>
     </div>
 
@@ -1227,8 +1227,8 @@
         <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>hide</div><div class="cmd-desc">Hide a channel from regular members.</div><div class="cmd-syntax">?hide [channel]</div><div class="cmd-meta"><span class="cmd-badge perm"><i class="fa-solid fa-lock"></i> Manage Channels</span></div></div>
         <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>unhide</div><div class="cmd-desc">Restore a hidden channel's visibility.</div><div class="cmd-syntax">?unhide [channel]</div><div class="cmd-meta"><span class="cmd-badge perm"><i class="fa-solid fa-lock"></i> Manage Channels</span></div></div>
         <div class="doc-nav-footer">
-            <div class="doc-nav-card" onclick="navigate('billing')"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Premium Plan</div></div>
-            <div class="doc-nav-card next" onclick="navigate('cmd-security')"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Security Commands →</div></div>
+            <div class="doc-nav-card" data-nav="billing"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Premium Plan</div></div>
+            <div class="doc-nav-card next" data-nav="cmd-security"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Security Commands →</div></div>
         </div>
     </div>
 
@@ -1250,8 +1250,8 @@
         <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>antiwebhook</div><div class="cmd-desc">Enable or disable anti-webhook defense.</div><div class="cmd-syntax">?antiwebhook &lt;on|off&gt;</div><div class="cmd-meta"><span class="cmd-badge perm"><i class="fa-solid fa-lock"></i> Manage Guild</span></div></div>
         <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>v-blacklist</div><div class="cmd-desc">Blacklist a member from entering any server voice channels.</div><div class="cmd-syntax">?v-blacklist &lt;add|remove|list&gt; [user]</div><div class="cmd-meta"><span class="cmd-badge perm"><i class="fa-solid fa-lock"></i> Manage Guild</span></div></div>
         <div class="doc-nav-footer">
-            <div class="doc-nav-card" onclick="navigate('cmd-moderation')"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Moderation Commands</div></div>
-            <div class="doc-nav-card next" onclick="navigate('cmd-utility')"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Utility Commands →</div></div>
+            <div class="doc-nav-card" data-nav="cmd-moderation"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Moderation Commands</div></div>
+            <div class="doc-nav-card next" data-nav="cmd-utility"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Utility Commands →</div></div>
         </div>
     </div>
 
@@ -1284,8 +1284,8 @@
         <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>addprefix</div><div class="cmd-desc">Register a new prefix.</div><div class="cmd-syntax">?addprefix &lt;prefix&gt;</div><div class="cmd-meta"><span class="cmd-badge perm"><i class="fa-solid fa-lock"></i> Manage Guild</span></div></div>
         <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>firstmessage</div><div class="cmd-desc">Generate URL to first message inside channel.</div><div class="cmd-syntax">?firstmessage [channel]</div></div>
         <div class="doc-nav-footer">
-            <div class="doc-nav-card" onclick="navigate('cmd-security')"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Security Commands</div></div>
-            <div class="doc-nav-card next" onclick="navigate('cmd-leveling')"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Leveling Commands →</div></div>
+            <div class="doc-nav-card" data-nav="cmd-security"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Security Commands</div></div>
+            <div class="doc-nav-card next" data-nav="cmd-leveling"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Leveling Commands →</div></div>
         </div>
     </div>
 
@@ -1302,8 +1302,8 @@
         <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>leaderboard</div><div class="cmd-desc">List the top ranked server members.</div><div class="cmd-syntax">?leaderboard [page]</div></div>
         <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>leveladmin</div><div class="cmd-desc">Set or add XP or level of a user.</div><div class="cmd-syntax">?leveladmin &lt;set|add|reset&gt; &lt;user&gt; [amount]</div><div class="cmd-meta"><span class="cmd-badge perm"><i class="fa-solid fa-lock"></i> Manage Guild</span></div></div>
         <div class="doc-nav-footer">
-            <div class="doc-nav-card" onclick="navigate('cmd-utility')"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Utility Commands</div></div>
-            <div class="doc-nav-card next" onclick="navigate('cmd-economy')"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Economy Commands →</div></div>
+            <div class="doc-nav-card" data-nav="cmd-utility"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Utility Commands</div></div>
+            <div class="doc-nav-card next" data-nav="cmd-economy"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Economy Commands →</div></div>
         </div>
     </div>
 
@@ -1321,8 +1321,8 @@
         <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>transfer</div><div class="cmd-desc">Transfer coins to another user.</div><div class="cmd-syntax">?transfer &lt;user&gt; &lt;amount&gt;</div></div>
         <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>top</div><div class="cmd-desc">Richest members ranking page.</div><div class="cmd-syntax">?top [page]</div></div>
         <div class="doc-nav-footer">
-            <div class="doc-nav-card" onclick="navigate('cmd-leveling')"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Leveling Commands</div></div>
-            <div class="doc-nav-card next" onclick="navigate('cmd-voice')"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Voice Commands →</div></div>
+            <div class="doc-nav-card" data-nav="cmd-leveling"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Leveling Commands</div></div>
+            <div class="doc-nav-card next" data-nav="cmd-voice"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Voice Commands →</div></div>
         </div>
     </div>
 
@@ -1346,8 +1346,8 @@
         <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>find</div><div class="cmd-desc">Locate the voice channel of a member.</div><div class="cmd-syntax">?find &lt;user&gt;</div></div>
         <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>join</div><div class="cmd-desc">Join the same voice channel as another member.</div><div class="cmd-syntax">?join &lt;user&gt;</div><div class="cmd-meta"><span class="cmd-badge perm"><i class="fa-solid fa-lock"></i> Move Members</span></div></div>
         <div class="doc-nav-footer">
-            <div class="doc-nav-card" onclick="navigate('cmd-economy')"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Economy Commands</div></div>
-            <div class="doc-nav-card next" onclick="navigate('cmd-fun')"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Fun Commands →</div></div>
+            <div class="doc-nav-card" data-nav="cmd-economy"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Economy Commands</div></div>
+            <div class="doc-nav-card next" data-nav="cmd-fun"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Fun Commands →</div></div>
         </div>
     </div>
 
@@ -1372,8 +1372,8 @@
         <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>roll</div><div class="cmd-desc">Roll a dice.</div><div class="cmd-syntax">?roll [sides]</div></div>
         <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>cat</div><div class="cmd-desc">Generate a cute cat image.</div><div class="cmd-syntax">?cat</div></div>
         <div class="doc-nav-footer">
-            <div class="doc-nav-card" onclick="navigate('cmd-voice')"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Voice Commands</div></div>
-            <div class="doc-nav-card next" onclick="navigate('cmd-marriage')"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Marriage Commands →</div></div>
+            <div class="doc-nav-card" data-nav="cmd-voice"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Voice Commands</div></div>
+            <div class="doc-nav-card next" data-nav="cmd-marriage"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Marriage Commands →</div></div>
         </div>
     </div>
 
@@ -1390,8 +1390,8 @@
         <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>divorce</div><div class="cmd-desc">Divorce your current partner.</div><div class="cmd-syntax">?divorce</div></div>
         <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>marriage-stats</div><div class="cmd-desc">View details of a member's marriage state.</div><div class="cmd-syntax">?marriage-stats [user]</div></div>
         <div class="doc-nav-footer">
-            <div class="doc-nav-card" onclick="navigate('cmd-fun')"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Fun Commands</div></div>
-            <div class="doc-nav-card next" onclick="navigate('cmd-giveaways')"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Giveaways Commands →</div></div>
+            <div class="doc-nav-card" data-nav="cmd-fun"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Fun Commands</div></div>
+            <div class="doc-nav-card next" data-nav="cmd-giveaways"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Giveaways Commands →</div></div>
         </div>
     </div>
 
@@ -1407,8 +1407,8 @@
         <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>vg</div><div class="cmd-desc">Launch a giveaway (e.g. ?vg 1d 2 Discord Nitro).</div><div class="cmd-syntax">?vg &lt;duration&gt; &lt;winners&gt; &lt;prize&gt;</div><div class="cmd-meta"><span class="cmd-badge perm"><i class="fa-solid fa-lock"></i> Manage Guild</span></div></div>
         <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>vb</div><div class="cmd-desc">Blacklist a user from joining future giveaways.</div><div class="cmd-syntax">?vb &lt;user&gt; [reason]</div><div class="cmd-meta"><span class="cmd-badge perm"><i class="fa-solid fa-lock"></i> Manage Guild</span></div></div>
         <div class="doc-nav-footer">
-            <div class="doc-nav-card" onclick="navigate('cmd-marriage')"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Marriage Commands</div></div>
-            <div class="doc-nav-card next" onclick="navigate('cmd-premium')"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Premium Rooms Commands →</div></div>
+            <div class="doc-nav-card" data-nav="cmd-marriage"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Marriage Commands</div></div>
+            <div class="doc-nav-card next" data-nav="cmd-premium"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Premium Rooms Commands →</div></div>
         </div>
     </div>
 
@@ -1434,8 +1434,8 @@
         <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>plist</div><div class="cmd-desc">List all permitted room users.</div><div class="cmd-syntax">?plist</div></div>
         <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>pshowall</div><div class="cmd-desc">List all active premium voice rooms.</div><div class="cmd-syntax">?pshowall</div><div class="cmd-meta"><span class="cmd-badge perm"><i class="fa-solid fa-lock"></i> Manage Guild</span></div></div>
         <div class="doc-nav-footer">
-            <div class="doc-nav-card" onclick="navigate('cmd-giveaways')"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Giveaways Commands</div></div>
-            <div class="doc-nav-card next" onclick="navigate('dev-portal')"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Developer Portal →</div></div>
+            <div class="doc-nav-card" data-nav="cmd-giveaways"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Giveaways Commands</div></div>
+            <div class="doc-nav-card next" data-nav="dev-portal"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Developer Portal →</div></div>
         </div>
     </div>
 
@@ -1456,8 +1456,8 @@
             <li>Inspect detailed usage charts.</li>
         </ul>
         <div class="doc-nav-footer">
-            <div class="doc-nav-card" onclick="navigate('cmd-premium')"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Premium Rooms Commands</div></div>
-            <div class="doc-nav-card next" onclick="navigate('rest-api')"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">REST API →</div></div>
+            <div class="doc-nav-card" data-nav="cmd-premium"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Premium Rooms Commands</div></div>
+            <div class="doc-nav-card next" data-nav="rest-api"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">REST API →</div></div>
         </div>
     </div>
 
@@ -1472,12 +1472,12 @@
         <div class="doc-divider"></div>
         <h2 class="doc-heading" id="api-base">Base Endpoint</h2>
         <div class="code-block">
-            <div class="code-header"><div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div><span class="code-lang">URL</span><button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy"></i> Copy</button></div>
+            <div class="code-header"><div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div><span class="code-lang">URL</span><button class="copy-btn"><i class="fa-regular fa-copy"></i> Copy</button></div>
             <pre><code>https://yourdomain.com/api/v1</code></pre>
         </div>
         <h2 class="doc-heading" id="api-auth">HTTP Headers Authorization</h2>
         <div class="code-block">
-            <div class="code-header"><div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div><span class="code-lang">Headers</span><button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy"></i> Copy</button></div>
+            <div class="code-header"><div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div><span class="code-lang">Headers</span><button class="copy-btn"><i class="fa-regular fa-copy"></i> Copy</button></div>
             <pre><code>Authorization: Bearer YOUR_API_KEY
 Content-Type:  application/json</code></pre>
         </div>
@@ -1492,8 +1492,8 @@ Content-Type:  application/json</code></pre>
             <tr><td><span style="color:var(--green)">GET</span></td><td><code>/guilds/{id}/logs</code></td><td>Get logs routing config</td></tr>
         </tbody></table></div>
         <div class="doc-nav-footer">
-            <div class="doc-nav-card" onclick="navigate('dev-portal')"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Developer Portal</div></div>
-            <div class="doc-nav-card next" onclick="navigate('auth-api')"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Authentication →</div></div>
+            <div class="doc-nav-card" data-nav="dev-portal"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Developer Portal</div></div>
+            <div class="doc-nav-card next" data-nav="auth-api"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Authentication →</div></div>
         </div>
     </div>
 
@@ -1515,8 +1515,8 @@ Content-Type:  application/json</code></pre>
             <tr><td><code>read:logs</code></td><td>View warning histories and logs</td></tr>
         </tbody></table></div>
         <div class="doc-nav-footer">
-            <div class="doc-nav-card" onclick="navigate('rest-api')"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">REST API</div></div>
-            <div class="doc-nav-card next" onclick="navigate('webhooks')"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Webhooks →</div></div>
+            <div class="doc-nav-card" data-nav="rest-api"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">REST API</div></div>
+            <div class="doc-nav-card next" data-nav="webhooks"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Webhooks →</div></div>
         </div>
     </div>
 
@@ -1539,8 +1539,8 @@ Content-Type:  application/json</code></pre>
             <tr><td><code>automod.action</code></td><td>Automod deletion executed</td></tr>
         </tbody></table></div>
         <div class="doc-nav-footer">
-            <div class="doc-nav-card" onclick="navigate('auth-api')"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Authentication</div></div>
-            <div class="doc-nav-card next" onclick="navigate('rate-limits')"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Rate Limits →</div></div>
+            <div class="doc-nav-card" data-nav="auth-api"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Authentication</div></div>
+            <div class="doc-nav-card next" data-nav="rate-limits"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Rate Limits →</div></div>
         </div>
     </div>
 
@@ -1559,8 +1559,8 @@ Content-Type:  application/json</code></pre>
             <tr><td>Developer API Keys</td><td>100 requests</td><td>5 min</td></tr>
         </tbody></table></div>
         <div class="doc-nav-footer">
-            <div class="doc-nav-card" onclick="navigate('webhooks')"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Webhooks</div></div>
-            <div class="doc-nav-card next" onclick="navigate('faq')"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">FAQ →</div></div>
+            <div class="doc-nav-card" data-nav="webhooks"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Webhooks</div></div>
+            <div class="doc-nav-card next" data-nav="faq"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">FAQ →</div></div>
         </div>
     </div>
 
@@ -1573,16 +1573,16 @@ Content-Type:  application/json</code></pre>
             <div class="doc-meta"><span><i class="fa-regular fa-clock"></i> 5 min read</span></div>
         </div>
         <div class="doc-divider"></div>
-        <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this)"><span>How do I invite Vivy to my guild?</span><i class="fa-solid fa-chevron-down faq-chevron"></i></div><div class="faq-answer"><div class="faq-answer-inner">Visit the main page, click Add to Discord, choose your guild and authorize the permissions. Ensure you hold Manage Server rights.</div></div></div>
-        <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this)"><span>What is the default command prefix?</span><i class="fa-solid fa-chevron-down faq-chevron"></i></div><div class="faq-answer"><div class="faq-answer-inner">The default prefix is <code>?</code>. You can change this or add extra prefixes by running <code>?addprefix [prefix]</code> or visiting Security & Prefix in the web dashboard.</div></div></div>
-        <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this)"><span>Why doesn't my guild show in dashboard?</span><i class="fa-solid fa-chevron-down faq-chevron"></i></div><div class="faq-answer"><div class="faq-answer-inner">You must have <strong>Manage Server</strong> permissions on the target server and the bot must be invited. Log out and back in to refresh OAuth lists.</div></div></div>
-        <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this)"><span>Bot does not respond to commands.</span><i class="fa-solid fa-chevron-down faq-chevron"></i></div><div class="faq-answer"><div class="faq-answer-inner">Verify: (1) Vivy is online in member list, (2) you are using correct prefix (default: <code>?</code>), (3) the bot has Send Messages and View Channel permissions. You can also mention <code>@Vivy help</code>.</div></div></div>
-        <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this)"><span>Why can't the bot warn or mute a member?</span><i class="fa-solid fa-chevron-down faq-chevron"></i></div><div class="faq-answer"><div class="faq-answer-inner">Discord role hierarchies apply. Vivy's highest role must be placed higher than any member's role it tries to moderate. Vivy cannot moderate the server owner.</div></div></div>
-        <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this)"><span>Dashboard says the bot is offline.</span><i class="fa-solid fa-chevron-down faq-chevron"></i></div><div class="faq-answer"><div class="faq-answer-inner">The bot may be undergoing minor updates or service restarts. If offline longer than 15 minutes, check the support channels.</div></div></div>
-        <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this)"><span>Is my server data secure?</span><i class="fa-solid fa-chevron-down faq-chevron"></i></div><div class="faq-answer"><div class="faq-answer-inner">Yes. We only store settings, coins balances, warnings, and XP records needed to operate the bot. Client-dashboard authentication is secured via Discord OAuth.</div></div></div>
+        <div class="faq-item"><div class="faq-question"><span>How do I invite Vivy to my guild?</span><i class="fa-solid fa-chevron-down faq-chevron"></i></div><div class="faq-answer"><div class="faq-answer-inner">Visit the main page, click Add to Discord, choose your guild and authorize the permissions. Ensure you hold Manage Server rights.</div></div></div>
+        <div class="faq-item"><div class="faq-question"><span>What is the default command prefix?</span><i class="fa-solid fa-chevron-down faq-chevron"></i></div><div class="faq-answer"><div class="faq-answer-inner">The default prefix is <code>?</code>. You can change this or add extra prefixes by running <code>?addprefix [prefix]</code> or visiting Security & Prefix in the web dashboard.</div></div></div>
+        <div class="faq-item"><div class="faq-question"><span>Why doesn't my guild show in dashboard?</span><i class="fa-solid fa-chevron-down faq-chevron"></i></div><div class="faq-answer"><div class="faq-answer-inner">You must have <strong>Manage Server</strong> permissions on the target server and the bot must be invited. Log out and back in to refresh OAuth lists.</div></div></div>
+        <div class="faq-item"><div class="faq-question"><span>Bot does not respond to commands.</span><i class="fa-solid fa-chevron-down faq-chevron"></i></div><div class="faq-answer"><div class="faq-answer-inner">Verify: (1) Vivy is online in member list, (2) you are using correct prefix (default: <code>?</code>), (3) the bot has Send Messages and View Channel permissions. You can also mention <code>@Vivy help</code>.</div></div></div>
+        <div class="faq-item"><div class="faq-question"><span>Why can't the bot warn or mute a member?</span><i class="fa-solid fa-chevron-down faq-chevron"></i></div><div class="faq-answer"><div class="faq-answer-inner">Discord role hierarchies apply. Vivy's highest role must be placed higher than any member's role it tries to moderate. Vivy cannot moderate the server owner.</div></div></div>
+        <div class="faq-item"><div class="faq-question"><span>Dashboard says the bot is offline.</span><i class="fa-solid fa-chevron-down faq-chevron"></i></div><div class="faq-answer"><div class="faq-answer-inner">The bot may be undergoing minor updates or service restarts. If offline longer than 15 minutes, check the support channels.</div></div></div>
+        <div class="faq-item"><div class="faq-question"><span>Is my server data secure?</span><i class="fa-solid fa-chevron-down faq-chevron"></i></div><div class="faq-answer"><div class="faq-answer-inner">Yes. We only store settings, coins balances, warnings, and XP records needed to operate the bot. Client-dashboard authentication is secured via Discord OAuth.</div></div></div>
         <div class="doc-nav-footer">
-            <div class="doc-nav-card" onclick="navigate('rate-limits')"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Rate Limits</div></div>
-            <div class="doc-nav-card next" onclick="navigate('troubleshooting')"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Troubleshooting →</div></div>
+            <div class="doc-nav-card" data-nav="rate-limits"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Rate Limits</div></div>
+            <div class="doc-nav-card next" data-nav="troubleshooting"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Troubleshooting →</div></div>
         </div>
     </div>
 
@@ -1614,8 +1614,8 @@ Content-Type:  application/json</code></pre>
             <tr><td>429 Rate Limit</td><td>API limit exceeded</td><td>Wait for resets</td></tr>
         </tbody></table></div>
         <div class="doc-nav-footer">
-            <div class="doc-nav-card" onclick="navigate('faq')"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">FAQ</div></div>
-            <div class="doc-nav-card next" onclick="navigate('changelog')"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Changelog →</div></div>
+            <div class="doc-nav-card" data-nav="faq"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">FAQ</div></div>
+            <div class="doc-nav-card next" data-nav="changelog"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Changelog →</div></div>
         </div>
     </div>
 
@@ -1657,8 +1657,8 @@ Content-Type:  application/json</code></pre>
             </div>
         </div>
         <div class="doc-nav-footer">
-            <div class="doc-nav-card" onclick="navigate('troubleshooting')"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Troubleshooting</div></div>
-            <div class="doc-nav-card next" onclick="navigate('home')"><div class="doc-nav-label">Back to <i class="fa-solid fa-house"></i></div><div class="doc-nav-title">Home</div></div>
+            <div class="doc-nav-card" data-nav="troubleshooting"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Troubleshooting</div></div>
+            <div class="doc-nav-card next" data-nav="home"><div class="doc-nav-label">Back to <i class="fa-solid fa-house"></i></div><div class="doc-nav-title">Home</div></div>
         </div>
     </div>
 </main>
@@ -1669,183 +1669,6 @@ Content-Type:  application/json</code></pre>
 </div>
 </div>
 
-<script>
-const searchIndex = [
-    { title: 'Quick Start Guide', path: 'Getting Started', page: 'getting-started', type: 'guide', snippet: 'Get Vivy running in your server in under 5 minutes. Default prefix is ?.' },
-    { title: 'Inviting Vivy', path: 'Getting Started', page: 'invite', type: 'guide', snippet: 'Invite link, required permissions and role hierarchy.' },
-    { title: 'Permissions Guide', path: 'Getting Started', page: 'permissions', type: 'guide', snippet: 'Which permissions Vivy needs and why each matters.' },
-    { title: 'Logging In', path: 'Getting Started', page: 'login', type: 'guide', snippet: 'Connect your Discord account and access the dashboard.' },
-    { title: 'Basic Configuration', path: 'Getting Started', page: 'basic-config', type: 'guide', snippet: 'First steps after inviting: prefix, welcome, logging, automod.' },
-    { title: 'Dashboard Overview', path: 'Dashboard', page: 'dashboard-overview', type: 'guide', snippet: 'All 20 dashboard modules and how to navigate them.' },
-    { title: 'Welcome Messages', path: 'Dashboard', page: 'welcome', type: 'guide', snippet: 'Custom join/leave messages and canvas background cards.' },
-    { title: 'Auto Role', path: 'Dashboard', page: 'autorole', type: 'guide', snippet: 'Automatically assign roles when a member joins.' },
-    { title: 'Security & Prefix', path: 'Dashboard', page: 'security', type: 'guide', snippet: 'Bot command prefix, Anti-Bot and Anti-Webhook defenses.' },
-    { title: 'Anti-Link Shield', path: 'Dashboard', page: 'antilink', type: 'guide', snippet: 'URL domain whitelist and blacklist configuration.' },
-    { title: 'Auto Moderation', path: 'Dashboard', page: 'automod', type: 'guide', snippet: 'Anti-spam, caps percentage limits, and raid protection.' },
-    { title: 'Warnings Setup', path: 'Dashboard', page: 'warn-dash', type: 'guide', snippet: 'Configure warned roles and warning thresholds.' },
-    { title: 'Mute Setup', path: 'Dashboard', page: 'mute-dash', type: 'guide', snippet: 'Mute role setup and logs channel routing.' },
-    { title: 'Jail Setup', path: 'Dashboard', page: 'jail-dash', type: 'guide', snippet: 'Configure isolation roles and isolation jail channels.' },
-    { title: 'Server Logs', path: 'Dashboard', page: 'logging', type: 'guide', snippet: 'Route server logs for message edits/deletions, member activity and voice.' },
-    { title: 'Audit Logs', path: 'Dashboard', page: 'audit-logs', type: 'guide', snippet: 'Searchable list of all bot moderation actions.' },
-    { title: 'Verification System', path: 'Dashboard', page: 'verification', type: 'guide', snippet: 'Member gate configuration for verified users.' },
-    { title: 'Apply Panel', path: 'Dashboard', page: 'applications', type: 'guide', snippet: 'Build staff applications forms using Discord modals.' },
-    { title: 'Economy Setup', path: 'Dashboard', page: 'economy', type: 'guide', snippet: 'Daily coin rewards, coin taxes, and shop items.' },
-    { title: 'Leveling Setup', path: 'Dashboard', page: 'leveling', type: 'guide', snippet: 'XP calculations, role rewards, and leveling logs.' },
-    { title: 'Giveaways', path: 'Dashboard', page: 'giveaways', type: 'guide', snippet: 'Create giveaways and configure user blacklists.' },
-    { title: 'Need Help Rooms', path: 'Dashboard', page: 'rooms', type: 'guide', snippet: 'Dynamic voice support room generator.' },
-    { title: 'Custom Commands', path: 'Dashboard', page: 'custom-commands', type: 'guide', snippet: 'Guild-specific text trigger-response commands.' },
-    { title: 'Developer API Keys', path: 'Dashboard', page: 'api-keys', type: 'guide', snippet: 'Generate secure API keys to integrate REST API data.' },
-    { title: 'Premium Plan', path: 'Dashboard', page: 'billing', type: 'guide', snippet: 'Unlock personal voice channels and custom perks.' },
-    { title: '?ban — Ban a member', path: 'Commands / Moderation', page: 'cmd-moderation', type: 'command', snippet: 'Permanently ban a member from the server.' },
-    { title: '?banforlife — Lifetime ban', path: 'Commands / Moderation', page: 'cmd-moderation', type: 'command', snippet: 'Permanently ban and record to lifetime database.' },
-    { title: '?unban — Lift ban', path: 'Commands / Moderation', page: 'cmd-moderation', type: 'command', snippet: 'Unban a user by ID.' },
-    { title: '?kick — Kick a member', path: 'Commands / Moderation', page: 'cmd-moderation', type: 'command', snippet: 'Kick a member from the server.' },
-    { title: '?mute — Mute a member', path: 'Commands / Moderation', page: 'cmd-moderation', type: 'command', snippet: 'Mute using configured muted role.' },
-    { title: '?timeout — Timeout member', path: 'Commands / Moderation', page: 'cmd-moderation', type: 'command', snippet: 'Discord-native timeout.' },
-    { title: '?warn — Warn member', path: 'Commands / Moderation', page: 'cmd-moderation', type: 'command', snippet: 'Issue a formal warning stored in the database.' },
-    { title: '?jail — Jail member', path: 'Commands / Moderation', page: 'cmd-moderation', type: 'command', snippet: 'Restrict member to jail channel.' },
-    { title: '?clear — Delete messages', path: 'Commands / Moderation', page: 'cmd-moderation', type: 'command', snippet: 'Bulk delete messages in current channel.' },
-    { title: '?temprole — Temp role', path: 'Commands / Moderation', page: 'cmd-moderation', type: 'command', snippet: 'Assign a role temporarily for a set duration.' },
-    { title: '?hide / ?unhide — Channel visibility', path: 'Commands / Moderation', page: 'cmd-moderation', type: 'command', snippet: 'Hide or restore a channel.' },
-    { title: '?lock / ?unlock — Lock channel', path: 'Commands / Security', page: 'cmd-security', type: 'command', snippet: 'Lock or unlock a channel.' },
-    { title: '?antilink — Toggle link filter', path: 'Commands / Security', page: 'cmd-security', type: 'command', snippet: 'Enable or disable the anti-link filter.' },
-    { title: '?antibots — Anti-bot protection', path: 'Commands / Security', page: 'cmd-security', type: 'command', snippet: 'Configure automatic action against bot accounts.' },
-    { title: '?antiwebhook — Anti-webhook', path: 'Commands / Security', page: 'cmd-security', type: 'command', snippet: 'Protect against unauthorized webhooks.' },
-    { title: '?v-blacklist — Voice blacklist', path: 'Commands / Security', page: 'cmd-security', type: 'command', snippet: 'Prevent specific members from joining voice channels.' },
-    { title: '?rank — View rank card', path: 'Commands / Leveling', page: 'cmd-leveling', type: 'command', snippet: 'Display current level and XP.' },
-    { title: '?leaderboard — XP leaderboard', path: 'Commands / Leveling', page: 'cmd-leveling', type: 'command', snippet: 'View XP leaderboard.' },
-    { title: '?bal — Check balance', path: 'Commands / Economy', page: 'cmd-economy', type: 'command', snippet: 'Check coin balance.' },
-    { title: '?daily — Daily reward', path: 'Commands / Economy', page: 'cmd-economy', type: 'command', snippet: 'Claim daily coin reward.' },
-    { title: '?vmute — Server voice mute', path: 'Commands / Voice', page: 'cmd-voice', type: 'command', snippet: 'Server-mute a member in voice.' },
-    { title: '?vkick — Disconnect voice channel', path: 'Commands / Voice', page: 'cmd-voice', type: 'command', snippet: 'Disconnect from voice channel.' },
-    { title: '?help — Help menu', path: 'Commands / Utility', page: 'cmd-utility', type: 'command', snippet: 'Display all commands.' },
-    { title: '?ping — Latency check', path: 'Commands / Utility', page: 'cmd-utility', type: 'command', snippet: 'Check response time and API gateway latency.' },
-    { title: '?vg — Start giveaway', path: 'Commands / Giveaways', page: 'cmd-giveaways', type: 'command', snippet: 'Start a new giveaway.' },
-    { title: '?marriage — Propose marriage', path: 'Commands / Marriage', page: 'cmd-marriage', type: 'command', snippet: 'Propose marriage to another member.' },
-    { title: '?divorce — End marriage', path: 'Commands / Marriage', page: 'cmd-marriage', type: 'command', snippet: 'End your current server marriage.' },
-    { title: '?pcreate — Create premium room', path: 'Commands / Premium', page: 'cmd-premium', type: 'command', snippet: 'Create your personal premium voice room.' },
-    { title: 'Developer Portal', path: 'Developer', page: 'dev-portal', type: 'api', snippet: 'API key management and developer tools.' },
-    { title: 'REST API', path: 'Developer', page: 'rest-api', type: 'api', snippet: 'Full REST API documentation with endpoints.' },
-    { title: 'Authentication', path: 'Developer', page: 'auth-api', type: 'api', snippet: 'API keys and scopes.' },
-    { title: 'Webhooks', path: 'Developer', page: 'webhooks', type: 'api', snippet: 'Receive real-time event notifications.' },
-    { title: 'Rate Limits', path: 'Developer', page: 'rate-limits', type: 'api', snippet: 'API rate limits and handling.' },
-    { title: 'FAQ', path: 'Support', page: 'faq', type: 'faq', snippet: 'Frequently asked questions including default prefix ?.' },
-    { title: 'Troubleshooting', path: 'Support', page: 'troubleshooting', type: 'faq', snippet: 'Diagnose and fix common issues.' },
-    { title: 'Changelog', path: 'Support', page: 'changelog', type: 'guide', snippet: 'Latest updates and improvements.' }
-];
-
-let currentPage = 'home';
-
-function navigate(pageId) {
-    document.querySelectorAll('.doc-page').forEach(p => p.classList.remove('active'));
-    const target = document.getElementById('page-' + pageId);
-    if (target) { target.classList.add('active'); currentPage = pageId; }
-    document.querySelectorAll('.sidebar-link').forEach(l => {
-        l.classList.remove('active');
-        if (l.dataset.page === pageId) l.classList.add('active');
-    });
-    buildToc(pageId);
-    updateBreadcrumb(pageId);
-    document.getElementById('docsMain').scrollTo({top:0});
-    window.scrollTo({top:0});
-    closeMobileSidebar();
-    history.replaceState(null,'','/docs/' + pageId);
-}
-
-function buildToc(pageId) {
-    const page = document.getElementById('page-' + pageId);
-    const tocContent = document.getElementById('tocContent');
-    if (!page || !tocContent) return;
-    const headings = page.querySelectorAll('h2.doc-heading, h3.doc-heading');
-    if (!headings.length) { tocContent.innerHTML = '<div style="font-size:12px;color:var(--text-muted);padding:4px 0">No sections on this page</div>'; return; }
-    tocContent.innerHTML = '';
-    headings.forEach(h => {
-        const link = document.createElement('a');
-        link.className = 'toc-link' + (h.tagName === 'H3' ? ' h3' : '');
-        link.textContent = h.textContent.replace('#','').trim();
-        link.href = '#' + (h.id || '');
-        link.onclick = e => { e.preventDefault(); h.scrollIntoView({behavior:'smooth',block:'start'}); };
-        tocContent.appendChild(link);
-    });
-}
-
-function updateBreadcrumb(pageId) {
-    const crumb = document.getElementById('breadcrumb');
-    const link = document.querySelector(`.sidebar-link[data-page="${pageId}"]`);
-    const section = link?.closest('.sidebar-section');
-    const sectionTitle = section?.querySelector('.sidebar-section-title')?.textContent || '';
-    const pageTitle = link?.textContent?.trim().replace(/new|pro/gi,'').trim() || pageId;
-    crumb.innerHTML = `<span>Docs</span>`;
-    if (sectionTitle) crumb.innerHTML += `<span class="sep">/</span><span>${sectionTitle}</span>`;
-    if (pageTitle && pageTitle !== sectionTitle) crumb.innerHTML += `<span class="sep">/</span><span style="color:var(--text-primary)">${pageTitle}</span>`;
-}
-
-const searchInput = document.getElementById('searchInput');
-const searchResults = document.getElementById('searchResults');
-
-searchInput.addEventListener('input', () => {
-    const q = searchInput.value.trim().toLowerCase();
-    if (!q) { searchResults.classList.remove('active'); return; }
-    const matches = searchIndex.filter(item =>
-        item.title.toLowerCase().includes(q) || item.snippet.toLowerCase().includes(q) || item.path.toLowerCase().includes(q)
-    ).slice(0,8);
-    if (!matches.length) {
-        searchResults.innerHTML = `<div class="search-empty">No results for "<strong>${q}</strong>"</div>`;
-    } else {
-        searchResults.innerHTML = matches.map(m => `
-            <div class="search-result-item" onclick="navigate('${m.page}');closeSearch();">
-                <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
-                    <span class="sr-tag ${m.type}">${m.type}</span>
-                    <div class="sr-title">${highlight(m.title,q)}</div>
-                </div>
-                <div class="sr-path">${m.path}</div>
-                <div class="sr-snippet">${highlight(m.snippet,q)}</div>
-            </div>`).join('');
-    }
-    searchResults.classList.add('active');
-});
-
-function highlight(text,q) {
-    const re = new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi');
-    return text.replace(re,'<mark style="background:rgba(0,242,254,0.2);color:var(--cyan);border-radius:2px;padding:0 2px">$1</mark>');
-}
-function closeSearch() { searchResults.classList.remove('active'); searchInput.value = ''; }
-
-document.addEventListener('click', e => { if (!e.target.closest('.search-wrap')) closeSearch(); });
-document.addEventListener('keydown', e => {
-    if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); searchInput.focus(); searchInput.select(); }
-    if (e.key === 'Escape') closeSearch();
-});
-
-function toggleFaq(el) {
-    const item = el.parentElement;
-    const wasOpen = item.classList.contains('open');
-    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
-    if (!wasOpen) item.classList.add('open');
-}
-
-function copyCode(btn) {
-    const pre = btn.closest('.code-block').querySelector('pre');
-    navigator.clipboard.writeText(pre.textContent.trim()).then(() => {
-        const orig = btn.innerHTML;
-        btn.innerHTML = '<i class="fa-solid fa-check"></i> Copied!';
-        btn.classList.add('copied');
-        setTimeout(() => { btn.innerHTML = orig; btn.classList.remove('copied'); }, 2000);
-    });
-}
-
-const sidebar = document.getElementById('docsSidebar');
-const overlay = document.getElementById('sidebarOverlay');
-const mobileBtn = document.getElementById('mobileSidebarBtn');
-mobileBtn.addEventListener('click', () => { sidebar.classList.toggle('mobile-open'); overlay.classList.toggle('active'); });
-overlay.addEventListener('click', closeMobileSidebar);
-function closeMobileSidebar() { sidebar.classList.remove('mobile-open'); overlay.classList.remove('active'); }
-
-const pathParts = window.location.pathname.split('/');
-const pathPage = pathParts.length > 2 ? pathParts[2] : '';
-const hash = window.location.hash.replace('#','');
-const initialPage = hash || pathPage;
-if (initialPage && document.getElementById('page-' + initialPage)) { navigate(initialPage); } else { navigate('home'); }
-</script>
+<script src="/docs.js"></script>
 </body>
 </html>

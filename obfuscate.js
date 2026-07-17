@@ -56,7 +56,7 @@ for (const { input, output } of targets) {
         );
         console.log(`   ✅ ${filename} → ${path.relative(__dirname, output)}`);
     } catch (e) {
-        console.error(`   ❌ Failed to obfuscate ${filename}:`, e.message);
+        console.error(`   <:no:1526496561188831244>Failed to obfuscate ${filename}:`, e.message);
         process.exit(1);
     }
 }

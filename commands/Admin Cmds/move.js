@@ -22,7 +22,7 @@ module.exports = {
       // We check if the user HAS authority to use the command, ignoring room locks for them.
       if (!isOwner && !hasOwnerRole && !hasMovePerm && !isAdmin) {
         return message.reply({
-          components: [UI.createContainer({ description: '❌ You do not have permission to move members.' })],
+          components: [UI.createContainer({ description: '<:no:1526496561188831244>You do not have permission to move members.' })],
           flags: MessageFlags.IsComponentsV2
         });
       }
@@ -31,7 +31,7 @@ module.exports = {
       // Ensure the bot has administrative or move permissions to perform the action.
       if (!message.guild.members.me.permissions.has(PermissionsBitField.Flags.MoveMembers)) {
         return message.channel.send({
-          components: [UI.createContainer({ description: '❌ I need **Move Members** permission to work.' })],
+          components: [UI.createContainer({ description: '<:no:1526496561188831244>I need **Move Members** permission to work.' })],
           flags: MessageFlags.IsComponentsV2
         });
       }
@@ -49,14 +49,14 @@ module.exports = {
 
       if (!target) {
         return message.reply({
-          components: [UI.createContainer({ description: '❌ Member not found.' })],
+          components: [UI.createContainer({ description: '<:no:1526496561188831244>Member not found.' })],
           flags: MessageFlags.IsComponentsV2
         });
       }
 
       if (target.user.bot) {
         return message.reply({
-          components: [UI.createContainer({ description: '❌ You cannot move bots.' })],
+          components: [UI.createContainer({ description: '<:no:1526496561188831244>You cannot move bots.' })],
           flags: MessageFlags.IsComponentsV2
         });
       }
@@ -74,7 +74,7 @@ module.exports = {
 
       if (!targetChannel || targetChannel.type !== ChannelType.GuildVoice) {
         return message.reply({
-          components: [UI.createContainer({ description: '❌ Invalid voice channel. Please mention a channel or join one.' })],
+          components: [UI.createContainer({ description: '<:no:1526496561188831244>Invalid voice channel. Please mention a channel or join one.' })],
           flags: MessageFlags.IsComponentsV2
         });
       }
@@ -82,7 +82,7 @@ module.exports = {
       // ─── Status Checks ───
       if (!target.voice.channel) {
         return message.reply({
-          components: [UI.createContainer({ description: '❌ That user is not in a voice channel.' })],
+          components: [UI.createContainer({ description: '<:no:1526496561188831244>That user is not in a voice channel.' })],
           flags: MessageFlags.IsComponentsV2
         });
       }
@@ -90,7 +90,7 @@ module.exports = {
       const fromChannel = target.voice.channel;
       if (fromChannel.id === targetChannel.id) {
         return message.reply({
-          components: [UI.createContainer({ description: '❌ User is already in that channel.' })],
+          components: [UI.createContainer({ description: '<:no:1526496561188831244>User is already in that channel.' })],
           flags: MessageFlags.IsComponentsV2
         });
       }
@@ -130,7 +130,7 @@ module.exports = {
     } catch (error) {
       console.error("move command error:", error);
       return message.reply({
-        components: [UI.createContainer({ description: `❌ An error occurred: ${error.message}` })],
+        components: [UI.createContainer({ description: `<:no:1526496561188831244>An error occurred: ${error.message}` })],
         flags: MessageFlags.IsComponentsV2
       });
     }

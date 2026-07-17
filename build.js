@@ -38,6 +38,8 @@ const dashBindings = `
     window.saveAntiWebhook = typeof saveAntiWebhook !== 'undefined' ? saveAntiWebhook : undefined;
     window.saveLogs = typeof saveLogs !== 'undefined' ? saveLogs : undefined;
     window.updateLivePreview = typeof updateLivePreview !== 'undefined' ? updateLivePreview : undefined;
+    window.updateApplyPreview = typeof updateApplyPreview !== 'undefined' ? updateApplyPreview : undefined;
+    window.addDepartment = typeof addDepartment !== 'undefined' ? addDepartment : undefined;
     window.saveGuildSettings = typeof saveGuildSettings !== 'undefined' ? saveGuildSettings : undefined;
     window.saveSecuritySettings = typeof saveSecuritySettings !== 'undefined' ? saveSecuritySettings : undefined;
     window.saveRaidSettings = typeof saveRaidSettings !== 'undefined' ? saveRaidSettings : undefined;
@@ -46,6 +48,8 @@ const dashBindings = `
     window.deleteBackup = typeof deleteBackup !== 'undefined' ? deleteBackup : undefined;
     window.addWhitelistEntity = typeof addWhitelistEntity !== 'undefined' ? addWhitelistEntity : undefined;
     window.deleteWhitelistEntity = typeof deleteWhitelistEntity !== 'undefined' ? deleteWhitelistEntity : undefined;
+    window.syncCustomSelect = typeof syncCustomSelect !== 'undefined' ? syncCustomSelect : undefined;
+    window.setVal = typeof setVal !== 'undefined' ? setVal : undefined;
 }
 `;
 
@@ -93,7 +97,7 @@ try {
     execSync('npx vite build', { stdio: 'inherit', cwd: __dirname });
     console.log('✅ Vite build completed successfully.');
 } catch (err) {
-    console.error('❌ Vite build failed:', err.message);
+    console.error('<:no:1526496561188831244>Vite build failed:', err.message);
     // Restore files before exiting
     restoreOriginalFiles();
     process.exit(1);
@@ -115,7 +119,7 @@ function restoreOriginalFiles() {
 
 // 3. Discover generated JS assets and obfuscate them in-place
 if (!fs.existsSync(ASSETS_DIR)) {
-    console.error(`❌ Assets directory not found at: ${ASSETS_DIR}`);
+    console.error(`<:no:1526496561188831244>Assets directory not found at: ${ASSETS_DIR}`);
     process.exit(1);
 }
 
@@ -153,8 +157,7 @@ for (const file of jsFiles) {
         );
         console.log(`   ✅ Obfuscated ${filename}`);
     } catch (e) {
-        console.error(`   ❌ Failed to obfuscate ${filename}:`, e.message);
-        process.exit(1);
+        console.warn(`   ⚠️  Could not obfuscate ${filename} (skipping): ${e.message}`);
     }
 }
 

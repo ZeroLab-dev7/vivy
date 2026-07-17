@@ -1,4 +1,5 @@
 const UI = require('../utils/ui');
+const Messages = require('../utils/messages');
 const fs = require('fs');
 const path = require('path');
 const { getPrefix } = require('../db/prefix');
@@ -200,17 +201,21 @@ module.exports = {
                                     title: '🚧 Maintenance Mode Enabled',
                                     description: check.message
                                 })]
-                            }).catch(() => {});
+                            }).catch(() => { });
                         } else if (check.reason === 'disabled') {
                             return message.reply({
                                 components: [UI.createContainer({
                                     color: 0xFF0000,
-                                    description: `❌ **Command Disabled**\nThe \`${prefixlessAlias.command_name}\` command has been disabled globally by the developers.`
+                                    description: `<:no:1526496561188831244>**Command Disabled**\nThe \`${prefixlessAlias.command_name}\` command has been disabled globally by the developers.`
                                 })]
-                            }).catch(() => {});
+                            }).catch(() => { });
                         }
                         return;
                     }
+                    const CooldownManager = require('../services/cooldown/CooldownManager');
+                    const cooldownCheck = await CooldownManager.check(message, cmd);
+                    if (cooldownCheck.blocked) return;
+
                     await cmd.execute(message, parts.slice(1));
                     await devHelper.logCommand(prefixlessAlias.command_name, message.author.id, message.guild.id, 'prefix');
                     return;
@@ -259,25 +264,28 @@ module.exports = {
                                 title: '🚧 Maintenance Mode Enabled',
                                 description: check.message
                             })]
-                        }).catch(() => {});
+                        }).catch(() => { });
                     } else if (check.reason === 'disabled') {
                         return message.reply({
                             components: [UI.createContainer({
                                 color: 0xFF0000,
-                                description: `❌ **Command Disabled**\nThe \`${command.name || commandName}\` command has been disabled globally by the developers.`
+                                description: `<:no:1526496561188831244>**Command Disabled**\nThe \`${command.name || commandName}\` command has been disabled globally by the developers.`
                             })]
-                        }).catch(() => {});
+                        }).catch(() => { });
                     }
                     return;
                 }
+                const CooldownManager = require('../services/cooldown/CooldownManager');
+                const cooldownCheck = await CooldownManager.check(message, command);
+                if (cooldownCheck.blocked) return;
+
                 await command.execute(message, args);
                 await devHelper.logCommand(command.name || commandName, message.author.id, message.guild.id, 'prefix');
             }
         } catch (error) {
             console.error('Error processing message:', error);
             const errorEmbed = UI.createEmbed({
-                description: `- ⚠️ Oops! Something went wrong while processing your request.`,
-                color: 'Yellow'
+                description: Messages.error.generic()
             });
             await message.reply({ embeds: [errorEmbed] }).catch(() => { });
         }

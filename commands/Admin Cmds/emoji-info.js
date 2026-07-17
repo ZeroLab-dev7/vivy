@@ -22,7 +22,6 @@ module.exports = {
             const guideContainer = UI.createContainer({
                 title: 'Command : EmojiInfo',
                 description: 'Retrieve details about a specific emoji.',
-                footer: `Requested by ${message.author.tag}`,
                 fields: [
                     { name: "Aliases:", value: "- einfo, emoji-info, emojiinfo" },
                     { name: "Usage:", value: "- ?emojiinfo emoji/id" },
@@ -65,7 +64,6 @@ module.exports = {
         const emojiContainer = UI.createContainer({
             title: 'Command : Emoji Info',
             description: `Emoji Information: **${emoji}**`,
-            footer: `Requested by ${message.author.tag}`,
             fields: [
                 { name: " Emoji Name", value: `\`${emoji.name}\`` },
                 { name: " Emoji ID", value: `\`${emoji.id}\`` },

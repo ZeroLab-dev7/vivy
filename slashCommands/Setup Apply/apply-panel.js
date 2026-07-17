@@ -14,32 +14,32 @@ module.exports = {
         const settings = await ApplySetup.findOne({ where: { guild_id: interaction.guild.id } });
 
         if (!settings || !settings.apply_channel_id) {
-            return interaction.editReply({ content: '❌ Apply system is not configured. Use `/setup-apply` first.' });
+            return interaction.editReply({ content: '<:no:1526496561188831244>Apply system is not configured. Use `/setup-apply` first.' });
         }
 
         const channel = interaction.guild.channels.cache.get(settings.apply_channel_id) ||
             await interaction.guild.channels.fetch(settings.apply_channel_id).catch(() => null);
 
         if (!channel) {
-            return interaction.editReply({ content: '❌ Configured apply channel not found or inaccessible.' });
+            return interaction.editReply({ content: '<:no:1526496561188831244>Configured apply channel not found or inaccessible.' });
         }
 
         const { SeparatorSpacingSize, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, MediaGalleryBuilder, MediaGalleryItemBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 
         // Resolve custom panel strings and departments
         const title = settings.panel_title || `${interaction.guild.name} • Staff Applications`;
-        const description = settings.panel_description || 
+        const description = settings.panel_description ||
             `め 」 **Take your application test, Our team is waiting for you!**\n` +
             `• **We're looking for active and dedicated members to join our team and help our community grow!**`;
         const style = settings.panel_style || 'menu';
-        
+
         let departments = [];
         if (settings.departments) {
             try {
                 departments = typeof settings.departments === 'string'
                     ? JSON.parse(settings.departments)
                     : settings.departments;
-            } catch {}
+            } catch { }
         }
 
         // If no custom departments are configured, use legacy/default 4 departments
@@ -157,7 +157,7 @@ module.exports = {
             await interaction.editReply({ content: `✅ Application panel (${style}) sent to ${channel}.` });
         } catch (error) {
             console.error(error);
-            await interaction.editReply({ content: '❌ Failed to send application panel.' });
+            await interaction.editReply({ content: '<:no:1526496561188831244>Failed to send application panel.' });
         }
     }
 };

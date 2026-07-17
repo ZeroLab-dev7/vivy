@@ -15,7 +15,6 @@ module.exports = {
         return message.reply({
           components: [UI.createContainer({
             title: 'Verification Help',
-            footer: `Requested by ${message.author.tag}`,
             fields: [
               { name: "Aliases:", value: "- verify-boy, verifyboy" },
               { name: "Usage:", value: "- ?vb @user/id" },
@@ -60,7 +59,7 @@ module.exports = {
       if (blacklistEntry) {
         return message.reply({
           components: [UI.createContainer({
-            description: `- ❌ This user is blocked from verification!\n**Reason:** ${blacklistEntry.reason}\n**Blacklisted By ID:** \`${blacklistEntry.verificator_id}\``
+            description: `- <:no:1526496561188831244>This user is blocked from verification!\n**Reason:** ${blacklistEntry.reason}\n**Blacklisted By ID:** \`${blacklistEntry.verificator_id}\``
           })],
           flags: MessageFlags.IsComponentsV2
         });
@@ -136,8 +135,9 @@ module.exports = {
       // Execute non-blocking actions (DM and Logging)
       (async () => {
         try {
+          dmContainer.addActionRowComponents(buttonRow);
           await target.send({
-            components: [dmContainer, buttonRow],
+            components: [dmContainer],
             flags: MessageFlags.IsComponentsV2
           });
         } catch (error) {

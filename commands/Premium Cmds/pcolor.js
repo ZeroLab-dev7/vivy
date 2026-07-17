@@ -35,7 +35,7 @@ module.exports = {
             const plan = await PremiumPlan.findOne({ where: { owner_id: message.author.id, guild_id: message.guild.id } });
             if (!plan) {
                 return message.reply({
-                    components: [UI.createContainer({ color: 0xFF0000, description: "❌ **Access Denied**\nYou do not own a premium plan." })],
+                    components: [UI.createContainer({ color: 0xFF0000, description: "<:no:1526496561188831244>**Access Denied**\nYou do not own a premium plan." })],
                     flags: MessageFlags.IsComponentsV2
                 });
             }
@@ -62,7 +62,7 @@ module.exports = {
                     finalColor = inputColor.startsWith("#") ? inputColor : `#${inputColor}`;
                 } else {
                     return message.reply({
-                        components: [UI.createContainer({ color: 0xFF0000, description: "❌ **Invalid Color**\nPlease provide a valid color name (e.g., red, pink) or hex code (e.g., #ff0000)." })],
+                        components: [UI.createContainer({ color: 0xFF0000, description: "<:no:1526496561188831244>**Invalid Color**\nPlease provide a valid color name (e.g., red, pink) or hex code (e.g., #ff0000)." })],
                         flags: MessageFlags.IsComponentsV2
                     });
                 }
@@ -74,7 +74,7 @@ module.exports = {
             const role = message.guild.roles.cache.get(plan.role_id);
             if (!role) {
                 return message.reply({
-                    components: [UI.createContainer({ color: 0xFF0000, description: "❌ **Plan role not found.**" })],
+                    components: [UI.createContainer({ color: 0xFF0000, description: "<:no:1526496561188831244>**Plan role not found.**" })],
                     flags: MessageFlags.IsComponentsV2
                 });
             }
@@ -84,7 +84,7 @@ module.exports = {
                 return message.reply({
                     components: [UI.createContainer({
                         color: 0xFF0000,
-                        description: `❌ **Permission Error**\nMy role is not high enough to manage the role **${role.name}**.`
+                        description: `<:no:1526496561188831244>**Permission Error**\nMy role is not high enough to manage the role **${role.name}**.`
                     })],
                     flags: MessageFlags.IsComponentsV2
                 });
@@ -106,7 +106,7 @@ module.exports = {
         } catch (error) {
             console.error("pcolor Error:", error);
             message.reply({
-                components: [UI.createContainer({ color: 0xFF0000, description: "❌ **Internal Error**\nFailed to update the role color." })],
+                components: [UI.createContainer({ color: 0xFF0000, description: "<:no:1526496561188831244>**Internal Error**\nFailed to update the role color." })],
                 flags: MessageFlags.IsComponentsV2
             });
         }

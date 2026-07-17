@@ -83,7 +83,7 @@ async function sendPremiumRequired(context, featureName = 'This feature') {
             new SectionBuilder()
                 .addTextDisplayComponents(td => td.setContent(
                     `### 🔒 ${featureName}\n` +
-                    `-# This is a **Premium** feature`
+                    `-# This is a premium feature. Upgrade to unlock! 💎`
                 ))
                 .setButtonAccessory(upgradeButton)
         )

@@ -83,12 +83,12 @@ async function runTests() {
         } else {
             throw new Error(`Blacklist user role test failed.`);
         }
-        
-        console.log('\n🎉 ALL TESTS PASSED SUCCESSFULLY! Setup is ready.');
+
+        console.log('\n<a:pink8:1337678972108148757> ALL TESTS PASSED SUCCESSFULLY! Setup is ready.');
         process.exit(0);
 
     } catch (error) {
-        console.error('\n❌ TEST FAILED:', error);
+        console.error('\n<:no:1526496561188831244>TEST FAILED:', error);
         process.exit(1);
     }
 }
