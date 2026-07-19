@@ -134,7 +134,9 @@ body {
     top: 0; left: 0; right: 0;
     height: var(--nav-h);
     background: rgba(3, 7, 18, 0.75);
-    backdrop-filter: blur(24px);
+    backdrop-filter: blur(12px);
+    will-change: transform;
+    transform: translate3d(0, 0, 0);
     border-bottom: 1px solid var(--border);
     z-index: 200;
     display: flex;
@@ -269,7 +271,9 @@ body {
     width: var(--sidebar-w);
     background: rgba(3, 7, 18, 0.45);
     border-right: 1px solid var(--border);
-    backdrop-filter: blur(20px);
+    backdrop-filter: blur(12px);
+    will-change: transform;
+    transform: translate3d(0, 0, 0);
     padding: 24px 16px;
     overflow-y: auto;
     display: flex;
@@ -376,7 +380,7 @@ body {
 .dev-panel {
     background: var(--bg-card);
     border: 1px solid var(--border);
-    backdrop-filter: blur(16px);
+    backdrop-filter: blur(8px);
     border-radius: var(--radius-lg);
     padding: 32px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);

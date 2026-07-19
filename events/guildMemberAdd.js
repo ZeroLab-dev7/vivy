@@ -1,4 +1,4 @@
-const { PermissionsBitField, AuditLogEvent } = require("discord.js");
+const { PermissionsBitField, AuditLogEvent, MessageFlags } = require("discord.js");
 const { GuildSettings, JailSetup, JailedUser, AntiBotSetup, Mute, MuteSetup, PubSetup, SecuritySettings, RaidProtectionSettings, TrustedEntity } = require("../db/models");
 const { isExecutorTrusted, punishExecutor, logSecurityEvent } = require("../utils/securityHelper");
 const UI = require("../utils/ui");
@@ -163,7 +163,7 @@ module.exports = {
               });
               await logChannel.send({
                 components: [logContainer],
-                flags: 128 // MessageFlags.IsComponentsV2
+                flags: MessageFlags.IsComponentsV2
               }).catch(() => { });
             }
             return; // Don't give auto-roles if jailed

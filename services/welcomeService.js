@@ -1,6 +1,6 @@
 const { WelcomeSettings, AutoRoleSetup } = require('../db/models');
 const { createCanvas, loadImage } = require('@napi-rs/canvas');
-const { EmbedBuilder, AttachmentBuilder } = require('discord.js');
+const { EmbedBuilder, AttachmentBuilder, MessageFlags, TextDisplayBuilder } = require('discord.js');
 const UI = require('../utils/ui');
 
 class WelcomeService {
@@ -89,7 +89,7 @@ class WelcomeService {
                 const channel = member.guild.channels.cache.get(settings.welcome_channel);
                 if (channel) {
                     const content = this.replaceVariables(settings.welcome_message, member);
-                    const options = { content };
+                    const options = { content: null };
 
                     let embedData = null;
                     if (settings.welcome_embed_json) {
@@ -123,8 +123,13 @@ class WelcomeService {
                     }
 
                     const welcomeContainer = UI.createContainer(containerOptions);
-                    options.components = [welcomeContainer];
-                    options.flags = 128; // MessageFlags.IsComponentsV2
+                    const components = [];
+                    if (content) {
+                        components.push(new TextDisplayBuilder().setContent(content));
+                    }
+                    components.push(welcomeContainer);
+                    options.components = components;
+                    options.flags = MessageFlags.IsComponentsV2;
 
                     await channel.send(options).catch(err => console.error("Error sending welcome message:", err));
                 }
@@ -163,7 +168,7 @@ class WelcomeService {
                 const channel = member.guild.channels.cache.get(settings.leave_channel);
                 if (channel) {
                     const content = this.replaceVariables(settings.leave_message, member);
-                    const options = { content };
+                    const options = { content: null };
 
                     let embedData = null;
                     if (settings.leave_embed_json) {
@@ -189,8 +194,13 @@ class WelcomeService {
                     };
 
                     const leaveContainer = UI.createContainer(containerOptions);
-                    options.components = [leaveContainer];
-                    options.flags = 128; // MessageFlags.IsComponentsV2
+                    const components = [];
+                    if (content) {
+                        components.push(new TextDisplayBuilder().setContent(content));
+                    }
+                    components.push(leaveContainer);
+                    options.components = components;
+                    options.flags = MessageFlags.IsComponentsV2;
 
                     await channel.send(options).catch(err => console.error("Error sending leave message:", err));
                 }

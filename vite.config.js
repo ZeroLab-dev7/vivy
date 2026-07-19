@@ -8,13 +8,7 @@ export default defineConfig({
     outDir: resolve(__dirname, 'server/public'),
     emptyOutDir: true,
     sourcemap: false,
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: false,
-        drop_debugger: true
-      }
-    },
+    minify: 'esbuild',
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'frontend/index.html'),

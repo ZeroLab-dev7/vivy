@@ -1,4 +1,5 @@
 const { Warning, GuildSettings } = require('../db/models');
+const { MessageFlags } = require('discord.js');
 const UI = require('../utils/ui');
 
 module.exports = {
@@ -45,7 +46,7 @@ module.exports = {
                         color: 0xFF3300,
                         footer: 'AutoMod Security System'
                     });
-                    await logChannel.send({ components: [logContainer], flags: 128 }).catch(e => {
+                    await logChannel.send({ components: [logContainer], flags: MessageFlags.IsComponentsV2 }).catch(e => {
                         console.error('[AutoModEvent] Failed to send log message:', e.message);
                     });
                 } else {

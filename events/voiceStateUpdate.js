@@ -110,7 +110,7 @@ module.exports = {
         // Notify the user in their room
         const userEmbed = new EmbedBuilder()
           .setColor(0x2b2d31)
-          .setDescription(`**Helper Alert**\n\n<a:loading:1365691079374012587> Staff has been notified and will be with you shortly.`)
+          .setDescription(`**Helper Alert**\n\n Staff has been notified and will be with you shortly.`)
           .setTimestamp();
 
         // Ping the Staff Roles and the User

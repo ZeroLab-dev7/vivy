@@ -422,7 +422,7 @@ module.exports = {
 
           if (selectMenu && typeof selectMenu.setDisabled === 'function') {
             selectMenu.setDisabled(true);
-            selectMenu.setPlaceholder('<:no:1526496561188831244>Menu Expired');
+            selectMenu.setPlaceholder('Menu Expired');
           }
 
           await reply.edit({

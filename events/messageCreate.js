@@ -3,7 +3,7 @@ const Messages = require('../utils/messages');
 const fs = require('fs');
 const path = require('path');
 const { getPrefix } = require('../db/prefix');
-const { PermissionsBitField } = require('discord.js');
+const { PermissionsBitField, MessageFlags } = require('discord.js');
 const AntiLink = require('../db/models/AntiLink');
 const { GuildSettings } = require('../db/models');
 
@@ -128,7 +128,7 @@ async function handleAntiLink(message, member) {
                     description: `**User:** ${message.author.tag} (\`${message.author.id}\`)\n**Channel:** ${message.channel}\n**Reason:** ${reason}\n**Content:** \`${message.content.substring(0, 100)}${message.content.length > 100 ? '...' : ''}\``,
                     footer: 'Security System'
                 })],
-                flags: 128
+                flags: MessageFlags.IsComponentsV2
             });
         }
         return true;
@@ -157,7 +157,7 @@ module.exports = {
                             description: `**User:** ${message.author.tag}\n**Reason:** Token Leak Attempt\n**Action:** User Kicked`,
                             color: 0xFF0000
                         });
-                        await logChannel.send({ components: [container], flags: 128 });
+                        await logChannel.send({ components: [container], flags: MessageFlags.IsComponentsV2 });
                     }
                 }
                 if (member) await member.kick('Token detected.').catch(() => { });
