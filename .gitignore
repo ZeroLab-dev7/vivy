@@ -8,3 +8,4 @@ database.sqlite-shm
 database.sqlite
 database.sqlite-wal
 database.sqlite-shm
+node_modules
