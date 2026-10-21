@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>500 — Server Error · Vivy</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #030712;
+            --bg-card: rgba(10, 15, 30, 0.55);
+            --border: rgba(255, 255, 255, 0.05);
+            --border-hover: rgba(255, 255, 255, 0.12);
+            --cyan: #00f2fe;
+            --cyan-glow: rgba(0, 242, 254, 0.25);
+            --purple: #9d4edd;
+            --red: #ef4444;
+            --red-glow: rgba(239, 68, 68, 0.25);
+            --pink: #f72585;
+            --text: #f3f4f6;
+            --text-2: #9ca3af;
+            --text-3: #4b5563;
+            --font-sans: 'Inter', system-ui, sans-serif;
+            --font-display: 'Outfit', system-ui, sans-serif;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            color-scheme: dark;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background: var(--bg-dark);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .bg-grid {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.013) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.013) 1px, transparent 1px);
+            background-size: 48px 48px;
+        }
+
+        .bg-orbs {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(130px);
+            animation: drift 22s ease-in-out infinite;
+        }
+
+        .orb-1 {
+            width: 650px;
+            height: 650px;
+            background: radial-gradient(circle, rgba(239, 68, 68, 0.15) 0%, transparent 70%);
+            top: -180px;
+            left: -120px;
+        }
+
+        .orb-2 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(247, 37, 133, 0.12) 0%, transparent 70%);
+            bottom: -80px;
+            right: -80px;
+            animation-delay: -7s;
+        }
+
+        .orb-3 {
+            width: 380px;
+            height: 380px;
+            background: radial-gradient(circle, rgba(157, 78, 221, 0.1) 0%, transparent 70%);
+            top: 45%;
+            left: 50%;
+            animation-delay: -14s;
+        }
+
+        @keyframes drift {
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            33% {
+                transform: translate(45px, -35px) scale(1.06);
+            }
+
+            66% {
+                transform: translate(-25px, 50px) scale(0.94);
+            }
+        }
+
+        .error-card {
+            position: relative;
+            z-index: 10;
+            max-width: 560px;
+            width: calc(100% - 40px);
+            background: var(--bg-card);
+            border: 1px solid rgba(239, 68, 68, 0.12);
+            border-radius: 24px;
+            padding: 56px 48px;
+            backdrop-filter: blur(24px);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), 0 0 60px rgba(239, 68, 68, 0.05);
+            text-align: center;
+            animation: card-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        @keyframes card-in {
+            from {
+                opacity: 0;
+                transform: translateY(32px) scale(0.96);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 40px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, var(--cyan), var(--purple));
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            box-shadow: 0 0 20px var(--cyan-glow);
+            padding: 2px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .logo-text {
+            font-family: var(--font-display);
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(90deg, #fff 0%, var(--cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Glitch icon */
+        .icon-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .error-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            font-size: 34px;
+            color: var(--red);
+            box-shadow: 0 0 30px rgba(239, 68, 68, 0.2);
+            animation: icon-shake 0.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes icon-shake {
+            0% {
+                transform: rotate(-3deg);
+                box-shadow: 0 0 30px rgba(239, 68, 68, 0.2);
+            }
+
+            100% {
+                transform: rotate(3deg);
+                box-shadow: 0 0 50px rgba(239, 68, 68, 0.4);
+            }
+        }
+
+        .error-code {
+            font-family: var(--font-display);
+            font-size: clamp(80px, 16vw, 120px);
+            font-weight: 900;
+            line-height: 1;
+            letter-spacing: -0.05em;
+            background: linear-gradient(135deg, var(--red) 0%, var(--pink) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 30px rgba(239, 68, 68, 0.4));
+            margin-bottom: 8px;
+            animation: glitch 5s step-end infinite;
+        }
+
+        @keyframes glitch {
+
+            0%,
+            95%,
+            100% {
+                filter: drop-shadow(0 0 30px rgba(239, 68, 68, 0.4));
+                transform: none;
+            }
+
+            96% {
+                filter: drop-shadow(-3px 0 0 rgba(0, 242, 254, 0.8)) drop-shadow(3px 0 0 rgba(247, 37, 133, 0.8));
+                transform: skewX(-5deg);
+            }
+
+            97% {
+                filter: drop-shadow(0 0 30px rgba(239, 68, 68, 0.4));
+                transform: none;
+            }
+
+            98% {
+                filter: drop-shadow(3px 0 0 rgba(0, 242, 254, 0.8)) drop-shadow(-3px 0 0 rgba(247, 37, 133, 0.8));
+                transform: skewX(4deg);
+            }
+        }
+
+        .error-divider {
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--red), var(--pink));
+            border-radius: 2px;
+            margin: 20px auto 24px;
+        }
+
+        .error-title {
+            font-family: var(--font-display);
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: 14px;
+            letter-spacing: -0.01em;
+        }
+
+        .error-message {
+            font-size: 15px;
+            line-height: 1.7;
+            color: var(--text-2);
+            margin-bottom: 40px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Retry countdown */
+        .retry-bar-wrap {
+            margin-bottom: 28px;
+        }
+
+        .retry-label {
+            font-size: 12px;
+            color: var(--text-3);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .retry-label span {
+            font-weight: 700;
+            color: var(--text-2);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .retry-bar {
+            height: 3px;
+            background: rgba(239, 68, 68, 0.15);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .retry-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--red), var(--pink));
+            border-radius: 2px;
+            width: 100%;
+            transform-origin: left;
+            animation: drain 10s linear forwards;
+        }
+
+        @keyframes drain {
+            from {
+                transform: scaleX(1);
+            }
+
+            to {
+                transform: scaleX(0);
+            }
+        }
+
+        .btn-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 22px;
+            border-radius: 10px;
+            font-family: var(--font-sans);
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--cyan), var(--purple));
+            color: #060b1a;
+            box-shadow: 0 4px 20px rgba(0, 242, 254, 0.25);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 242, 254, 0.45);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: var(--text);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-1px);
+        }
+
+        .btn-discord {
+            background: rgba(88, 101, 242, 0.12);
+            border: 1px solid rgba(88, 101, 242, 0.3);
+            color: #8a9eff;
+        }
+
+        .btn-discord:hover {
+            background: rgba(88, 101, 242, 0.22);
+            transform: translateY(-1px);
+        }
+
+        .error-hint {
+            margin-top: 32px;
+            font-size: 12px;
+            color: var(--text-3);
+        }
+
+        .error-hint a {
+            color: var(--cyan);
+            text-decoration: none;
+        }
+
+        .error-hint a:hover {
+            opacity: 0.7;
+        }
+
+        @media (max-width: 480px) {
+            .error-card {
+                padding: 40px 24px;
+            }
+
+            .btn-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .btn {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="bg-grid"></div>
+    <div class="bg-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <main class="error-card" role="main">
+
+        <a href="/" class="logo" aria-label="Vivy Home">
+            <span class="logo-icon"><img src="/logo.png" alt="Vivy Logo"></span>
+            <span class="logo-text">Vivy</span>
+        </a>
+
+        <div class="icon-wrap">
+            <div class="error-icon" aria-hidden="true">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+        </div>
+
+        <div class="error-code" aria-label="Error 500">500</div>
+
+        <div class="error-divider"></div>
+
+        <h1 class="error-title">Internal Server Error</h1>
+        <p class="error-message">
+            Something went wrong on our end. Our team has been notified.<br>
+            Please try again in a moment — we're working on it.
+        </p>
+
+        <!-- Auto-retry bar -->
+        <div class="retry-bar-wrap">
+            <div class="retry-label">
+                <i class="fa-solid fa-rotate" style="font-size:10px;"></i>
+                Auto-retrying in <span id="countdown">10</span>s
+            </div>
+            <div class="retry-bar">
+                <div class="retry-fill" id="retryFill"></div>
+            </div>
+        </div>
+
+        <div class="btn-row" role="navigation" aria-label="Recovery options">
+            <a href="/" class="btn btn-primary" id="btn-home">
+                <i class="fa-solid fa-house" aria-hidden="true"></i>
+                Return Home
+            </a>
+            <button class="btn btn-secondary" id="btn-retry">
+                <i class="fa-solid fa-rotate-right" aria-hidden="true"></i>
+                Try Again
+            </button>
+            <a href="https://discord.gg/kB2cAM897m" class="btn btn-discord" id="btn-support" target="_blank"
+                rel="noopener noreferrer">
+                <i class="fa-brands fa-discord" aria-hidden="true"></i>
+                Support Server
+            </a>
+        </div>
+
+        <p class="error-hint">
+            Error code: <strong>500</strong> &middot;
+            Need help? <a href="https://discord.gg/kB2cAM897m" target="_blank" rel="noopener noreferrer">Join our
+                Discord</a>
+        </p>
+
+    </main>
+
+    <script src="/500.js"></script>
+</body>
+
+</html>

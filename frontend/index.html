@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vivy — The All-in-One Discord Bot for Growing Communities</title>
+    <meta name="description"
+        content="Level up your Discord server with Vivy — anti-spam protection, custom welcome cards, leveling rewards, voice support rooms, and a premium dashboard. Trusted by 100+ servers.">
+
+    <!-- Fonts Preload & Style -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="landing.css">
+</head>
+
+<body>
+
+    <!-- Grid lines overlay & background orbs -->
+    <div class="bg-grid-overlay"></div>
+    <div class="bg-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-inner">
+            <a href="#" class="logo">
+                <span class="logo-icon"><img src="logo.png" alt="Vivy"></span>
+                <span class="logo-text">Vivy</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#dashboard">Dashboard</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="#faq">FAQ</a></li>
+                <li><a href="/docs">Docs</a></li>
+            </ul>
+            <button class="nav-search-btn" id="navSearchBtn" aria-label="Open search command palette" style="display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:var(--radius-sm);padding:6px 12px;color:var(--text-secondary);cursor:pointer;font-family:inherit;font-size:13px;transition:all 0.2s ease;">
+                <i class="fa-solid fa-magnifying-glass" style="font-size:12px;color:var(--cyan);"></i>
+                <span>Search...</span>
+                <kbd style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);border-radius:3px;padding:1px 4px;font-size:10px;font-family:monospace;margin-left:4px;color:var(--text-muted);">Ctrl+K</kbd>
+            </button>
+            <a href="/auth/discord/login" class="btn-discord" id="nav-login-btn">
+                <i class="fa-brands fa-discord"></i> Login with Discord
+            </a>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+        <!-- Mobile menu -->
+        <div class="mobile-menu" id="mobileMenu">
+            <a href="#features">Features</a>
+            <a href="#dashboard">Dashboard</a>
+            <a href="#pricing">Pricing</a>
+            <a href="#faq">FAQ</a>
+            <a href="/docs">Docs</a>
+            <a href="/auth/discord/login" class="btn-discord-mobile" id="mobile-login-btn">
+                <i class="fa-brands fa-discord"></i> Login with Discord
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <!-- Animated Gradient Mesh & Particles -->
+        <div class="hero-mesh"></div>
+        <div class="hero-particles" id="hero-particles"></div>
+        
+        <!-- Live Bot Status -->
+        <div class="hero-status-pill">
+            <span class="status-dot pulsing"></span>
+            <span class="status-text">Bot Latency: <strong id="live-bot-latency">12ms</strong></span>
+        </div>
+
+        <!-- Floating Discord UI elements -->
+        <div class="hero-floater hero-floater-left">
+            <div class="discord-msg-mock">
+                <div class="discord-msg-header">
+                    <div class="discord-msg-avatar" style="background: var(--cyan);"></div>
+                    <span class="discord-msg-user">Vivy</span>
+                    <span class="discord-msg-bot-tag">BOT</span>
+                </div>
+                <div class="discord-msg-content">
+                    Blocked potential malicious link from <span style="color: #00b0f4;">@spambot</span>.
+                    <div class="discord-automod-alert">
+                        <i class="fa-solid fa-shield-halved" style="color: #f23f43; margin-right: 6px;"></i>
+                        <strong>AutoMod Alert:</strong> Phishing URL detected and quarantined.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero-floater hero-floater-right">
+            <div class="discord-welcome-mock">
+                <div class="welcome-banner-img">
+                    <div class="welcome-avatar-wrap">
+                        <svg width="100%" height="100%" viewBox="0 0 100 100" style="background:#a855f7;">
+                            <circle cx="50" cy="35" r="20" fill="#fff" />
+                            <path d="M15 85 C15 60, 85 60, 85 85" fill="#fff" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="welcome-content">
+                    <div class="welcome-title">Welcome @Loki!</div>
+                    <div class="welcome-desc">You are member #12,408 of the community</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hero Content -->
+        <div class="hero-badge-wrap">
+            <div class="hero-badge">
+                <div class="badge-pulse-dot"></div>
+                <span>Vivy</span> Manage, Protect, and Grow Your Discord Community with Ease
+            </div>
+        </div>
+
+        <h1 class="hero-title">
+            The All-in-One Discord Bot for <span class="gradient-text">Growing Communities</span>
+        </h1>
+
+        <p class="hero-sub">
+            Anti-raid security, welcome banners, leveled roles, ticketing, Moderation, Automations, and more. Set up in seconds,
+            <span id="hero-typing-target" class="typing-text"></span>
+        </p>
+
+        <div class="hero-cta">
+            <a href="/auth/discord/login" class="btn-primary" id="hero-cta-btn">
+                <i class="fa-brands fa-discord"></i> Get Started Free
+            </a>
+            <a href="#features" class="btn-ghost">
+                Explore Features <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        </div>
+
+        <!-- Social Proof Metrics -->
+        <div class="hero-social-proof">
+            <div class="social-avatars">
+                <!-- Custom SVG Avatars to prevent missing images -->
+                <svg width="40" height="40"
+                    style="background:#5865F2;border-radius:50%;border:2px solid var(--bg-dark);margin-right:-10px;">
+                    <circle cx="20" cy="15" r="8" fill="#fff" />
+                    <path d="M5 35 C5 25, 35 25, 35 35" fill="#fff" />
+                </svg>
+                <svg width="40" height="40"
+                    style="background:#10b981;border-radius:50%;border:2px solid var(--bg-dark);margin-right:-10px;">
+                    <circle cx="20" cy="15" r="8" fill="#fff" />
+                    <path d="M5 35 C5 25, 35 25, 35 35" fill="#fff" />
+                </svg>
+                <svg width="40" height="40"
+                    style="background:#f59e0b;border-radius:50%;border:2px solid var(--bg-dark);margin-right:-10px;">
+                    <circle cx="20" cy="15" r="8" fill="#fff" />
+                    <path d="M5 35 C5 25, 35 25, 35 35" fill="#fff" />
+                </svg>
+                <svg width="40" height="40"
+                    style="background:#ec4899;border-radius:50%;border:2px solid var(--bg-dark);margin-right:-10px;">
+                    <circle cx="20" cy="15" r="8" fill="#fff" />
+                    <path d="M5 35 C5 25, 35 25, 35 35" fill="#fff" />
+                </svg>
+            </div>
+            <div class="social-text">
+                <i class="fa-solid fa-star"></i>
+                <span>Trusted by <strong>100+</strong> communities</span>
+            </div>
+        </div>
+
+        <!-- Live Ticker Dashboard Console -->
+        <div class="hero-ticker-container">
+            <div class="ticker-header">
+                <div class="ticker-dots">
+                    <span class="ticker-dot ticker-dot-red"></span>
+                    <span class="ticker-dot ticker-dot-yellow"></span>
+                    <span class="ticker-dot ticker-dot-green"></span>
+                </div>
+                <div class="ticker-title">vivy-live-events.log</div>
+                <div style="width: 32px;"></div>
+            </div>
+            <div class="ticker-console" id="ticker-console">
+                <!-- Log lines will be appended here via JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Live Community Statistics Section -->
+    <section class="stats-section fade-in-section">
+        <div class="container">
+            <div class="stats-counter-grid">
+                <div class="stat-counter-card glass-card">
+                    <div class="stat-val gradient-text" data-target="152">0</div>
+                    <div class="stat-lbl">Servers Protected</div>
+                </div>
+                <div class="stat-counter-card glass-card">
+                    <div class="stat-val gradient-text" data-target="18491030">0</div>
+                    <div class="stat-lbl">Messages Processed</div>
+                </div>
+                <div class="stat-counter-card glass-card">
+                    <div class="stat-val gradient-text" data-target="84209">0</div>
+                    <div class="stat-lbl">Members Secured</div>
+                </div>
+                <div class="stat-counter-card glass-card">
+                    <div class="stat-val gradient-text" data-target="582109">0</div>
+                    <div class="stat-lbl">Commands Executed</div>
+                </div>
+                <div class="stat-counter-card glass-card">
+                    <div class="stat-val gradient-text" data-target="4">0</div>
+                    <div class="stat-lbl">Online Shard Servers</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Integrations Grid Section -->
+    <section class="integrations-section fade-in-section">
+        <div class="container">
+            <h2 class="trust-title">Integrated with Industry-Leading Platforms</h2>
+            <div class="integrations-grid">
+                <div class="integration-item glass-card"><i class="fa-brands fa-discord"></i><span>Discord</span></div>
+                <div class="integration-item glass-card"><i class="fa-brands fa-github"></i><span>GitHub</span></div>
+                <div class="integration-item glass-card"><i class="fa-brands fa-cloudflare"></i><span>Cloudflare</span></div>
+                <div class="integration-item glass-card"><i class="fa-solid fa-database"></i><span>MongoDB</span></div>
+                <div class="integration-item glass-card"><i class="fa-brands fa-node-js"></i><span>NodeJS</span></div>
+                <div class="integration-item glass-card"><i class="fa-brands fa-docker"></i><span>Docker</span></div>
+                <div class="integration-item glass-card"><i class="fa-solid fa-server"></i><span>Redis</span></div>
+                <div class="integration-item glass-card"><i class="fa-solid fa-network-wired"></i><span>PM2</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bento Features Section -->
+    <section id="features" class="features-section fade-in-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Feature Suite</span>
+                <h2 class="section-title">Automate Everything.<br><span class="gradient-text">Keep Control.</span></h2>
+                <p class="section-sub">Ditch multiple bots. Vivy does everything to scale and maintain your community.
+                </p>
+            </div>
+
+            <div class="features-grid">
+                <!-- AutoMod Feature -->
+                <div class="feature-card glass-card">
+                    <div class="card-glow"></div>
+                    <div class="feature-info">
+                        <div class="feature-top">
+                            <div class="feature-icon-wrap"
+                                style="background: rgba(0, 242, 254, 0.1); color: var(--cyan);">
+                                <i class="fa-solid fa-shield-halved"></i>
+                            </div>
+                            <span class="feature-outcome">10ms Response</span>
+                        </div>
+                        <h3>Advanced AutoMod</h3>
+                        <p>Stop spam and malicious raids before they reach your members. Rule sets trigger warnings,
+                            mutes, and bans instantly.</p>
+                    </div>
+                    <div class="feature-preview">
+                        <div class="automod-demo">
+                            <div class="automod-msg">
+                                <div class="avatar" style="background:#5865f2;"></div>
+                                <div class="content">Check out this link: http://phishing-site.xyz</div>
+                            </div>
+                            <div class="automod-msg flagged">
+                                <div class="avatar" style="background:#00f2fe;"></div>
+                                <div class="content">Warning: Phishing content flagged. Message deleted.</div>
+                            </div>
+                            <div class="automod-block-action">
+                                <i class="fa-solid fa-check-double"></i> Event logged & sender muted.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Welcome Banners Feature (col-span-2) -->
+                <div class="feature-card col-span-2 glass-card">
+                    <div class="card-glow"></div>
+                    <div class="feature-info">
+                        <div class="feature-top">
+                            <div class="feature-icon-wrap"
+                                style="background: rgba(157, 78, 221, 0.1); color: var(--purple);">
+                                <i class="fa-solid fa-image"></i>
+                            </div>
+                            <span class="feature-outcome">Engage Immediately</span>
+                        </div>
+                        <h3>Custom Welcome Cards</h3>
+                        <p>Automatically draw welcome banners inside your channels. Customize layout, colors, avatars,
+                            and text parameters directly from the web dashboard.</p>
+                    </div>
+                    <div class="feature-preview">
+                        <div class="welcome-demo">
+                            <div class="welcome-demo-card">
+                                <div class="welcome-demo-avatar">
+                                    <svg width="100%" height="100%" viewBox="0 0 100 100" style="background:#9d4edd;">
+                                        <circle cx="50" cy="35" r="20" fill="#fff" />
+                                        <path d="M15 85 C15 60, 85 60, 85 85" fill="#fff" />
+                                    </svg>
+                                </div>
+                                <div class="welcome-demo-text">
+                                    <div class="welcome-demo-title">Welcome, Developer!</div>
+                                    <div class="welcome-demo-subtitle">You are our 5,200th member. Customize this text
+                                        in the dashboard.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Leveling & Rewards (col-span-2) -->
+                <div class="feature-card col-span-2 glass-card">
+                    <div class="card-glow"></div>
+                    <div class="feature-info">
+                        <div class="feature-top">
+                            <div class="feature-icon-wrap"
+                                style="background: rgba(247, 37, 133, 0.1); color: var(--pink);">
+                                <i class="fa-solid fa-ranking-star"></i>
+                            </div>
+                            <span class="feature-outcome">Gamify Community</span>
+                        </div>
+                        <h3>Leveling & Rewards</h3>
+                        <p>Keep your community active. Members earn XP by chatting. Award special roles, unlock
+                            permissions, and show off beautifully designed rank cards.</p>
+                    </div>
+                    <div class="feature-preview">
+                        <div class="leveling-demo">
+                            <div class="leveling-row">
+                                <span style="font-weight:700;">Level Up! @Aria reached Level 15</span>
+                                <span class="leveling-badge">Role Unlocked: Elder Elite</span>
+                            </div>
+                            <div class="leveling-progress-container">
+                                <div class="leveling-progress-bar"></div>
+                            </div>
+                            <div class="leveling-row" style="font-size:11px;color:var(--text-muted);">
+                                <span>XP: 4,890 / 5,000</span>
+                                <span>Next Level: 110 XP remaining</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ticketing System -->
+                <div class="feature-card glass-card">
+                    <div class="card-glow"></div>
+                    <div class="feature-info">
+                        <div class="feature-top">
+                            <div class="feature-icon-wrap"
+                                style="background: rgba(59, 130, 246, 0.1); color: var(--blue);">
+                                <i class="fa-solid fa-headset"></i>
+                            </div>
+                            <span class="feature-outcome">Streamline Support</span>
+                        </div>
+                        <h3>Ticketing System</h3>
+                        <p>Support queues built with buttons. Generate claim alerts, transcript logs, and auto-delete
+                            completed ticket channels instantly.</p>
+                    </div>
+                    <div class="feature-preview">
+                        <div class="tickets-demo">
+                            <div class="ticket-bubble">
+                                <span>Ticket #0409 (Support Query)</span>
+                                <span class="ticket-status open"></span>
+                            </div>
+                            <div class="ticket-bubble">
+                                <span>Ticket #0408 (Billing Issue)</span>
+                                <span class="ticket-status closed"></span>
+                            </div>
+                            <div class="ticket-bubble">
+                                <span>Ticket #0407 (Partner Application)</span>
+                                <span class="ticket-status closed"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Smart Verification -->
+                <div class="feature-card glass-card">
+                    <div class="card-glow"></div>
+                    <div class="feature-info">
+                        <div class="feature-top">
+                            <div class="feature-icon-wrap"
+                                style="background: rgba(0, 242, 254, 0.1); color: var(--cyan);">
+                                <i class="fa-solid fa-user-check"></i>
+                            </div>
+                            <span class="feature-outcome">Staff Gateway</span>
+                        </div>
+                        <h3>Smart Verification</h3>
+                        <p>Secure your server with staff-approved verification gates. Automatically assign unverified roles and manage appeals cleanly.</p>
+                    </div>
+                    <div class="feature-preview">
+                        <div class="verify-demo">
+                            <div class="verify-badge"><i class="fa-solid fa-user-check"></i> Pending Approval</div>
+                            <div class="verify-member-card">
+                                <div class="verify-avatar"></div>
+                                <div class="verify-user-info">
+                                    <div class="verify-name">Aiden#0001</div>
+                                    <div class="verify-time">Joined 2 min ago</div>
+                                </div>
+                                <div class="verify-actions">
+                                    <span class="verify-btn accept"><i class="fa-solid fa-check"></i></span>
+                                    <span class="verify-btn decline"><i class="fa-solid fa-xmark"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Visual Command Builder (col-span-2) -->
+                <div class="feature-card col-span-2 glass-card">
+                    <div class="card-glow"></div>
+                    <div class="feature-info">
+                        <div class="feature-top">
+                            <div class="feature-icon-wrap"
+                                style="background: rgba(16, 185, 129, 0.1); color: var(--green);">
+                                <i class="fa-solid fa-code"></i>
+                            </div>
+                            <span class="feature-outcome">Zero-Code API</span>
+                        </div>
+                        <h3>Visual Custom Commands</h3>
+                        <p>Create server automation and embeds without programming. Drag and drop triggers, check
+                            conditional permissions, and format custom bot responses.</p>
+                    </div>
+                    <div class="feature-preview">
+                        <div class="builder-demo">
+                            <div class="builder-block event">
+                                <i class="fa-regular fa-clock" style="color:var(--cyan);"></i> When member joins server
+                            </div>
+                            <div class="builder-block action">
+                                <i class="fa-solid fa-arrow-turn-down"
+                                    style="color:var(--purple);transform:rotate(90deg);"></i> Assign role @Newcomer
+                            </div>
+                            <div class="builder-block action">
+                                <i class="fa-solid fa-envelope" style="color:var(--purple);"></i> Send direct message
+                                welcome
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Live Feature Demo Playground Section -->
+    <section class="demo-section fade-in-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Interactive Playground</span>
+                <h2 class="section-title">Test Drive <span class="gradient-text">Vivy Live</span></h2>
+                <p class="section-sub">Try out our core bot modules interactively right here. No setup required.</p>
+            </div>
+
+            <div class="demo-playground-wrapper glass-card">
+                <!-- Playground Tabs -->
+                <div class="demo-tabs">
+                    <button class="demo-tab-btn active" data-demo="automod"><i class="fa-solid fa-shield-halved"></i> AutoMod</button>
+                    <button class="demo-tab-btn" data-demo="welcome"><i class="fa-solid fa-image"></i> Welcome Banner</button>
+                    <button class="demo-tab-btn" data-demo="leveling"><i class="fa-solid fa-ranking-star"></i> Leveling XP</button>
+                    <button class="demo-tab-btn" data-demo="verification"><i class="fa-solid fa-user-check"></i> Verification</button>
+                </div>
+
+                <!-- Playground Content Panels -->
+                <div class="demo-panels">
+                    <!-- Panel 1: AutoMod -->
+                    <div class="demo-panel active" id="demo-panel-automod">
+                        <div class="playground-layout">
+                            <div class="playground-controls">
+                                <h3>Simulate spam or phishing</h3>
+                                <p style="font-size:14px;color:var(--text-secondary);margin-bottom:16px;">Type a normal message or test a blocked word like "free nitro link" or "discord.gg/scam".</p>
+                                <div class="input-wrap">
+                                    <input type="text" id="automod-input" placeholder="Type something to send..." class="demo-input">
+                                    <button class="btn-primary" id="automod-send-btn">Send Message</button>
+                                </div>
+                            </div>
+                            <div class="playground-preview">
+                                <div class="mock-chat-box" id="automod-chat-box">
+                                    <div class="chat-message">
+                                        <div class="chat-avatar" style="background:#4f46e5;">L</div>
+                                        <div class="chat-body">
+                                            <div class="chat-meta"><span class="chat-author">Loki</span> <span class="chat-time">Today at 10:15 AM</span></div>
+                                            <div class="chat-content">Hey everyone! How's the server doing today?</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Panel 2: Welcome Card Builder -->
+                    <div class="demo-panel" id="demo-panel-welcome">
+                        <div class="playground-layout">
+                            <div class="playground-controls" style="display:flex;flex-direction:column;gap:16px;">
+                                <div>
+                                    <h3>Welcome Card Builder</h3>
+                                    <p style="font-size:14px;color:var(--text-secondary);margin-bottom:12px;">Design premium graphic welcome banners dynamically.</p>
+                                </div>
+                                <div class="control-group">
+                                    <label style="display:block;font-size:12px;font-weight:700;color:var(--text-primary);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;">Member Nickname</label>
+                                    <input type="text" id="welcome-input" value="Aiden" placeholder="Enter username..." class="demo-input" maxlength="15" style="width:100%;">
+                                </div>
+                                <div class="control-group">
+                                    <label style="display:block;font-size:12px;font-weight:700;color:var(--text-primary);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;">Custom Title Text</label>
+                                    <input type="text" id="welcome-title-input" value="Welcome to the Server" placeholder="Welcome message..." class="demo-input" maxlength="25" style="width:100%;">
+                                </div>
+                                <div class="control-group">
+                                    <label style="display:block;font-size:12px;font-weight:700;color:var(--text-primary);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;">Background Theme</label>
+                                    <div class="theme-picker" style="display:flex;gap:10px;">
+                                        <button class="theme-btn active" data-theme="nebula" style="width:28px;height:28px;border-radius:50%;cursor:pointer;background:linear-gradient(135deg, rgba(157,78,221,0.25), rgba(0,242,254,0.1));border:2px solid var(--cyan);" title="Nebula"></button>
+                                        <button class="theme-btn" data-theme="sunset" style="width:28px;height:28px;border-radius:50%;cursor:pointer;background:linear-gradient(135deg, #7b2cbf, #ff007f);border:2px solid transparent;" title="Sunset"></button>
+                                        <button class="theme-btn" data-theme="aurora" style="width:28px;height:28px;border-radius:50%;cursor:pointer;background:linear-gradient(135deg, #059669, #00f2fe);border:2px solid transparent;" title="Aurora"></button>
+                                        <button class="theme-btn" data-theme="void" style="width:28px;height:28px;border-radius:50%;cursor:pointer;background:linear-gradient(135deg, #1e1b4b, #311042);border:2px solid transparent;" title="Void"></button>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label style="display:block;font-size:12px;font-weight:700;color:var(--text-primary);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;">Avatar Frame Shape</label>
+                                    <div style="display:flex;gap:16px;">
+                                        <label class="radio-label" style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;">
+                                            <input type="radio" name="avatar-shape" value="circle" checked> Circle
+                                        </label>
+                                        <label class="radio-label" style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;">
+                                            <input type="radio" name="avatar-shape" value="square"> Square
+                                        </label>
+                                        <label class="radio-label" style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;">
+                                            <input type="radio" name="avatar-shape" value="hexagon"> Hexagon
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="playground-preview">
+                                <div class="welcome-banner-preview" id="welcomeCardPreview" style="background: linear-gradient(135deg, rgba(157, 78, 221, 0.15) 0%, rgba(0, 242, 254, 0.05) 100%); transition: background 0.4s ease;">
+                                    <div class="welcome-avatar-large" id="welcomeAvatarPreview" style="background: var(--purple); border-radius: 50%; transition: border-radius 0.3s ease, clip-path 0.3s ease;">
+                                        <i class="fa-brands fa-discord" style="font-size: 32px; color: #fff;"></i>
+                                    </div>
+                                    <div class="welcome-text-large">
+                                        <div class="welcome-usr"><span id="welcome-preview-title">Welcome to the Server</span>, <span id="welcome-preview-name">Aiden</span>!</div>
+                                        <div class="welcome-subtxt">You are community member #12,408</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Panel 3: Leveling XP -->
+                    <div class="demo-panel" id="demo-panel-leveling">
+                        <div class="playground-layout">
+                            <div class="playground-controls">
+                                <h3>Earn Server XP</h3>
+                                <p style="font-size:14px;color:var(--text-secondary);margin-bottom:16px;">Click the button to simulate sending active chat messages and watch your level rise.</p>
+                                <button class="btn-primary" id="level-chat-btn"><i class="fa-solid fa-paper-plane"></i> Send active chat message (+15 XP)</button>
+                            </div>
+                            <div class="playground-preview">
+                                <div class="level-card-preview">
+                                    <div class="level-card-header">
+                                        <span class="level-card-badge">LEVEL <strong id="level-preview-num">1</strong></span>
+                                        <span style="color:var(--text-secondary);font-size:13px;" id="level-preview-status">Freshman Role</span>
+                                    </div>
+                                    <div class="progress-container">
+                                        <div class="progress-bar-fill" id="level-progress-fill" style="width: 0%;"></div>
+                                    </div>
+                                    <div class="level-card-footer">
+                                        <span id="level-preview-xp">0 / 100 XP</span>
+                                        <span style="color: var(--cyan);" id="level-preview-notif"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Panel 4: Verification -->
+                    <div class="demo-panel" id="demo-panel-verification">
+                        <div class="playground-layout">
+                            <div class="playground-controls">
+                                <h3>Verify New Members</h3>
+                                <p style="font-size:14px;color:var(--text-secondary);margin-bottom:16px;">Review the applicant's detail card below. Approve or reject to verify them.</p>
+                                <div class="verify-controls-btns">
+                                    <button class="btn-primary" id="verify-approve-btn" style="background:var(--green);"><i class="fa-solid fa-check"></i> Approve Member</button>
+                                    <button class="btn-ghost" id="verify-reject-btn" style="border-color:#ef4444;color:#ef4444;"><i class="fa-solid fa-xmark"></i> Decline</button>
+                                </div>
+                            </div>
+                            <div class="playground-preview">
+                                <div class="verify-card-preview" id="verify-applicant-card">
+                                    <div class="applicant-avatar"></div>
+                                    <div class="applicant-details">
+                                        <h4>Zenith#4920</h4>
+                                        <p style="font-size:12px;color:var(--text-secondary);">Account Age: 1 Year • Reason: Gaming community</p>
+                                    </div>
+                                    <div class="applicant-status" id="applicant-status-badge">PENDING APPROVAL</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Real Dashboard Tour Section -->
+    <section id="dashboard" class="dashboard-showcase-section fade-in-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Interactive Tour</span>
+                <h2 class="section-title">Take the Dashboard <span class="gradient-text">for a Spin</span></h2>
+                <p class="section-sub">Click the sidebar links below to explore Vivy's real control panel. Everything is live and responsive.</p>
+            </div>
+
+            <!-- Full-width Interactive Tour Mockup -->
+            <div class="dashboard-mockup tour-mockup">
+                <!-- Sidebar -->
+                <div class="dash-sidebar">
+                    <div class="dash-sidebar-header">
+                        <div class="logo-mini"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                        <span>Vivy Dashboard</span>
+                    </div>
+                    <div class="dash-menu" id="tour-dash-menu">
+                        <button class="dash-menu-item active" data-tour="analytics"><i class="fa-solid fa-chart-line"></i> Settings &amp; Analytics</button>
+                        <button class="dash-menu-item" data-tour="automod"><i class="fa-solid fa-shield-halved"></i> AutoMod Protection</button>
+                        <button class="dash-menu-item" data-tour="tickets"><i class="fa-solid fa-headset"></i> Support Tickets</button>
+                        <button class="dash-menu-item" data-tour="leveling"><i class="fa-solid fa-ranking-star"></i> Leveling &amp; XP</button>
+                        <button class="dash-menu-item" data-tour="verification"><i class="fa-solid fa-user-check"></i> Verification Gates</button>
+                    </div>
+                </div>
+
+                <!-- Content Area -->
+                <div class="dash-content" id="tour-dash-content">
+                    <div class="dash-header">
+                        <div class="dash-server-select">
+                            <i class="fa-brands fa-discord" style="color:#5865F2;"></i>
+                            <span>Developer Hub</span>
+                            <i class="fa-solid fa-chevron-down" style="font-size:10px;color:var(--text-muted);"></i>
+                        </div>
+                        <div class="dash-status">
+                            <span class="status-dot"></span>
+                            <span>Bot Status: <strong style="color:var(--green)">Online</strong></span>
+                        </div>
+                    </div>
+                    
+                    <div class="dash-body tour-body">
+                        <!-- Panel 1: Analytics / Settings -->
+                        <div class="tour-panel active" id="tour-panel-analytics">
+                            <!-- Stats Grid -->
+                            <div class="dash-stats-grid">
+                                <div class="dash-stat-card">
+                                    <div class="dash-stat-title">Members</div>
+                                    <div class="dash-stat-val" id="tour-members-val">12,408</div>
+                                    <div class="dash-stat-change pos"><i class="fa-solid fa-arrow-up"></i> +12% this week</div>
+                                </div>
+                                <div class="dash-stat-card">
+                                    <div class="dash-stat-title">Uptime SLA</div>
+                                    <div class="dash-stat-val">99.99%</div>
+                                    <div class="dash-stat-change pos"><i class="fa-solid fa-bolt"></i> Healthy latency</div>
+                                </div>
+                            </div>
+                            <div class="dash-panels-grid">
+                                <div class="dash-panel">
+                                    <div class="dash-panel-header">
+                                        <div class="dash-panel-title">Server Growth Analytics</div>
+                                    </div>
+                                    <div class="chart-container">
+                                        <svg class="chart-svg" viewBox="0 0 500 150">
+                                            <defs>
+                                                <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+                                                    <stop offset="0%" stop-color="#00f2fe" stop-opacity="0.3" />
+                                                    <stop offset="100%" stop-color="#00f2fe" stop-opacity="0" />
+                                                </linearGradient>
+                                            </defs>
+                                            <path class="chart-area-path" d="M 0 150 L 50 120 L 100 130 L 150 90 L 200 80 L 250 60 L 300 70 L 350 40 L 400 45 L 450 10 L 500 15 L 500 150 Z" fill="url(#chartGrad)"></path>
+                                            <path class="chart-path" d="M 0 150 L 50 120 L 100 130 L 150 90 L 200 80 L 250 60 L 300 70 L 350 40 L 400 45 L 450 10 L 500 15" fill="none" stroke="#00f2fe" stroke-width="3"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Panel 2: AutoMod -->
+                        <div class="tour-panel" id="tour-panel-automod">
+                            <div class="dash-panels-grid" style="grid-template-columns: 1fr;">
+                                <div class="dash-panel">
+                                    <div class="dash-panel-header">
+                                        <div class="dash-panel-title">Configure AutoMod Limits</div>
+                                    </div>
+                                    <div style="display:flex;flex-direction:column;gap:16px;padding:8px 0;">
+                                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                                            <span>Anti-Spam Threshold (messages/5s)</span>
+                                            <span style="color:var(--cyan);font-weight:700;" id="tour-spam-lbl">5</span>
+                                        </div>
+                                        <input type="range" min="1" max="15" value="5" class="tour-slider" id="tour-spam-slider">
+                                        
+                                        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">
+                                            <span>Raid Protection Mode</span>
+                                            <label class="switch">
+                                                <input type="checkbox" checked id="tour-raid-toggle">
+                                                <span class="slider round"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Panel 3: Tickets -->
+                        <div class="tour-panel" id="tour-panel-tickets">
+                            <div class="dash-panels-grid">
+                                <div class="dash-panel">
+                                    <div class="dash-panel-header">
+                                        <div class="dash-panel-title">Active Support Ticket Config</div>
+                                    </div>
+                                    <div style="display:flex;flex-direction:column;gap:12px;padding:8px 0;">
+                                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                                            <span>Enable Transcript Saves</span>
+                                            <label class="switch">
+                                                <input type="checkbox" checked id="tour-transcripts-toggle">
+                                                <span class="slider round"></span>
+                                            </label>
+                                        </div>
+                                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                                            <span>Claim Staff Required Role</span>
+                                            <span style="color:var(--purple);font-weight:600;">@Support Team</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dash-panel">
+                                    <div class="dash-panel-header" style="display:flex;justify-content:space-between;align-items:center;">
+                                        <div class="dash-panel-title">Live Tickets Queue</div>
+                                        <button class="btn-primary" id="tour-create-ticket-btn" style="padding:4px 10px;font-size:11px;"><i class="fa-solid fa-plus"></i> Simulate Ticket</button>
+                                    </div>
+                                    <div id="tour-tickets-queue" style="display:flex;flex-direction:column;gap:8px;max-height:120px;overflow-y:auto;padding-right:4px;">
+                                        <div class="tour-ticket-row" id="ticket-1041" style="display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,0.02);padding:8px 12px;border-radius:var(--radius-sm);font-size:12px;">
+                                            <span>Ticket #1041 by <strong>Aiden</strong></span>
+                                            <div style="display:flex;gap:8px;align-items:center;">
+                                                <span class="status-badge" style="color:var(--gold);font-weight:700;">OPEN</span>
+                                                <button class="btn-ghost solve-ticket-btn" data-id="1041" style="padding:2px 8px;font-size:10px;border-color:rgba(255,255,255,0.1);">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Panel 4: Leveling -->
+                        <div class="tour-panel" id="tour-panel-leveling">
+                            <div class="dash-panels-grid">
+                                <div class="dash-panel">
+                                    <div class="dash-panel-header">
+                                        <div class="dash-panel-title">Configure Level Rewards</div>
+                                    </div>
+                                    <div style="display:flex;flex-direction:column;gap:12px;padding:8px 0;">
+                                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                                            <span>XP Gain Rate multiplier</span>
+                                            <select class="demo-input" id="tour-xp-multiplier" style="padding:6px;width:120px;background:#090d16;font-size:12px;border-color:var(--border);color:#fff;">
+                                                <option value="1.0">1.0x (Standard)</option>
+                                                <option value="1.5" selected>1.5x (Boosted)</option>
+                                                <option value="2.0">2.0x (Double)</option>
+                                                <option value="3.0">3.0x (Triple)</option>
+                                            </select>
+                                        </div>
+                                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                                            <span>Level 5 Reward Role</span>
+                                            <input type="text" class="demo-input" id="tour-level-role" value="Active Member" style="padding:6px;width:120px;background:#090d16;font-size:12px;border-color:var(--border);color:#fff;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Panel 5: Verification -->
+                        <div class="tour-panel" id="tour-panel-verification">
+                            <div class="dash-panels-grid" style="grid-template-columns: 1fr;">
+                                <div class="dash-panel">
+                                    <div class="dash-panel-header">
+                                        <div class="dash-panel-title">Verification Gate Configuration</div>
+                                    </div>
+                                    <div style="display:flex;flex-direction:column;gap:12px;padding:8px 0;">
+                                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                                            <span>Require Email Verification</span>
+                                            <label class="switch">
+                                                <input type="checkbox" checked id="tour-verify-email">
+                                                <span class="slider round"></span>
+                                            </label>
+                                        </div>
+                                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                                            <span>Assigned Verified Role</span>
+                                            <input type="text" class="demo-input" id="tour-verify-role" value="Verified User" style="padding:6px;width:120px;background:#090d16;font-size:12px;border-color:var(--border);color:#fff;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Sandbox Dashboard Audit Log console -->
+                    <div class="sandbox-audit-log-wrap" style="margin:24px 32px 0;border-top:1px solid var(--border);padding-top:16px;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:12px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.05em;font-weight:600;">
+                            <span><i class="fa-solid fa-clock-rotate-left"></i> Sandbox Audit Log</span>
+                            <span style="color:var(--cyan);text-transform:none;">Real-time execution logs</span>
+                        </div>
+                        <div class="sandbox-audit-console" id="sandboxAuditConsole" style="background:#03050a;border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;font-family:monospace;font-size:12px;color:var(--text-secondary);height:80px;overflow-y:auto;display:flex;flex-direction:column;gap:6px;line-height:1.4;text-align:left;">
+                            <div class="audit-line"><span style="color:var(--text-muted);">[SYSTEM]</span> Sandbox Dashboard initialized. Ready for operations.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Timeline Section -->
+    <section class="timeline-section fade-in-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Getting Started</span>
+                <h2 class="section-title">From Setup to <span class="gradient-text">Massive Growth</span></h2>
+                <p class="section-sub">Zero-friction implementation path. Launch Vivy in your server in under 2 minutes.</p>
+            </div>
+
+            <div class="timeline-container">
+                <!-- Timeline Progress Line -->
+                <div class="timeline-track">
+                    <div class="timeline-progress" id="timeline-progress-bar"></div>
+                </div>
+
+                <!-- Timeline Steps -->
+                <div class="timeline-steps">
+                    <!-- Step 1 -->
+                    <div class="timeline-step glass-card active" data-step="1">
+                        <div class="step-num">01</div>
+                        <h3>1-Click Setup</h3>
+                        <p>Authenticate securely using Discord OAuth. No password required.</p>
+                    </div>
+                    <!-- Step 2 -->
+                    <div class="timeline-step glass-card" data-step="2">
+                        <div class="step-num">02</div>
+                        <h3>Invite the Bot</h3>
+                        <p>Authorize Vivy to join your community with customizable permissions.</p>
+                    </div>
+                    <!-- Step 3 -->
+                    <div class="timeline-step glass-card" data-step="3">
+                        <div class="step-num">03</div>
+                        <h3>Configure Settings</h3>
+                        <p>Toggle AutoMod rules, set Level roles, and customize welcome cards.</p>
+                    </div>
+                    <!-- Step 4 -->
+                    <div class="timeline-step glass-card" data-step="4">
+                        <div class="step-num">04</div>
+                        <h3>Launch & Engage</h3>
+                        <p>Let members gain levels, request ticketing queues, and secure their chats.</p>
+                    </div>
+                    <!-- Step 5 -->
+                    <div class="timeline-step glass-card" data-step="5">
+                        <div class="step-num">05</div>
+                        <h3>Analyze & Grow</h3>
+                        <p>Monitor member growth curves, spam logs, and community activities.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- API Preview Section -->
+    <section class="api-preview-section fade-in-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">For Developers</span>
+                <h2 class="section-title">Robust REST API <span class="gradient-text">Engine</span></h2>
+                <p class="section-sub">Integrate Vivy's real-time community insights, leveling databases, and mod stats directly into your custom apps.</p>
+            </div>
+
+            <div class="api-grid">
+                <div class="api-info-panel">
+                    <h3>Synchronous Guild States</h3>
+                    <p style="margin-bottom:16px;">Interact with leveling records, tickets, audit trails, and member profiles via a fast, authenticated JSON API.</p>
+                    <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px;margin-bottom:24px;">
+                        <li><i class="fa-solid fa-bolt" style="color:var(--cyan);margin-right:8px;"></i> <strong>99.99% Uptime</strong> SLA Guarantee</li>
+                        <li><i class="fa-solid fa-shield-halved" style="color:var(--purple);margin-right:8px;"></i> Secured with standard <strong>Bearer API keys</strong></li>
+                        <li><i class="fa-solid fa-code-branch" style="color:var(--pink);margin-right:8px;"></i> Complete OpenAPI/Swagger documentation</li>
+                    </ul>
+                    <a href="/docs" class="btn-ghost">View API Documentation <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                </div>
+
+                <div class="api-editor-card glass-card">
+                    <div class="editor-header">
+                        <div class="editor-dots">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                        <div class="editor-method">GET</div>
+                        <div class="editor-url">/api/guilds/12408/leaderboard</div>
+                        <button class="editor-send-btn" id="api-send-req-btn">Send</button>
+                    </div>
+                    <div class="editor-body">
+                        <pre><code class="language-json" id="api-response-body">{
+  "status": "idle",
+  "message": "Click Send to query the active guild leaderboard API."
+}</code></pre>
+                    </div>
+                    <div class="editor-footer">
+                        <span>Status: <strong id="api-status-code" style="color:var(--text-secondary);">-</strong></span>
+                        <span>Latency: <strong id="api-latency-val" style="color:var(--text-secondary);">-</strong></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Live Status Center Section -->
+    <section class="status-section fade-in-section">
+        <div class="container">
+            <div class="status-box glass-card">
+                <div class="status-top">
+                    <div style="display:flex;align-items:center;gap:12px;">
+                        <span class="status-dot pulsing" style="background:var(--green)"></span>
+                        <h3 style="font-family:var(--font-display);font-size:20px;font-weight:700;">All Systems Operational</h3>
+                    </div>
+                    <span style="font-size:12px;color:var(--text-secondary);">Last updated 10s ago</span>
+                </div>
+                <div class="status-indicators-grid">
+                    <div class="status-indicator" data-status="api" style="cursor:pointer;">
+                        <span class="status-lbl">API Services</span>
+                        <span class="status-val" style="color:var(--green);display:flex;align-items:center;gap:6px;">99.98% <i class="fa-solid fa-chevron-down" style="font-size:10px;"></i></span>
+                    </div>
+                    <div class="status-indicator" data-status="gateway" style="cursor:pointer;">
+                        <span class="status-lbl">Discord Gateway</span>
+                        <span class="status-val" style="color:var(--green);display:flex;align-items:center;gap:6px;">Connected <i class="fa-solid fa-chevron-down" style="font-size:10px;"></i></span>
+                    </div>
+                    <div class="status-indicator" data-status="shards" style="cursor:pointer;">
+                        <span class="status-lbl">Shard Status</span>
+                        <span class="status-val" style="color:var(--cyan);display:flex;align-items:center;gap:6px;">4/4 Online <i class="fa-solid fa-chevron-down" style="font-size:10px;"></i></span>
+                    </div>
+                    <div class="status-indicator" data-status="voice" style="cursor:pointer;">
+                        <span class="status-lbl">Voice Nodes</span>
+                        <span class="status-val" style="color:var(--green);display:flex;align-items:center;gap:6px;">Operational <i class="fa-solid fa-chevron-down" style="font-size:10px;"></i></span>
+                    </div>
+                </div>
+                
+                <!-- Expandable Live Status Sub-panel -->
+                <div class="status-details-panel" id="statusDetailsPanel">
+                    <div id="statusDetailsContent">
+                        <!-- Filled dynamically via JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing-section fade-in-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Pricing</span>
+                <h2 class="section-title">Elevate Your Guild Today</h2>
+                <p class="section-sub">Start with our complete free tier. Upgrade anytime to unlock custom assets,
+                    anti-raid protections, and smart tools.</p>
+            </div>
+
+            <!-- Pricing Monthly/Yearly toggle -->
+            <div class="pricing-switch-container">
+                <span class="pricing-switch-label active" id="label-monthly">Monthly</span>
+                <button class="pricing-switch" id="pricingToggleBtn" aria-label="Toggle pricing structure"></button>
+                <span class="pricing-switch-label" id="label-yearly">Yearly</span>
+                <span class="discount-badge">Save 20%</span>
+            </div>
+
+            <div class="pricing-grid">
+                <!-- Starter Tier -->
+                <div class="pricing-card glass-card">
+                    <div>
+                        <div class="plan-name">Starter</div>
+                        <div class="plan-price-wrap">
+                            <span class="plan-price">$0</span>
+                            <span class="plan-period">/month</span>
+                        </div>
+                        <p class="plan-desc">For exploring Vivy features with small servers.</p>
+                        <ul class="plan-features-list">
+                            <li class="plan-feature-item included"><i class="fa-solid fa-check"></i> Standard welcome
+                                templates</li>
+                            <li class="plan-feature-item included"><i class="fa-solid fa-check"></i> Basic AutoMod
+                                filters</li>
+                            <li class="plan-feature-item included"><i class="fa-solid fa-check"></i> Need Help voice channels</li>
+                            <li class="plan-feature-item included"><i class="fa-solid fa-check"></i> Leveling XP system
+                            </li>
+                            <li class="plan-feature-item excluded"><i class="fa-solid fa-xmark"></i> Custom graphic
+                                canvas generator</li>
+                            <li class="plan-feature-item excluded"><i class="fa-solid fa-xmark"></i> AI Smart mod &
+                                anti-raid</li>
+                        </ul>
+                    </div>
+                    <a href="/auth/discord/login" class="btn-plan btn-plan-ghost">Get Started Free</a>
+                </div>
+
+                <!-- Pro Tier -->
+                <div class="pricing-card glass-card featured">
+                    <span class="pricing-popular-badge">Most Popular</span>
+                    <div>
+                        <div class="plan-name">Premium Pro</div>
+                        <div class="plan-price-wrap">
+                            <span class="plan-price" id="pro-price-amount">$4.99</span>
+                            <span class="plan-period" id="pro-price-period">/month</span>
+                        </div>
+                        <p class="plan-desc">Unlocks full visual customization and enterprise anti-raid tools.</p>
+                        <ul class="plan-features-list">
+                            <li class="plan-feature-item included"><i class="fa-solid fa-check"></i> Everything in
+                                Starter</li>
+                            <li class="plan-feature-item included"><i class="fa-solid fa-check"></i> Canvas Welcome
+                                Builder</li>
+                            <li class="plan-feature-item included"><i class="fa-solid fa-check"></i> Advanced AutoMod &
+                                Anti-Raid</li>
+                            <li class="plan-feature-item included"><i class="fa-solid fa-check"></i> Custom embeds &
+                                slash builder</li>
+                            <li class="plan-feature-item included"><i class="fa-solid fa-check"></i> Developer REST API access</li>
+                            <li class="plan-feature-item included"><i class="fa-solid fa-check"></i> Dedicated support
+                                queue logs</li>
+                        </ul>
+                    </div>
+                    <a href="/auth/discord/login" class="btn-plan btn-plan-gradient">Upgrade to Pro</a>
+                </div>
+            </div>
+
+            <!-- Pricing Comparison Table -->
+            <div class="comparison-container">
+                <div class="comparison-table-title">Full Feature Comparison</div>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Starter</th>
+                            <th>Premium Pro</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="feature-name">Core Moderation Filters</td>
+                            <td class="val-check"><i class="fa-solid fa-check"></i></td>
+                            <td class="val-check"><i class="fa-solid fa-check"></i></td>
+                        </tr>
+                        <tr>
+                            <td class="feature-name">Need Help Voice Rooms</td>
+                            <td class="val-check"><i class="fa-solid fa-check"></i></td>
+                            <td class="val-check"><i class="fa-solid fa-check"></i></td>
+                        </tr>
+                        <tr>
+                            <td class="feature-name">Welcome Cards Customization</td>
+                            <td class="val-dash"><i class="fa-solid fa-minus"></i> Standard templates only</td>
+                            <td class="val-check"><i class="fa-solid fa-check"></i> Full graphical builder</td>
+                        </tr>
+                        <tr>
+                            <td class="feature-name">Anti-Raid Spam Shield</td>
+                            <td class="val-dash"><i class="fa-solid fa-minus"></i></td>
+                            <td class="val-check"><i class="fa-solid fa-check"></i> Dynamic spam quarantine</td>
+                        </tr>
+                        <tr>
+                            <td class="feature-name">Visual Embed Architect</td>
+                            <td class="val-dash"><i class="fa-solid fa-minus"></i></td>
+                            <td class="val-check"><i class="fa-solid fa-check"></i></td>
+                        </tr>
+                        <tr>
+                            <td class="feature-name">Developer API Integration</td>
+                            <td class="val-dash"><i class="fa-solid fa-minus"></i></td>
+                            <td class="val-check"><i class="fa-solid fa-check"></i></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="faq-section fade-in-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Questions</span>
+                <h2 class="section-title">Frequently Asked Questions</h2>
+                <p class="section-sub">Got questions about permissions, payments, or setting up? We've got answers.</p>
+            </div>
+
+            <div class="faq-list">
+                <!-- FAQ Item 1 -->
+                <div class="faq-item">
+                    <button class="faq-q" aria-expanded="false">
+                        How does dashboard sync work?
+                        <i class="fa-solid fa-chevron-down faq-icon"></i>
+                    </button>
+                    <div class="faq-a-wrapper">
+                        <div class="faq-a-inner">
+                            <div class="faq-a">
+                                Any configurations changed in the dashboard are instantly written to our database cache
+                                and pushed to your active bot session. No bot server restart is ever required.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 2 -->
+                <div class="faq-item">
+                    <button class="faq-q" aria-expanded="false">
+                        Is my server database safe?
+                        <i class="fa-solid fa-chevron-down faq-icon"></i>
+                    </button>
+                    <div class="faq-a-wrapper">
+                        <div class="faq-a-inner">
+                            <div class="faq-a">
+                                Absolutely. We utilize OAuth2 tokens provided directly by Discord for all authentication
+                                parameters. We never store discord passwords or personal identity credentials, and all
+                                logs are safely quarantined.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 3 -->
+                <div class="faq-item">
+                    <button class="faq-q" aria-expanded="false">
+                        Can I manage multiple servers at once?
+                        <i class="fa-solid fa-chevron-down faq-icon"></i>
+                    </button>
+                    <div class="faq-a-wrapper">
+                        <div class="faq-a-inner">
+                            <div class="faq-a">
+                                Yes. Logging in displays a server selector layout matching all guilds you have admin
+                                privileges in. Clicking a server switches your dashboard controls seamlessly.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 4 -->
+                <div class="faq-item">
+                    <button class="faq-q" aria-expanded="false">
+                        How can I request support or submit queries?
+                        <i class="fa-solid fa-chevron-down faq-icon"></i>
+                    </button>
+                    <div class="faq-a-wrapper">
+                        <div class="faq-a-inner">
+                            <div class="faq-a">
+                                You can join our support community server or launch an interactive support ticket
+                                directly within your server dashboard panels.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA Banner -->
+    <section class="cta-banner fade-in-section">
+        <div class="container">
+            <div class="cta-inner">
+                <div class="cta-glow-rings">
+                    <div class="cta-ring cta-ring-1"></div>
+                    <div class="cta-ring cta-ring-2"></div>
+                    <div class="cta-ring cta-ring-3"></div>
+                </div>
+                <h2>Build the Discord Community Members Never Want to Leave</h2>
+                <p>Add Vivy to your server in 2 clicks. Upgrade your moderation, levels, and engagement logs today.</p>
+                <a href="/auth/discord/login" class="btn-primary" id="bottom-cta-btn"
+                    style="position:relative; z-index:5;">
+                    <i class="fa-brands fa-discord"></i> Get Started Free
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <!-- Footer Floating Ambient Glow -->
+        <div class="footer-glow"></div>
+        <div class="container">
+            <div class="footer-grid-layout">
+                <div class="footer-brand-col">
+                    <div class="footer-brand">
+                        <span class="logo-icon"><img src="logo.png" alt="Vivy"></span>
+                        <span class="logo-text">Vivy</span>
+                    </div>
+                    <p class="footer-desc">The ultimate premium SaaS ecosystem designed to scale, manage, and engage Discord communities seamlessly.</p>
+                </div>
+                
+                <div class="footer-links-col">
+                    <h4>Product</h4>
+                    <a href="#features">Features</a>
+                    <a href="#dashboard">Dashboard Tour</a>
+                    <a href="#pricing">Pricing Plan</a>
+                    <a href="https://status.zerolab.best" target="_blank" rel="noopener noreferrer">Status Page</a>
+                </div>
+
+                <div class="footer-links-col">
+                    <h4>Community</h4>
+                    <a href="https://discord.gg/zerolab" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-discord"></i> Discord Server</a>
+                    <a href="https://github.com/zerolab" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-github"></i> GitHub Org</a>
+                    <a href="/docs">Documentation</a>
+                </div>
+
+                <div class="footer-newsletter-col">
+                    <h4>Stay Updated</h4>
+                    <p style="font-size:12px;color:var(--text-secondary);margin-bottom:12px;">Get feature updates and bot guides straight to your inbox.</p>
+                    <form class="newsletter-form" id="newsletter-form">
+                        <input type="email" placeholder="Enter your email..." required class="newsletter-input" aria-label="Newsletter email">
+                        <button type="submit" class="newsletter-btn" aria-label="Subscribe"><i class="fa-solid fa-paper-plane"></i></button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p class="footer-copy">© 2026 Vivy. Designed for modern communities. Powered by ZeroLab.</p>
+                <div class="footer-legal">
+                    <a href="/terms">Terms of Service</a>
+                    <span style="color:var(--border);">|</span>
+                    <a href="/privacy">Privacy Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to top button -->
+    <button class="back-to-top-btn" id="backToTopBtn" aria-label="Back to Top"><i class="fa-solid fa-arrow-up"></i></button>
+
+    <!-- Custom Cursor Layers -->
+    <div class="custom-cursor" id="custom-cursor"></div>
+    <div class="custom-cursor-glow" id="custom-cursor-glow"></div>
+
+    <!-- Command Palette (Ctrl+K) -->
+    <div class="cmd-palette" id="cmdPalette" role="dialog" aria-modal="true" aria-hidden="true" style="display:none;">
+        <div class="cmd-palette-content">
+            <div class="cmd-palette-header">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="cmdPaletteInput" placeholder="Search features, docs, commands or quick actions..." autocomplete="off" aria-label="Command search input">
+                <span class="cmd-palette-close" id="cmdPaletteCloseBtn"><i class="fa-solid fa-xmark"></i></span>
+            </div>
+            <div class="cmd-palette-body" id="cmdPaletteResults">
+                <!-- Search results injected here -->
+            </div>
+            <div class="cmd-palette-footer">
+                <span><kbd>↑</kbd><kbd>↓</kbd> Navigation</span>
+                <span><kbd>Enter</kbd> Select</span>
+                <span><kbd>Esc</kbd> Close</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="/index.js"></script>
+</body>
+
+</html>

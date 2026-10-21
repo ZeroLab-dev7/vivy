@@ -1,0 +1,30 @@
+{
+  "scripts": {
+    "start": "node index.js",
+    "build": "node build.js",
+    "deploy": "node build.js && pm2 restart vivy1"
+  },
+  "dependencies": {
+    "@discordjs/voice": "^0.18.0",
+    "@napi-rs/canvas": "^0.1.88",
+    "@snazzah/davey": "^0.1.9",
+    "axios": "^1.13.2",
+    "connect-session-sequelize": "^8.0.6",
+    "discord.js": "^14.25.1",
+    "dotenv": "^16.5.0",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.5.2",
+    "express-session": "^1.19.0",
+    "helmet": "^8.2.0",
+    "libsodium-wrappers": "^0.8.1",
+    "minecraft-server-util": "^5.4.4",
+    "sequelize": "^6.37.7",
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.1",
+    "javascript-obfuscator": "^4.1.1",
+    "terser": "^5.39.0",
+    "vite": "^8.0.16"
+  }
+}

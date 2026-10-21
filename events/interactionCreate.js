@@ -1,0 +1,2183 @@
+const { EmbedBuilder, PermissionFlagsBits, MessageFlags, ActionRowBuilder, ButtonBuilder, ButtonStyle, SeparatorSpacingSize } = require("discord.js");
+const UI = require('../utils/ui');
+const Messages = require('../utils/messages');
+
+module.exports = {
+  name: "interactionCreate",
+  async execute(interaction) {
+    try {
+      // 1. Slash Commands
+      if (interaction.isChatInputCommand()) {
+        const command = interaction.client.slashCommands.get(interaction.commandName);
+        if (command) {
+          const devHelper = require('../utils/developerHelper');
+          const check = await devHelper.checkMaintenanceAndDisabled(interaction.commandName, interaction.user.id, interaction.client);
+          if (check.blocked) {
+            const embed = UI.createEmbed({
+              description: check.reason === 'maintenance'
+                ? Messages.error.maintenance(check.message)
+                : Messages.error.commandDisabled(interaction.commandName)
+            });
+            return interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral }).catch(() => { });
+          }
+
+          try {
+            const CooldownManager = require('../services/cooldown/CooldownManager');
+            const cooldownCheck = await CooldownManager.check(interaction, command);
+            if (cooldownCheck.blocked) return;
+
+            await command.execute(interaction);
+            await devHelper.logCommand(interaction.commandName, interaction.user.id, interaction.guild?.id, 'slash');
+          } catch (error) {
+            if (error.code === 10062 || error.code === 40060) {
+              return;
+            }
+            console.error(error);
+            const errorEmbed = UI.createEmbed({
+              description: Messages.error.generic()
+            });
+
+            if (interaction.replied || interaction.deferred) {
+              await interaction.followUp({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral }).catch(() => { });
+            } else {
+              await interaction.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral }).catch(() => { });
+            }
+          }
+        } else {
+          // Check for custom slash command from database
+          try {
+            const { CustomCommand } = require('../db/models');
+            const customCmd = await CustomCommand.findOne({
+              where: {
+                guild_id: interaction.guild.id,
+                name: interaction.commandName.toLowerCase(),
+                type: 'slash'
+              }
+            });
+            if (customCmd) {
+              const devHelper = require('../utils/developerHelper');
+              const check = await devHelper.checkMaintenanceAndDisabled(interaction.commandName, interaction.user.id, interaction.client);
+              if (check.blocked) {
+                const embed = UI.createEmbed({
+                  color: check.reason === 'maintenance' ? 'Orange' : 'Red',
+                  title: check.reason === 'maintenance' ? '🚧 Maintenance Mode Enabled' : '<:no:1526496561188831244>Command Disabled',
+                  description: check.reason === 'maintenance'
+                    ? check.message
+                    : `The \`${interaction.commandName}\` command has been disabled globally by the developers.`
+                });
+                return interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral }).catch(() => { });
+              }
+              const CustomCommandService = require('../services/customCommandService');
+              const CooldownManager = require('../services/cooldown/CooldownManager');
+              const cooldownCheck = await CooldownManager.check(interaction, customCmd);
+              if (cooldownCheck.blocked) return;
+
+              await CustomCommandService.executeInteraction(customCmd, interaction);
+              await devHelper.logCommand(interaction.commandName, interaction.user.id, interaction.guild?.id, 'slash');
+            }
+          } catch (err) {
+            console.error('Error handling custom slash command:', err);
+          }
+        }
+      }
+
+      // 2. Buttons & Select Menus
+      else if (interaction.isButton() || interaction.isStringSelectMenu()) {
+        if (interaction.customId === 'lb_select_level') {
+          const leaderboardCommand = require('../commands/Leveling Cmds/leaderboard');
+          return leaderboardCommand.sendLevelLeaderboard(interaction);
+        }
+
+        if (['daily_bank_tip', 'bal_bank_btn', 'bal_bank_res_btn', 'bal_tip_btn', 'bal_tip_dep_btn', 'bank_dep_btn'].includes(interaction.customId)) {
+          const { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } = require('discord.js');
+          const modal = new ModalBuilder()
+            .setCustomId('bank_deposit_modal')
+            .setTitle('Quick Bank Deposit');
+
+          const amountInput = new TextInputBuilder()
+            .setCustomId('deposit_amount')
+            .setLabel('Amount to deposit into Bank Vault')
+            .setStyle(TextInputStyle.Short)
+            .setPlaceholder('e.g. 500, 1000, or all')
+            .setRequired(true);
+
+          const reasonInput = new TextInputBuilder()
+            .setCustomId('deposit_reason')
+            .setLabel('Note / Reason (Optional)')
+            .setStyle(TextInputStyle.Short)
+            .setPlaceholder('e.g. Savings or Daily Reward')
+            .setRequired(false);
+
+          modal.addComponents(
+            new ActionRowBuilder().addComponents(amountInput),
+            new ActionRowBuilder().addComponents(reasonInput)
+          );
+
+          return interaction.showModal(modal);
+        }
+
+        if (interaction.customId === 'close_embed') {
+          await interaction.message.delete().catch(() => { });
+        }
+
+        if (interaction.customId.startsWith('ticket_claim_')) {
+          const parts = interaction.customId.split('_');
+          const channelId = parts[2];
+          const TicketService = require('../services/ticketService');
+          return TicketService.claimTicket(interaction, channelId);
+        }
+
+        if (interaction.customId.startsWith('ticket_close_')) {
+          const parts = interaction.customId.split('_');
+          const channelId = parts[2];
+          const TicketService = require('../services/ticketService');
+          return TicketService.closeTicket(interaction, channelId);
+        }
+
+        if (interaction.customId === 'ticket_open_select') {
+          const optionSelected = interaction.values[0];
+          if (optionSelected.startsWith('separator_')) {
+            return interaction.reply({
+              content: '⚠️ This item is a divider line and cannot be selected to open a ticket.',
+              flags: MessageFlags.Ephemeral
+            });
+          }
+          const TicketService = require('../services/ticketService');
+          await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+          const res = await TicketService.createTicket(interaction.guild, interaction.user, optionSelected);
+          if (res.success) {
+            const container = UI.createContainer({
+              title: '🎫 Ticket Created',
+              description: `✅ Ticket opened successfully in ${res.channel}!`,
+              color: 0x00FF00
+            });
+            return interaction.editReply({ components: [container], flags: MessageFlags.IsComponentsV2 });
+          } else {
+            const container = UI.createContainer({
+              title: '<:no:1526496561188831244> Failed to Open Ticket',
+              description: res.reason,
+              color: 0xFF0000
+            });
+            return interaction.editReply({ components: [container], flags: MessageFlags.IsComponentsV2 });
+          }
+        }
+
+        if (interaction.customId.startsWith('ticket_open_btn_')) {
+          const optionSelected = interaction.customId.replace('ticket_open_btn_', '');
+          const TicketService = require('../services/ticketService');
+          await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+          const res = await TicketService.createTicket(interaction.guild, interaction.user, optionSelected);
+          if (res.success) {
+            const container = UI.createContainer({
+              title: '🎫 Ticket Created',
+              description: `✅ Ticket opened successfully in ${res.channel}!`,
+              color: 0x00FF00
+            });
+            return interaction.editReply({ components: [container], flags: MessageFlags.IsComponentsV2 });
+          } else {
+            const container = UI.createContainer({
+              title: '<:no:1526496561188831244> Failed to Open Ticket',
+              description: res.reason,
+              color: 0xFF0000
+            });
+            return interaction.editReply({ components: [container], flags: MessageFlags.IsComponentsV2 });
+          }
+        }
+
+        if (interaction.customId === 'btn_verify_member') {
+          const { VerificationConfig, VerifiedUsers } = require('../db/models');
+          const VerificationService = require('../services/verificationService');
+          await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+
+          const config = await VerificationConfig.findByPk(interaction.guild.id);
+
+          const dbVerified = await VerifiedUsers.findOne({
+            where: { guild_id: interaction.guild.id, user_id: interaction.member.id }
+          });
+
+          let hasVerifiedRole = false;
+          if (config) {
+            const verifiedRoleId = config.mode === 'security' ? config.sec_verified_role : config.role_id;
+            if (verifiedRoleId && interaction.member.roles.cache.has(verifiedRoleId)) {
+              hasVerifiedRole = true;
+            }
+          }
+
+          if (dbVerified || hasVerifiedRole) {
+            const container = UI.createContainer({
+              description: Messages.error.alreadyVerified(),
+              color: 0xFF0000
+            });
+            return interaction.editReply({ components: [container], flags: MessageFlags.IsComponentsV2 });
+          }
+          if (config && config.mode === 'security') {
+            // ── Security Verification Mode ──
+            if (config.sec_captcha && config.sec_captcha !== 'disabled') {
+              const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+
+              if (config.sec_captcha === 'math') {
+                const num1 = Math.floor(Math.random() * 9) + 1;
+                const num2 = Math.floor(Math.random() * 9) + 1;
+                const ans = num1 + num2;
+
+                const choices = new Set([ans]);
+                while (choices.size < 4) {
+                  choices.add(Math.floor(Math.random() * 18) + 1);
+                }
+                const choicesArr = Array.from(choices).sort(() => Math.random() - 0.5);
+
+                const container = UI.createContainer({
+                  title: '🛡️ Captcha Verification: Math Challenge',
+                  description: Messages.verification.captchaChallengeMath(num1, num2),
+                  color: 0x00FFFF
+                });
+
+                const row = new ActionRowBuilder();
+                choicesArr.forEach(c => {
+                  row.addComponents(
+                    new ButtonBuilder()
+                      .setCustomId(`sec_verify_math_${c}_${ans}`)
+                      .setLabel(c.toString())
+                      .setStyle(ButtonStyle.Secondary)
+                  );
+                });
+
+                container.addActionRowComponents(row); return interaction.editReply({ components: [container], flags: MessageFlags.IsComponentsV2 });
+              } else if (config.sec_captcha === 'button') {
+                const options = ['⭐ Star', '☘️ Clover', '🔥 Fire', '💧 Water'];
+                const correctIndex = Math.floor(Math.random() * options.length);
+                const correctOption = options[correctIndex];
+
+                const container = UI.createContainer({
+                  title: '🛡️ Captcha Verification: Button Challenge',
+                  description: Messages.verification.captchaChallengeButton(correctOption),
+                  color: 0x00FFFF
+                });
+
+                const row = new ActionRowBuilder();
+                options.forEach((opt, idx) => {
+                  row.addComponents(
+                    new ButtonBuilder()
+                      .setCustomId(`sec_verify_btn_${idx}_${correctIndex}`)
+                      .setLabel(opt)
+                      .setStyle(ButtonStyle.Secondary)
+                  );
+                });
+
+                container.addActionRowComponents(row); return interaction.editReply({ components: [container], flags: MessageFlags.IsComponentsV2 });
+              }
+            }
+
+            // No captcha: verify directly
+            const res = await VerificationService.verifyMemberSecurity(interaction.member, config);
+            if (res.success) {
+              const finalContainer = UI.createContainer({
+                description: Messages.verification.success(),
+                color: 0x00FF00
+              });
+              return interaction.editReply({ components: [finalContainer], flags: MessageFlags.IsComponentsV2 });
+            } else {
+              const finalContainer = UI.createContainer({
+                description: Messages.error.verificationFailed(res.reason),
+                color: 0xFF0000
+              });
+              return interaction.editReply({ components: [finalContainer], flags: MessageFlags.IsComponentsV2 });
+            }
+          } else {
+            // ── Staff manual verification Mode ──
+            const res = await VerificationService.verifyMember(interaction.member);
+            if (res.success) {
+              const finalContainer = UI.createContainer({
+                description: Messages.verification.success(),
+                color: 0x00FF00
+              });
+              return interaction.editReply({ components: [finalContainer], flags: MessageFlags.IsComponentsV2 });
+            } else {
+              const finalContainer = UI.createContainer({
+                description: Messages.error.verificationFailed(res.reason),
+                color: 0xFF0000
+              });
+              return interaction.editReply({ components: [finalContainer], flags: MessageFlags.IsComponentsV2 });
+            }
+          }
+        }
+
+        if (interaction.customId.startsWith('sec_verify_math_')) {
+          const parts = interaction.customId.split('_');
+          const chosen = parseInt(parts[3]);
+          const correct = parseInt(parts[4]);
+
+          const VerificationService = require('../services/verificationService');
+          const { VerificationConfig } = require('../db/models');
+
+          await interaction.deferUpdate();
+
+          if (chosen === correct) {
+            const config = await VerificationConfig.findByPk(interaction.guild.id);
+            const res = await VerificationService.verifyMemberSecurity(interaction.member, config);
+            if (res.success) {
+              VerificationService.resetFailures(interaction.member.id);
+              const UI = require('../utils/ui');
+              const finalContainer = UI.createContainer({
+                title: '<:success:1526086221338771567> Verification Successful',
+                description: 'Captcha correct! Verification successful.',
+                color: 0x00FF00
+              });
+              return interaction.editReply({ components: [finalContainer], flags: MessageFlags.IsComponentsV2 });
+            } else {
+              const UI = require('../utils/ui');
+              const finalContainer = UI.createContainer({
+                title: '<:no:1526496561188831244>Verification Failed',
+                description: `Captcha correct, but security checks failed: ${res.reason}`,
+                color: 0xFF0000
+              });
+              return interaction.editReply({ components: [finalContainer], flags: MessageFlags.IsComponentsV2 });
+            }
+          } else {
+            const attempts = VerificationService.incrementFailures(interaction.member.id);
+            const config = await VerificationConfig.findByPk(interaction.guild.id);
+            const maxAttemptsVal = (config && config.sec_auto_kick_limit) || 3;
+            const isMaxAttemptsEnabled = (config && config.sec_auto_kick_limit > 0);
+
+            if (isMaxAttemptsEnabled && attempts >= maxAttemptsVal) {
+              VerificationService.resetFailures(interaction.member.id);
+              await VerificationService.logVerificationEvent(interaction.guild.id, interaction.member, 'security', 'failed', [], ['captcha'], null, 0, `Incorrect captcha answer - exceeded max attempts (${attempts}/${maxAttemptsVal})`);
+              if (config && config.sec_auto_ban) {
+                await interaction.member.ban({ reason: `Security verification failed. Captcha incorrect ${attempts} times.` }).catch(() => { });
+              } else {
+                await interaction.member.kick(`Security verification failed. Captcha incorrect ${attempts} times.`).catch(() => { });
+              }
+              const UI = require('../utils/ui');
+              const finalContainer = UI.createContainer({
+                title: '<:no:1526496561188831244>Verification Failed',
+                description: 'Captcha incorrect. Verification failed due to too many attempts.',
+                color: 0xFF0000
+              });
+              return interaction.editReply({ components: [finalContainer], flags: MessageFlags.IsComponentsV2 });
+            } else {
+              await VerificationService.logVerificationEvent(interaction.guild.id, interaction.member, 'security', 'failed', [], ['captcha'], null, 0, `Incorrect captcha answer (${attempts}/${maxAttemptsVal})`);
+
+              const num1 = Math.floor(Math.random() * 9) + 1;
+              const num2 = Math.floor(Math.random() * 9) + 1;
+              const ans = num1 + num2;
+
+              const choices = new Set([ans]);
+              while (choices.size < 4) {
+                choices.add(Math.floor(Math.random() * 18) + 1);
+              }
+              const choicesArr = Array.from(choices).sort(() => Math.random() - 0.5);
+
+              const UI = require('../utils/ui');
+              const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+
+              const container = UI.createContainer({
+                title: `🛡️ Captcha Verification: Math Challenge`,
+                description: `<:no:1526496561188831244>**Incorrect answer. Please try this new challenge (Attempts: ${attempts}/${maxAttemptsVal})**\n\n**What is ${num1} + ${num2}?**`,
+                color: 0x00FFFF
+              });
+
+              const row = new ActionRowBuilder();
+              choicesArr.forEach(c => {
+                row.addComponents(
+                  new ButtonBuilder()
+                    .setCustomId(`sec_verify_math_${c}_${ans}`)
+                    .setLabel(c.toString())
+                    .setStyle(ButtonStyle.Secondary)
+                );
+              });
+
+              container.addActionRowComponents(row); return interaction.editReply({ components: [container], flags: MessageFlags.IsComponentsV2 });
+            }
+          }
+        }
+
+        if (interaction.customId.startsWith('sec_verify_btn_')) {
+          const parts = interaction.customId.split('_');
+          const chosenIdx = parseInt(parts[3]);
+          const correctIdx = parseInt(parts[4]);
+
+          const VerificationService = require('../services/verificationService');
+          const { VerificationConfig } = require('../db/models');
+
+          await interaction.deferUpdate();
+
+          if (chosenIdx === correctIdx) {
+            const config = await VerificationConfig.findByPk(interaction.guild.id);
+            const res = await VerificationService.verifyMemberSecurity(interaction.member, config);
+            if (res.success) {
+              VerificationService.resetFailures(interaction.member.id);
+              const UI = require('../utils/ui');
+              const finalContainer = UI.createContainer({
+                title: '<:success:1526086221338771567> Verification Successful',
+                description: 'Captcha correct! Verification successful.',
+                color: 0x00FF00
+              });
+              return interaction.editReply({ components: [finalContainer], flags: MessageFlags.IsComponentsV2 });
+            } else {
+              const UI = require('../utils/ui');
+              const finalContainer = UI.createContainer({
+                title: '<:no:1526496561188831244>Verification Failed',
+                description: `Captcha correct, but security checks failed: ${res.reason}`,
+                color: 0xFF0000
+              });
+              return interaction.editReply({ components: [finalContainer], flags: MessageFlags.IsComponentsV2 });
+            }
+          } else {
+            const attempts = VerificationService.incrementFailures(interaction.member.id);
+            const config = await VerificationConfig.findByPk(interaction.guild.id);
+            const maxAttemptsVal = (config && config.sec_auto_kick_limit) || 3;
+            const isMaxAttemptsEnabled = (config && config.sec_auto_kick_limit > 0);
+
+            if (isMaxAttemptsEnabled && attempts >= maxAttemptsVal) {
+              VerificationService.resetFailures(interaction.member.id);
+              await VerificationService.logVerificationEvent(interaction.guild.id, interaction.member, 'security', 'failed', [], ['captcha'], null, 0, `Incorrect captcha answer - exceeded max attempts (${attempts}/${maxAttemptsVal})`);
+              if (config && config.sec_auto_ban) {
+                await interaction.member.ban({ reason: `Security verification failed. Captcha incorrect ${attempts} times.` }).catch(() => { });
+              } else {
+                await interaction.member.kick(`Security verification failed. Captcha incorrect ${attempts} times.`).catch(() => { });
+              }
+              const UI = require('../utils/ui');
+              const finalContainer = UI.createContainer({
+                title: '<:no:1526496561188831244>Verification Failed',
+                description: 'Captcha incorrect. Verification failed due to too many attempts.',
+                color: 0xFF0000
+              });
+              return interaction.editReply({ components: [finalContainer], flags: MessageFlags.IsComponentsV2 });
+            } else {
+              await VerificationService.logVerificationEvent(interaction.guild.id, interaction.member, 'security', 'failed', [], ['captcha'], null, 0, `Incorrect captcha answer (${attempts}/${maxAttemptsVal})`);
+
+              const options = ['⭐ Star', '☘️ Clover', '🔥 Fire', '💧 Water'];
+              const correctIndex = Math.floor(Math.random() * options.length);
+              const correctOption = options[correctIndex];
+
+              const UI = require('../utils/ui');
+              const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+
+              const container = UI.createContainer({
+                title: `🛡️ Captcha Verification: Button Challenge`,
+                description: `<:no:1526496561188831244>**Incorrect answer. Please try this new challenge (Attempts: ${attempts}/${maxAttemptsVal})**\n\nTo verify, please click the button that matches:\n\n**${correctOption}**`,
+                color: 0x00FFFF
+              });
+
+              const row = new ActionRowBuilder();
+              options.forEach((opt, idx) => {
+                row.addComponents(
+                  new ButtonBuilder()
+                    .setCustomId(`sec_verify_btn_${opt}_${correctIndex}`)
+                    .setLabel(opt)
+                    .setStyle(ButtonStyle.Secondary)
+                );
+              });
+
+              container.addActionRowComponents(row); return interaction.editReply({ components: [container], flags: MessageFlags.IsComponentsV2 });
+            }
+          }
+        }
+
+        // ── Automated Security Verification Interaction Handlers ──
+        if (interaction.customId === 'btn_security_verify_member') {
+          const { SecurityVerificationSetup, VerificationConfig, VerifiedUsers } = require('../db/models');
+          const VerificationService = require('../services/verificationService');
+          await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+
+          const config = await VerificationConfig.findOne({ where: { guild_id: interaction.guild.id } });
+          if (!config || config.mode !== 'security') {
+            const UI = require('../utils/ui');
+            const container = UI.createContainer({
+              title: '<:no:1526496561188831244>Feature Disabled',
+              description: 'Automated security verification is currently disabled.',
+              color: 0xFF0000
+            });
+            return interaction.editReply({ components: [container], flags: MessageFlags.IsComponentsV2 });
+          }
+
+          const setup = await SecurityVerificationSetup.findOne({ where: { guild_id: interaction.guild.id } });
+          if (!setup) {
+            const UI = require('../utils/ui');
+            const container = UI.createContainer({
+              title: '<:no:1526496561188831244>Feature Not Configured',
+              description: 'Automated security verification is not configured.',
+              color: 0xFF0000
+            });
+            return interaction.editReply({ components: [container], flags: MessageFlags.IsComponentsV2 });
+          }
+
+          const dbVerified = await VerifiedUsers.findOne({
+            where: { guild_id: interaction.guild.id, user_id: interaction.member.id }
+          });
+
+          let hasVerifiedRole = false;
+          if (setup && setup.verified_role_id && interaction.member.roles.cache.has(setup.verified_role_id)) {
+            hasVerifiedRole = true;
+          }
+
+          if (dbVerified || hasVerifiedRole) {
+            const UI = require('../utils/ui');
+            const container = UI.createContainer({
+              title: '<:no:1526496561188831244>Already Verified',
+              description: 'You are already verified in this server.',
+              color: 0xFF0000
+            });
+            return interaction.editReply({ components: [container], flags: MessageFlags.IsComponentsV2 });
+          }
+
+          // Resolve captcha based on level or custom config
+          let captchaType = 'disabled';
+          const level = setup.level || 'low';
+          if (level === 'medium') {
+            captchaType = 'button';
+          } else if (level === 'high') {
+            captchaType = 'math';
+          } else if (level === 'extreme') {
+            captchaType = 'image';
+          } else if (level === 'custom' && setup.rule_captcha_enabled) {
+            captchaType = setup.rule_captcha_type;
+          }
+
+          if (captchaType !== 'disabled') {
+            const UI = require('../utils/ui');
+            const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+
+            if (captchaType === 'math') {
+              const num1 = Math.floor(Math.random() * 9) + 1;
+              const num2 = Math.floor(Math.random() * 9) + 1;
+              const ans = num1 + num2;
+
+              const choices = new Set([ans]);
+              while (choices.size < 4) {
+                choices.add(Math.floor(Math.random() * 18) + 1);
+              }
+              const choicesArr = Array.from(choices).sort(() => Math.random() - 0.5);
+
+              const container = UI.createContainer({
+                title: '🛡️ Captcha Verification: Math Challenge',
+                description: `To verify, please answer this simple question:\n\n**What is ${num1} + ${num2}?**`,
+                color: 0x00FFFF
+              });
+
+              const row = new ActionRowBuilder();
+              choicesArr.forEach(c => {
+                row.addComponents(
+                  new ButtonBuilder()
+                    .setCustomId(`security_val_math_${c}_${ans}`)
+                    .setLabel(c.toString())
+                    .setStyle(ButtonStyle.Secondary)
+                );
+              });
+
+              container.addActionRowComponents(row); return interaction.editReply({ components: [container], flags: MessageFlags.IsComponentsV2 });
+            } else if (captchaType === 'button') {
+              const options = ['⭐ Star', '☘️ Clover', '🔥 Fire', '💧 Water'];
+              const correctIndex = Math.floor(Math.random() * options.length);
+              const correctOption = options[correctIndex];
+
+              const container = UI.createContainer({
+                title: '🛡️ Captcha Verification: Button Challenge',
+                description: `To verify, please click the button that matches:\n\n**${correctOption}**`,
+                color: 0x00FFFF
+              });
+
+              const row = new ActionRowBuilder();
+              options.forEach((opt, idx) => {
+                row.addComponents(
+                  new ButtonBuilder()
+                    .setCustomId(`security_val_btn_${idx}_${correctIndex}`)
+                    .setLabel(opt)
+                    .setStyle(ButtonStyle.Secondary)
+                );
+              });
+
+              container.addActionRowComponents(row); return interaction.editReply({ components: [container], flags: MessageFlags.IsComponentsV2 });
+            } else if (captchaType === 'image') {
+              const { createCanvas } = require('@napi-rs/canvas');
+              const { AttachmentBuilder } = require('discord.js');
+
+              const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+              let code = '';
+              for (let i = 0; i < 5; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
+              }
+
+              const canvas = createCanvas(180, 60);
+              const ctx = canvas.getContext('2d');
+
+              ctx.fillStyle = '#2b2d31';
+              ctx.fillRect(0, 0, 180, 60);
+
+              ctx.strokeStyle = '#5865F2';
+              for (let i = 0; i < 5; i++) {
+                ctx.lineWidth = Math.floor(Math.random() * 2) + 1;
+                ctx.beginPath();
+                ctx.moveTo(Math.random() * 180, Math.random() * 60);
+                ctx.lineTo(Math.random() * 180, Math.random() * 60);
+                ctx.stroke();
+              }
+
+              ctx.font = 'bold 28px sans-serif';
+              ctx.fillStyle = '#ffffff';
+              ctx.textBaseline = 'middle';
+
+              for (let i = 0; i < code.length; i++) {
+                const char = code[i];
+                ctx.save();
+                ctx.translate(20 + i * 30, 30);
+                ctx.rotate((Math.random() - 0.5) * 0.3);
+                ctx.fillText(char, 0, 0);
+                ctx.restore();
+              }
+
+              const buffer = await canvas.toBuffer('image/png');
+              const attachment = new AttachmentBuilder(buffer, { name: 'captcha.png' });
+
+              const container = UI.createContainer({
+                title: '🛡️ Captcha Verification: Image Challenge',
+                description: 'To verify, please match the security code shown in the image below:',
+                color: 0x00FFFF,
+                image: 'attachment://captcha.png'
+              });
+
+              const correctCode = code;
+              const choices = new Set([correctCode]);
+              while (choices.size < 4) {
+                let decoy = '';
+                for (let i = 0; i < 5; i++) {
+                  decoy += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                choices.add(decoy);
+              }
+              const choicesArr = Array.from(choices).sort(() => Math.random() - 0.5);
+
+              const row = new ActionRowBuilder();
+              choicesArr.forEach(c => {
+                row.addComponents(
+                  new ButtonBuilder()
+                    .setCustomId(`security_val_img_${c}_${correctCode}`)
+                    .setLabel(c)
+                    .setStyle(ButtonStyle.Secondary)
+                );
+              });
+
+              container.addActionRowComponents(row); return interaction.editReply({ files: [attachment], components: [container], flags: MessageFlags.IsComponentsV2 });
+            }
+          }
+
+          // No captcha: verify directly
+          const res = await VerificationService.runSecurityVerification(interaction.member, setup);
+          const UI = require('../utils/ui');
+          if (res.success) {
+            const finalContainer = UI.createContainer({
+              title: '<:success:1526086221338771567> Verification Successful',
+              description: 'Verification successful! You have been granted the verified role.',
+              color: 0x00FF00
+            });
+            return interaction.editReply({ components: [finalContainer], flags: MessageFlags.IsComponentsV2 });
+          } else {
+            const finalContainer = UI.createContainer({
+              title: '<:no:1526496561188831244>Verification Failed',
+              description: `Verification failed: ${res.reason}`,
+              color: 0xFF0000
+            });
+            return interaction.editReply({ components: [finalContainer], flags: MessageFlags.IsComponentsV2 });
+          }
+        }
+
+        if (interaction.customId.startsWith('security_val_math_')) {
+          const parts = interaction.customId.split('_');
+          const chosen = parseInt(parts[3]);
+          const correct = parseInt(parts[4]);
+
+          const VerificationService = require('../services/verificationService');
+          const { SecurityVerificationSetup } = require('../db/models');
+
+          await interaction.deferUpdate();
+
+          if (chosen === correct) {
+            const setup = await SecurityVerificationSetup.findOne({ where: { guild_id: interaction.guild.id } });
+            const res = await VerificationService.runSecurityVerification(interaction.member, setup);
+            if (res.success) {
+              VerificationService.resetFailures(interaction.member.id);
+              return interaction.editReply({ content: '<:success:1526086221338771567> Captcha correct! Verification successful.', embeds: [], components: [], files: [] });
+            } else {
+              return interaction.editReply({ content: `<:no:1526496561188831244>Captcha correct, but security checks failed: ${res.reason}`, embeds: [], components: [], files: [] });
+            }
+          } else {
+            const attempts = VerificationService.incrementFailures(interaction.member.id);
+            const setup = await SecurityVerificationSetup.findOne({ where: { guild_id: interaction.guild.id } });
+
+            let maxAttemptsVal = 3;
+            let isMaxAttemptsEnabled = false;
+            if (setup) {
+              const level = setup.level || 'low';
+              if (level === 'extreme') {
+                isMaxAttemptsEnabled = true;
+                maxAttemptsVal = 3;
+              } else if (level === 'custom') {
+                isMaxAttemptsEnabled = !!setup.rule_max_attempts_enabled;
+                maxAttemptsVal = setup.rule_max_attempts_val || 3;
+              }
+            }
+
+            if (isMaxAttemptsEnabled && attempts >= maxAttemptsVal) {
+              VerificationService.resetFailures(interaction.member.id);
+              await VerificationService.logSecurityVerificationEvent(interaction.guild.id, interaction.member, 'failed', [], ['captcha'], 0, `Incorrect captcha answer - exceeded max attempts (${attempts}/${maxAttemptsVal})`);
+
+              if (setup) {
+                const level = setup.level || 'low';
+                const autoKick = (level === 'extreme') || (level === 'custom' && !!setup.rule_auto_kick_enabled);
+                const autoBan = (level === 'custom' && !!setup.rule_auto_ban_enabled);
+                const actionFailKick = autoKick || !!setup.action_fail_kick;
+                const actionFailBan = autoBan || !!setup.action_fail_ban;
+                const actionFailNotify = !!setup.action_fail_notify_staff;
+
+                if (actionFailNotify && setup.log_channel_id) {
+                  const logChannel = interaction.guild.channels.cache.get(setup.log_channel_id);
+                  if (logChannel) {
+                    const UI = require('../utils/ui');
+                    const { MessageFlags } = require('discord.js');
+                    const logContainer = UI.createContainer({
+                      title: '⚠️ Security Verification Failed',
+                      description: `**User:** ${interaction.member.user.tag} (\`${interaction.member.id}\`)\n` +
+                        `**Status:** Verification Failed\n` +
+                        `**Reason:** Captcha failed too many times.\n` +
+                        `**Account Age:** ${Math.floor((Date.now() - interaction.member.user.createdTimestamp) / (24 * 60 * 60 * 1000))} days\n` +
+                        `**Server Join Time:** ${Math.floor((Date.now() - interaction.member.joinedTimestamp) / 1000)}s\n` +
+                        `**Checks Failed:** \`captcha\``,
+                      thumbnail: interaction.member.user.displayAvatarURL({ dynamic: true }),
+                      color: 0xFF0000
+                    });
+                    logChannel.send({ components: [logContainer], flags: MessageFlags.IsComponentsV2 }).catch(console.error);
+                  }
+                }
+
+                if (actionFailBan) {
+                  await interaction.member.ban({ reason: `Security verification failed. Captcha incorrect ${attempts} times.` }).catch(() => { });
+                } else if (actionFailKick) {
+                  await interaction.member.kick(`Security verification failed. Captcha incorrect ${attempts} times.`).catch(() => { });
+                }
+
+                if (setup.rule_send_dm_enabled) {
+                  await interaction.member.send({ content: `<:no:1526496561188831244>Verification failed in **${interaction.guild.name}**. Reason: Captcha failed too many times.` }).catch(() => { });
+                }
+              }
+              const UI = require('../utils/ui');
+              const finalContainer = UI.createContainer({
+                title: '<:no:1526496561188831244>Verification Failed',
+                description: 'Captcha incorrect. Verification failed due to too many attempts.',
+                color: 0xFF0000
+              });
+              return interaction.editReply({ components: [finalContainer], flags: MessageFlags.IsComponentsV2 });
+            } else {
+              await VerificationService.logSecurityVerificationEvent(interaction.guild.id, interaction.member, 'failed', [], ['captcha'], 0, `Incorrect captcha answer (${attempts}/${maxAttemptsVal})`);
+
+              const num1 = Math.floor(Math.random() * 9) + 1;
+              const num2 = Math.floor(Math.random() * 9) + 1;
+              const ans = num1 + num2;
+
+              const choices = new Set([ans]);
+              while (choices.size < 4) {
+                choices.add(Math.floor(Math.random() * 18) + 1);
+              }
+              const choicesArr = Array.from(choices).sort(() => Math.random() - 0.5);
+
+              const UI = require('../utils/ui');
+              const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+
+              const container = UI.createContainer({
+                title: `🛡️ Captcha Verification: Math Challenge`,
+                description: `<:no:1526496561188831244>**Incorrect answer. Please try this new challenge (Attempts: ${attempts}/${maxAttemptsVal})**\n\n**What is ${num1} + ${num2}?**`,
+                color: 0x00FFFF
+              });
+
+              const row = new ActionRowBuilder();
+              choicesArr.forEach(c => {
+                row.addComponents(
+                  new ButtonBuilder()
+                    .setCustomId(`security_val_math_${c}_${ans}`)
+                    .setLabel(c.toString())
+                    .setStyle(ButtonStyle.Secondary)
+                );
+              });
+
+              container.addActionRowComponents(row); return interaction.editReply({ components: [container], flags: MessageFlags.IsComponentsV2 });
+            }
+          }
+        }
+
+        if (interaction.customId.startsWith('security_val_btn_')) {
+          const parts = interaction.customId.split('_');
+          const chosenIdx = parseInt(parts[3]);
+          const correctIdx = parseInt(parts[4]);
+
+          const VerificationService = require('../services/verificationService');
+          const { SecurityVerificationSetup } = require('../db/models');
+
+          await interaction.deferUpdate();
+
+          if (chosenIdx === correctIdx) {
+            const setup = await SecurityVerificationSetup.findOne({ where: { guild_id: interaction.guild.id } });
+            const res = await VerificationService.runSecurityVerification(interaction.member, setup);
+            if (res.success) {
+              VerificationService.resetFailures(interaction.member.id);
+              const UI = require('../utils/ui');
+              const finalContainer = UI.createContainer({
+                title: '<:success:1526086221338771567> Verification Successful',
+                description: 'Captcha correct! Verification successful.',
+                color: 0x00FF00
+              });
+              return interaction.editReply({ components: [finalContainer], flags: MessageFlags.IsComponentsV2 });
+            } else {
+              const UI = require('../utils/ui');
+              const finalContainer = UI.createContainer({
+                title: '<:no:1526496561188831244>Verification Failed',
+                description: `Captcha correct, but security checks failed: ${res.reason}`,
+                color: 0xFF0000
+              });
+              return interaction.editReply({ components: [finalContainer], flags: MessageFlags.IsComponentsV2 });
+            }
+          } else {
+            const attempts = VerificationService.incrementFailures(interaction.member.id);
+            const setup = await SecurityVerificationSetup.findOne({ where: { guild_id: interaction.guild.id } });
+
+            let maxAttemptsVal = 3;
+            let isMaxAttemptsEnabled = false;
+            if (setup) {
+              const level = setup.level || 'low';
+              if (level === 'extreme') {
+                isMaxAttemptsEnabled = true;
+                maxAttemptsVal = 3;
+              } else if (level === 'custom') {
+                isMaxAttemptsEnabled = !!setup.rule_max_attempts_enabled;
+                maxAttemptsVal = setup.rule_max_attempts_val || 3;
+              }
+            }
+
+            if (isMaxAttemptsEnabled && attempts >= maxAttemptsVal) {
+              VerificationService.resetFailures(interaction.member.id);
+              await VerificationService.logSecurityVerificationEvent(interaction.guild.id, interaction.member, 'failed', [], ['captcha'], 0, `Incorrect captcha answer - exceeded max attempts (${attempts}/${maxAttemptsVal})`);
+
+              if (setup) {
+                const level = setup.level || 'low';
+                const autoKick = (level === 'extreme') || (level === 'custom' && !!setup.rule_auto_kick_enabled);
+                const autoBan = (level === 'custom' && !!setup.rule_auto_ban_enabled);
+                const actionFailKick = autoKick || !!setup.action_fail_kick;
+                const actionFailBan = autoBan || !!setup.action_fail_ban;
+                const actionFailNotify = !!setup.action_fail_notify_staff;
+
+                if (actionFailNotify && setup.log_channel_id) {
+                  const logChannel = interaction.guild.channels.cache.get(setup.log_channel_id);
+                  if (logChannel) {
+                    const UI = require('../utils/ui');
+                    const { MessageFlags } = require('discord.js');
+                    const logContainer = UI.createContainer({
+                      title: '⚠️ Security Verification Failed',
+                      description: `**User:** ${interaction.member.user.tag} (\`${interaction.member.id}\`)\n` +
+                        `**Status:** Verification Failed\n` +
+                        `**Reason:** Captcha failed too many times.\n` +
+                        `**Account Age:** ${Math.floor((Date.now() - interaction.member.user.createdTimestamp) / (24 * 60 * 60 * 1000))} days\n` +
+                        `**Server Join Time:** ${Math.floor((Date.now() - interaction.member.joinedTimestamp) / 1000)}s\n` +
+                        `**Checks Failed:** \`captcha\``,
+                      thumbnail: interaction.member.user.displayAvatarURL({ dynamic: true }),
+                      color: 0xFF0000
+                    });
+                    logChannel.send({ components: [logContainer], flags: MessageFlags.IsComponentsV2 }).catch(console.error);
+                  }
+                }
+
+                if (actionFailBan) {
+                  await interaction.member.ban({ reason: `Security verification failed. Captcha incorrect ${attempts} times.` }).catch(() => { });
+                } else if (actionFailKick) {
+                  await interaction.member.kick(`Security verification failed. Captcha incorrect ${attempts} times.`).catch(() => { });
+                }
+
+                if (setup.rule_send_dm_enabled) {
+                  await interaction.member.send({ content: `<:no:1526496561188831244>Verification failed in **${interaction.guild.name}**. Reason: Captcha failed too many times.` }).catch(() => { });
+                }
+              }
+              const UI = require('../utils/ui');
+              const finalContainer = UI.createContainer({
+                title: '<:no:1526496561188831244>Verification Failed',
+                description: 'Captcha incorrect. Verification failed due to too many attempts.',
+                color: 0xFF0000
+              });
+              return interaction.editReply({ components: [finalContainer], flags: MessageFlags.IsComponentsV2 });
+            } else {
+              await VerificationService.logSecurityVerificationEvent(interaction.guild.id, interaction.member, 'failed', [], ['captcha'], 0, `Incorrect captcha answer (${attempts}/${maxAttemptsVal})`);
+
+              const options = ['⭐ Star', '☘️ Clover', '🔥 Fire', '💧 Water'];
+              const correctIndex = Math.floor(Math.random() * options.length);
+              const correctOption = options[correctIndex];
+
+              const UI = require('../utils/ui');
+              const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+
+              const container = UI.createContainer({
+                title: `🛡️ Captcha Verification: Button Challenge`,
+                description: `<:no:1526496561188831244>**Incorrect answer. Please try this new challenge (Attempts: ${attempts}/${maxAttemptsVal})**\n\nTo verify, please click the button that matches:\n\n**${correctOption}**`,
+                color: 0x00FFFF
+              });
+
+              const row = new ActionRowBuilder();
+              options.forEach((opt, idx) => {
+                row.addComponents(
+                  new ButtonBuilder()
+                    .setCustomId(`security_val_btn_${idx}_${correctIndex}`)
+                    .setLabel(opt)
+                    .setStyle(ButtonStyle.Secondary)
+                );
+              });
+
+              container.addActionRowComponents(row); return interaction.editReply({ components: [container], flags: MessageFlags.IsComponentsV2 });
+            }
+          }
+        }
+
+        if (interaction.customId.startsWith('security_val_img_')) {
+          const parts = interaction.customId.split('_');
+          const chosen = parts[3];
+          const correct = parts[4];
+
+          const VerificationService = require('../services/verificationService');
+          const { SecurityVerificationSetup } = require('../db/models');
+
+          await interaction.deferUpdate();
+
+          if (chosen === correct) {
+            const setup = await SecurityVerificationSetup.findOne({ where: { guild_id: interaction.guild.id } });
+            const res = await VerificationService.runSecurityVerification(interaction.member, setup);
+            if (res.success) {
+              VerificationService.resetFailures(interaction.member.id);
+              const UI = require('../utils/ui');
+              const finalContainer = UI.createContainer({
+                title: '<:success:1526086221338771567> Verification Successful',
+                description: 'Captcha correct! Verification successful.',
+                color: 0x00FF00
+              });
+              return interaction.editReply({ components: [finalContainer], flags: MessageFlags.IsComponentsV2 });
+            } else {
+              const UI = require('../utils/ui');
+              const finalContainer = UI.createContainer({
+                title: '<:no:1526496561188831244>Verification Failed',
+                description: `Captcha correct, but security checks failed: ${res.reason}`,
+                color: 0xFF0000
+              });
+              return interaction.editReply({ components: [finalContainer], flags: MessageFlags.IsComponentsV2 });
+            }
+          } else {
+            const attempts = VerificationService.incrementFailures(interaction.member.id);
+            const setup = await SecurityVerificationSetup.findOne({ where: { guild_id: interaction.guild.id } });
+
+            let maxAttemptsVal = 3;
+            let isMaxAttemptsEnabled = false;
+            if (setup) {
+              const level = setup.level || 'low';
+              if (level === 'extreme') {
+                isMaxAttemptsEnabled = true;
+                maxAttemptsVal = 3;
+              } else if (level === 'custom') {
+                isMaxAttemptsEnabled = !!setup.rule_max_attempts_enabled;
+                maxAttemptsVal = setup.rule_max_attempts_val || 3;
+              }
+            }
+
+            if (isMaxAttemptsEnabled && attempts >= maxAttemptsVal) {
+              VerificationService.resetFailures(interaction.member.id);
+              await VerificationService.logSecurityVerificationEvent(interaction.guild.id, interaction.member, 'failed', [], ['captcha'], 0, `Incorrect captcha answer - exceeded max attempts (${attempts}/${maxAttemptsVal})`);
+
+              if (setup) {
+                const level = setup.level || 'low';
+                const autoKick = (level === 'extreme') || (level === 'custom' && !!setup.rule_auto_kick_enabled);
+                const autoBan = (level === 'custom' && !!setup.rule_auto_ban_enabled);
+                const actionFailKick = autoKick || !!setup.action_fail_kick;
+                const actionFailBan = autoBan || !!setup.action_fail_ban;
+                const actionFailNotify = !!setup.action_fail_notify_staff;
+
+                if (actionFailNotify && setup.log_channel_id) {
+                  const logChannel = interaction.guild.channels.cache.get(setup.log_channel_id);
+                  if (logChannel) {
+                    const UI = require('../utils/ui');
+                    const { MessageFlags } = require('discord.js');
+                    const logContainer = UI.createContainer({
+                      title: '⚠️ Security Verification Failed',
+                      description: `**User:** ${interaction.member.user.tag} (\`${interaction.member.id}\`)\n` +
+                        `**Status:** Verification Failed\n` +
+                        `**Reason:** Captcha failed too many times.\n` +
+                        `**Account Age:** ${Math.floor((Date.now() - interaction.member.user.createdTimestamp) / (24 * 60 * 60 * 1000))} days\n` +
+                        `**Server Join Time:** ${Math.floor((Date.now() - interaction.member.joinedTimestamp) / 1000)}s\n` +
+                        `**Checks Failed:** \`captcha\``,
+                      thumbnail: interaction.member.user.displayAvatarURL({ dynamic: true }),
+                      color: 0xFF0000
+                    });
+                    logChannel.send({ components: [logContainer], flags: MessageFlags.IsComponentsV2 }).catch(console.error);
+                  }
+                }
+
+                if (actionFailBan) {
+                  await interaction.member.ban({ reason: `Security verification failed. Captcha incorrect ${attempts} times.` }).catch(() => { });
+                } else if (actionFailKick) {
+                  await interaction.member.kick(`Security verification failed. Captcha incorrect ${attempts} times.`).catch(() => { });
+                }
+
+                if (setup.rule_send_dm_enabled) {
+                  await interaction.member.send({ content: `<:no:1526496561188831244>Verification failed in **${interaction.guild.name}**. Reason: Captcha failed too many times.` }).catch(() => { });
+                }
+              }
+              const UI = require('../utils/ui');
+              const finalContainer = UI.createContainer({
+                title: '<:no:1526496561188831244>Verification Failed',
+                description: 'Captcha incorrect. Verification failed due to too many attempts.',
+                color: 0xFF0000
+              });
+              return interaction.editReply({ components: [finalContainer], flags: MessageFlags.IsComponentsV2 });
+            } else {
+              await VerificationService.logSecurityVerificationEvent(interaction.guild.id, interaction.member, 'failed', [], ['captcha'], 0, `Incorrect captcha answer (${attempts}/${maxAttemptsVal})`);
+
+              const { createCanvas } = require('@napi-rs/canvas');
+              const { AttachmentBuilder } = require('discord.js');
+
+              const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+              let code = '';
+              for (let i = 0; i < 5; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
+              }
+
+              const canvas = createCanvas(180, 60);
+              const ctx = canvas.getContext('2d');
+
+              ctx.fillStyle = '#2b2d31';
+              ctx.fillRect(0, 0, 180, 60);
+
+              ctx.strokeStyle = '#5865F2';
+              for (let i = 0; i < 5; i++) {
+                ctx.lineWidth = Math.floor(Math.random() * 2) + 1;
+                ctx.beginPath();
+                ctx.moveTo(Math.random() * 180, Math.random() * 60);
+                ctx.lineTo(Math.random() * 180, Math.random() * 60);
+                ctx.stroke();
+              }
+
+              ctx.font = 'bold 28px sans-serif';
+              ctx.fillStyle = '#ffffff';
+              ctx.textBaseline = 'middle';
+
+              for (let i = 0; i < code.length; i++) {
+                const char = code[i];
+                ctx.save();
+                ctx.translate(20 + i * 30, 30);
+                ctx.rotate((Math.random() - 0.5) * 0.3);
+                ctx.fillText(char, 0, 0);
+                ctx.restore();
+              }
+
+              const buffer = await canvas.toBuffer('image/png');
+              const attachment = new AttachmentBuilder(buffer, { name: 'captcha.png' });
+
+              const UI = require('../utils/ui');
+              const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+
+              const container = UI.createContainer({
+                title: '🛡️ Captcha Verification: Image Challenge',
+                description: `<:no:1526496561188831244>**Incorrect answer. Please try this new challenge (Attempts: ${attempts}/${maxAttemptsVal})**\n\nTo verify, please match the security code shown in the image below:`,
+                color: 0x00FFFF,
+                image: 'attachment://captcha.png'
+              });
+
+              const correctCode = code;
+              const choices = new Set([correctCode]);
+              while (choices.size < 4) {
+                let decoy = '';
+                for (let i = 0; i < 5; i++) {
+                  decoy += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                choices.add(decoy);
+              }
+              const choicesArr = Array.from(choices).sort(() => Math.random() - 0.5);
+
+              const row = new ActionRowBuilder();
+              choicesArr.forEach(c => {
+                row.addComponents(
+                  new ButtonBuilder()
+                    .setCustomId(`security_val_img_${c}_${correctCode}`)
+                    .setLabel(c)
+                    .setStyle(ButtonStyle.Secondary)
+                );
+              });
+
+              container.addActionRowComponents(row); return interaction.editReply({ files: [attachment], components: [container], flags: MessageFlags.IsComponentsV2 });
+            }
+          }
+        }
+
+        // --- Setup Hub Pagination Handler (4 Pages) ---
+        if (interaction.customId.startsWith('setup_page_')) {
+          const page = parseInt(interaction.customId.split('_').reverse()[0]);
+          const { SeparatorSpacingSize, MediaGalleryBuilder, MediaGalleryItemBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, SectionBuilder } = require('discord.js');
+
+          const container = UI.createContainer({
+            title: `Server Setup • Page ${page}/4`,
+            description: `め 」 **Manage your server configuration using the buttons below.**\n\n` +
+              `Use the navigation buttons at the bottom to switch between pages.`,
+            color: 0x0099ff
+          });
+
+          const createSection = (desc, label, customId) => {
+            const section = new SectionBuilder();
+            section.addTextDisplayComponents(td => td.setContent(`• ⌄ ${desc} ⁝`));
+            section.setButtonAccessory(new ButtonBuilder().setCustomId(customId).setLabel(label).setStyle(ButtonStyle.Secondary));
+            return section;
+          };
+
+          if (page === 1) {
+            container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+            container.addSectionComponents(createSection('Configure automatic role assignment for new members', 'Auto Role', 'btn_setup_autorole'));
+            container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+            container.addSectionComponents(createSection('Configure automatic nickname tags based on roles', 'Auto Tag', 'btn_setup_autotag'));
+            container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+            container.addSectionComponents(createSection('Configure staff application system', 'Staff Apply', 'btn_setup_apply'));
+            container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+            container.addSectionComponents(createSection('Configure server logging system', 'Logs Server', 'btn_setup_logs'));
+          } else if (page === 2) {
+            container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+            container.addSectionComponents(createSection('Configure the warning and punishment system', 'Setup Warn', 'btn_setup_warn'));
+            container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+            container.addSectionComponents(createSection('Setup the automated and manual mute system', 'Setup Mute', 'btn_setup_mute'));
+            container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+            container.addSectionComponents(createSection('Configure the server prison/jail system', 'Setup Jail', 'btn_setup_jail'));
+            container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+            container.addSectionComponents(createSection('Configure server support/help rooms', 'Need Help', 'btn_setup_needhelp'));
+          } else if (page === 3) {
+            container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+            container.addSectionComponents(createSection('Setup member verification (Identity/Gender)', 'Setup Verify', 'btn_setup_verify'));
+            container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+            container.addSectionComponents(createSection('Configure security and server owner roles', 'Set Owner', 'btn_setup_owner'));
+            container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+            container.addSectionComponents(createSection('Customize user profile cards and settings', 'Set Profile', 'btn_setup_profile'));
+          } else if (page === 4) {
+            container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+            container.addSectionComponents(createSection('Configure join/leave messages and logs', 'Joins/Leaves', 'btn_setup_jl'));
+            container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+            container.addSectionComponents(createSection('Manage advanced premium-only systems', 'Premium', 'btn_setup_premium'));
+          }
+
+          // Navigation row
+          const prevPage = page === 1 ? 4 : page - 1;
+          const nextPage = page === 4 ? 1 : page + 1;
+          const navRow = new ActionRowBuilder().addComponents(
+            new ButtonBuilder().setCustomId(`setup_page_${prevPage}`).setEmoji('⬅️').setStyle(ButtonStyle.Secondary),
+            new ButtonBuilder().setCustomId(`setup_page_${nextPage}`).setEmoji('➡️').setStyle(ButtonStyle.Secondary)
+          );
+
+          container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+          container.addActionRowComponents(navRow);
+
+          const gallery = new MediaGalleryBuilder();
+          gallery.addItems(new MediaGalleryItemBuilder().setURL("https://media.discordapp.net/attachments/1329547343791525989/1492418340013084742/image.png?ex=69db4264&is=69d9f0e4&hm=89a4bc524d917dafd8b093478eb186879ad2dd27be947e6b2c0bd14f944ea008&=&format=webp&quality=lossless"));
+          container.addMediaGalleryComponents(gallery);
+
+          container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+          container.addTextDisplayComponents(td => td.setContent(`-# Forge Studio • Setup Hub`));
+
+          return interaction.update({
+            components: [container],
+            flags: MessageFlags.IsComponentsV2
+          });
+        }
+
+        // --- Setup Hub Configuration Hubs (V2 Interaction Panels) ---
+        const setupBackRow = new ActionRowBuilder().addComponents(
+          new ButtonBuilder().setCustomId('setup_page_1').setLabel('Back to Hub').setStyle(ButtonStyle.Secondary).setEmoji('🏠')
+        );
+
+        if (interaction.customId === 'btn_setup_jail') {
+          const { RoleSelectMenuBuilder } = require('discord.js');
+          const container = UI.createContainer({
+            title: '⛓️ Jailer Configuration',
+            description: 'め 」 **Select roles to manage the server jail system.**',
+            color: 0x0099ff
+          });
+
+          container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+          container.addTextDisplayComponents(td => td.setContent('• ⌄ **Jailer Roles** : `Can issue jail commands`'));
+          container.addActionRowComponents(new ActionRowBuilder().addComponents(
+            new RoleSelectMenuBuilder().setCustomId('select_jailers').setPlaceholder('Choose jailer roles').setMinValues(1).setMaxValues(10)
+          ));
+
+          container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+          container.addTextDisplayComponents(td => td.setContent('• ⌄ **Jailed Role** : `Given to restricted users`'));
+          container.addActionRowComponents(new ActionRowBuilder().addComponents(
+            new RoleSelectMenuBuilder().setCustomId('select_jailed').setPlaceholder('Choose jailed role')
+          ));
+
+          container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+          container.addActionRowComponents(setupBackRow);
+
+          return interaction.update({ components: [container], flags: MessageFlags.IsComponentsV2 });
+        }
+
+        if (interaction.customId === 'btn_setup_autorole') {
+          const { RoleSelectMenuBuilder } = require('discord.js');
+          const container = UI.createContainer({
+            title: '⚙️ Auto Role Configuration',
+            description: 'め 」 **Select roles to be automatically given to new members.**',
+            color: 0x0099ff
+          });
+
+          container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+          container.addTextDisplayComponents(td => td.setContent('• ⌄ **Auto Roles** : `Given on server join`'));
+          container.addActionRowComponents(new ActionRowBuilder().addComponents(
+            new RoleSelectMenuBuilder().setCustomId('select_autoroles').setPlaceholder('Choose auto-assigned roles').setMinValues(1).setMaxValues(10)
+          ));
+
+          container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+          container.addActionRowComponents(setupBackRow);
+
+          return interaction.update({ components: [container], flags: MessageFlags.IsComponentsV2 });
+        }
+
+        if (interaction.customId === 'btn_setup_logs') {
+          const { ChannelSelectMenuBuilder, ChannelType } = require('discord.js');
+          const container = UI.createContainer({
+            title: '📜 Global Logging',
+            description: 'め 」 **Select the main channel for server-wide audit logs.**',
+            color: 0x0099ff
+          });
+
+          container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+          container.addTextDisplayComponents(td => td.setContent('• ⌄ **Log Channel** : `Audit & event logs`'));
+          container.addActionRowComponents(new ActionRowBuilder().addComponents(
+            new ChannelSelectMenuBuilder().setCustomId('select_logs').setPlaceholder('Choose main logging channel').setChannelTypes([ChannelType.GuildText])
+          ));
+
+          container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+          container.addActionRowComponents(setupBackRow);
+
+          return interaction.update({ components: [container], flags: MessageFlags.IsComponentsV2 });
+        }
+
+        if (interaction.customId === 'btn_setup_warn') {
+          const { RoleSelectMenuBuilder, ChannelSelectMenuBuilder, ChannelType } = require('discord.js');
+          const container = UI.createContainer({
+            title: '🛡️ Warning System',
+            description: 'め 」 **Configure the server warning and moderation system.**',
+            color: 0x0099ff
+          });
+
+          container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+          container.addTextDisplayComponents(td => td.setContent('• ⌄ **Staff Roles** : `Can issue warnings`'));
+          container.addActionRowComponents(new ActionRowBuilder().addComponents(
+            new RoleSelectMenuBuilder().setCustomId('select_warn_staff').setPlaceholder('Choose staff roles').setMinValues(1).setMaxValues(10)
+          ));
+
+          container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+          container.addTextDisplayComponents(td => td.setContent('• ⌄ **Final Warn Role** : `Given at 3 warns`'));
+          container.addActionRowComponents(new ActionRowBuilder().addComponents(
+            new RoleSelectMenuBuilder().setCustomId('select_warn_final').setPlaceholder('Choose final warn role')
+          ));
+
+          container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+          container.addTextDisplayComponents(td => td.setContent('• ⌄ **Warn Logs** : `Warning logs only`'));
+          container.addActionRowComponents(new ActionRowBuilder().addComponents(
+            new ChannelSelectMenuBuilder().setCustomId('select_warn_logs').setPlaceholder('Choose warn log channel').setChannelTypes([ChannelType.GuildText])
+          ));
+
+          container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+          container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+          container.addActionRowComponents(setupBackRow);
+
+          return interaction.update({ components: [container], flags: MessageFlags.IsComponentsV2 });
+        }
+
+        if (interaction.customId === 'btn_setup_mute') {
+          const { RoleSelectMenuBuilder, ChannelSelectMenuBuilder, ChannelType } = require('discord.js');
+          const container = UI.createContainer({
+            title: '🔇 Mute System Configuration',
+            description: 'め 」 **Select role and log channel for the mute system.**',
+            color: 0x0099ff
+          });
+
+          container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+          container.addTextDisplayComponents(td => td.setContent('• ⌄ **Muted Role** : `Assigned to muted members`'));
+          container.addActionRowComponents(new ActionRowBuilder().addComponents(
+            new RoleSelectMenuBuilder().setCustomId('select_mute_role').setPlaceholder('Choose muted role')
+          ));
+
+          container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+          container.addTextDisplayComponents(td => td.setContent('• ⌄ **Mute Logs** : `Logs channel`'));
+          container.addActionRowComponents(new ActionRowBuilder().addComponents(
+            new ChannelSelectMenuBuilder().setCustomId('select_mute_logs').setPlaceholder('Choose mute logs channel').setChannelTypes([ChannelType.GuildText])
+          ));
+
+          container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+          container.addActionRowComponents(setupBackRow);
+
+          return interaction.update({ components: [container], flags: MessageFlags.IsComponentsV2 });
+        }
+
+        if (interaction.customId === 'btn_setup_needhelp') {
+          const { ChannelSelectMenuBuilder, ChannelType, RoleSelectMenuBuilder } = require('discord.js');
+          const container = UI.createContainer({
+            title: '🔊 Support Room (Need Help) Configuration',
+            description: 'め 」 **Configure the automatic support room creation system.**',
+            color: 0x0099ff
+          });
+
+          container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+          container.addTextDisplayComponents(td => td.setContent('• ⌄ **Join Voice Channel** : `Channel that users join to create a support room`'));
+          container.addActionRowComponents(new ActionRowBuilder().addComponents(
+            new ChannelSelectMenuBuilder().setCustomId('select_room_join').setPlaceholder('Choose join voice channel').setChannelTypes([ChannelType.GuildVoice])
+          ));
+
+          container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+          container.addTextDisplayComponents(td => td.setContent('• ⌄ **Room Category** : `Category where private support rooms are spawned`'));
+          container.addActionRowComponents(new ActionRowBuilder().addComponents(
+            new ChannelSelectMenuBuilder().setCustomId('select_room_category').setPlaceholder('Choose rooms category').setChannelTypes([ChannelType.GuildCategory])
+          ));
+
+          container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+          container.addTextDisplayComponents(td => td.setContent('• ⌄ **Logs Channel** : `Logs channel for room creation activity`'));
+          container.addActionRowComponents(new ActionRowBuilder().addComponents(
+            new ChannelSelectMenuBuilder().setCustomId('select_room_logs').setPlaceholder('Choose logs channel').setChannelTypes([ChannelType.GuildText])
+          ));
+
+          container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+          container.addTextDisplayComponents(td => td.setContent('• ⌄ **Staff Role** : `Staff role that will assist the users`'));
+          container.addActionRowComponents(new ActionRowBuilder().addComponents(
+            new RoleSelectMenuBuilder().setCustomId('select_room_staff').setPlaceholder('Choose staff role')
+          ));
+
+          container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+          container.addActionRowComponents(setupBackRow);
+
+          return interaction.update({ components: [container], flags: MessageFlags.IsComponentsV2 });
+        }
+
+        if (interaction.customId === 'btn_setup_verify') {
+          const { RoleSelectMenuBuilder, ChannelSelectMenuBuilder, ChannelType } = require('discord.js');
+          const container = UI.createContainer({
+            title: '🛡️ Member Verification Configuration',
+            description: 'め 」 **Select roles and logs channel for verification system.**',
+            color: 0x0099ff
+          });
+
+          container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+          container.addTextDisplayComponents(td => td.setContent('• ⌄ **Verified Male Role** : `Given on male verification`'));
+          container.addActionRowComponents(new ActionRowBuilder().addComponents(
+            new RoleSelectMenuBuilder().setCustomId('select_ver_role_male').setPlaceholder('Choose verified male role')
+          ));
+
+          container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+          container.addTextDisplayComponents(td => td.setContent('• ⌄ **Verified Female Role** : `Given on female verification`'));
+          container.addActionRowComponents(new ActionRowBuilder().addComponents(
+            new RoleSelectMenuBuilder().setCustomId('select_ver_role_female').setPlaceholder('Choose verified female role')
+          ));
+
+          container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+          container.addTextDisplayComponents(td => td.setContent('• ⌄ **Unverified Role** : `Removed after verification`'));
+          container.addActionRowComponents(new ActionRowBuilder().addComponents(
+            new RoleSelectMenuBuilder().setCustomId('select_ver_role_unverified').setPlaceholder('Choose unverified role')
+          ));
+
+          container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+          container.addTextDisplayComponents(td => td.setContent('• ⌄ **Verification Logs** : `Logs channel`'));
+          container.addActionRowComponents(new ActionRowBuilder().addComponents(
+            new ChannelSelectMenuBuilder().setCustomId('select_ver_logs').setPlaceholder('Choose logs channel').setChannelTypes([ChannelType.GuildText])
+          ));
+
+          container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+          container.addActionRowComponents(setupBackRow);
+
+          return interaction.update({ components: [container], flags: MessageFlags.IsComponentsV2 });
+        }
+
+        const redirectDashboard = (title) => {
+          const embed = UI.createEmbed({
+            title: title,
+            description: `め 」 **This system can be easily configured via the Web Panel.**\n\n🔗 [Open Dashboard](https://vivy.pro/servers/${interaction.guild.id})`,
+            color: 0x0099ff
+          });
+          return interaction.reply({ embeds: [embed], ephemeral: true });
+        };
+
+        if (interaction.customId === 'btn_setup_apply') {
+          return redirectDashboard('Staff Applications Setup');
+        }
+        if (interaction.customId === 'btn_setup_premium') {
+          return redirectDashboard('Premium Features Hub');
+        }
+        if (interaction.customId === 'btn_setup_owner') {
+          return redirectDashboard('Security Owners Setup');
+        }
+        if (interaction.customId === 'btn_setup_profile') {
+          return redirectDashboard('User Profile Customizer');
+        }
+        if (interaction.customId === 'btn_setup_jl') {
+          return redirectDashboard('Welcome & Leave Messages');
+        }
+
+        // --- Recruitment Hub Select Menu Handler (Direct Modal Style) ---
+        if (interaction.customId === 'apply_hub_dept_select') {
+          const selectedDept = interaction.values[0];
+          if (selectedDept.startsWith('separator_')) {
+            return interaction.reply({
+              content: '⚠️ This item is a divider line.',
+              flags: MessageFlags.Ephemeral
+            });
+          }
+          return openApplyModal(interaction, selectedDept);
+        }
+
+        // --- Apply System Button Handlers ---
+        if (interaction.customId.startsWith('apply_') &&
+          !interaction.customId.startsWith('apply_approve_') &&
+          !interaction.customId.startsWith('apply_deny_') &&
+          !interaction.customId.startsWith('apply_modal_')) {
+          const clickedDept = interaction.customId.replace('apply_', '');
+          return openApplyModal(interaction, clickedDept);
+        }
+
+        async function openApplyModal(interaction, clickedDept) {
+          const { ApplySetup } = require('../db/models');
+          const settings = await ApplySetup.findOne({ where: { guild_id: interaction.guild.id } });
+
+          if (!settings) {
+            return interaction.reply({ content: '<:no:1526496561188831244>Apply system is not configured. Use `/setup-apply` first.', ephemeral: true });
+          }
+
+          const { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } = require('discord.js');
+
+          const getDepartments = (settings) => {
+            let depts = [];
+            if (settings && settings.departments) {
+              try {
+                depts = typeof settings.departments === 'string'
+                  ? JSON.parse(settings.departments)
+                  : settings.departments;
+              } catch { }
+            }
+            if (!Array.isArray(depts) || depts.length === 0) {
+              depts = [
+                {
+                  key: 'staff',
+                  label: 'Staff Team',
+                  emoji: '<:staff:1369870831383220225>',
+                  description: 'Moderate and assist members',
+                  role_id: settings?.role_staff_id,
+                  questions: [
+                    'Why do you want to join our staff team?',
+                    'What experience do you have in moderation?',
+                    'How active can you be on a weekly basis?',
+                    'How would you handle a conflict between members?'
+                  ]
+                },
+                {
+                  key: 'designer',
+                  label: 'Designer',
+                  emoji: '<:designer:1492427141374152714>',
+                  description: 'Create visuals & graphics',
+                  role_id: settings?.role_designer_id,
+                  questions: [
+                    'What design software do you use?',
+                    'Link to your portfolio or examples of work.',
+                    'Describe your design style (Minimalist, etc.)',
+                    'Are you comfortable working with deadlines?'
+                  ]
+                },
+                {
+                  key: 'event',
+                  label: 'Event Hoster',
+                  emoji: '<:event:1492427991429677167>',
+                  description: 'Organize fun community events',
+                  role_id: settings?.role_event_id,
+                  questions: [
+                    'What kind of events would you like to host?',
+                    'Experience managing large groups/events?',
+                    'What makes a successful community event?',
+                    'What is your availability for hosting events?'
+                  ]
+                },
+                {
+                  key: 'partnership',
+                  label: 'Partnership',
+                  emoji: '<:partner:1492427938950545498>',
+                  description: 'Build server relationships',
+                  role_id: settings?.role_partnership_id,
+                  questions: [
+                    'Previous experience in server partnerships?',
+                    'How do you find potential partners?',
+                    'What are your methods for growing relationships?',
+                    'How many partnerships can you handle weekly?'
+                  ]
+                }
+              ];
+            }
+            return depts;
+          };
+
+          const departments = getDepartments(settings);
+          let dept = null;
+          let deptIndex = -1;
+
+          if (clickedDept.startsWith('dept_')) {
+            deptIndex = parseInt(clickedDept.replace('dept_', ''), 10);
+            dept = departments[deptIndex];
+          } else if (/^\d+$/.test(clickedDept)) {
+            deptIndex = parseInt(clickedDept, 10);
+            dept = departments[deptIndex];
+          } else {
+            // Backward compatibility string match
+            deptIndex = departments.findIndex(d => d.key === clickedDept);
+            if (deptIndex !== -1) {
+              dept = departments[deptIndex];
+            } else {
+              // Fallback match label
+              deptIndex = departments.findIndex(d => d.label.toLowerCase() === clickedDept.toLowerCase());
+              if (deptIndex !== -1) {
+                dept = departments[deptIndex];
+              }
+            }
+          }
+
+          if (!dept) {
+            return interaction.reply({ content: '<:no:1526496561188831244>Selected department configuration not found.', ephemeral: true });
+          }
+
+          const modal = new ModalBuilder()
+            .setCustomId(`apply_modal_${deptIndex}`)
+            .setTitle(dept.label.substring(0, 45));
+
+          const questions = (dept.questions || []).slice(0, 5);
+          const rows = questions.map((q, index) => {
+            const input = new TextInputBuilder()
+              .setCustomId(`q_${index}`)
+              .setLabel(q.length > 45 ? q.substring(0, 42) + '...' : q)
+              .setPlaceholder(q.length > 100 ? q.substring(0, 97) + '...' : q)
+              .setStyle(TextInputStyle.Paragraph)
+              .setRequired(true);
+
+            return new ActionRowBuilder().addComponents(input);
+          });
+
+          if (rows.length === 0) {
+            return interaction.reply({ content: '<:no:1526496561188831244>No questions configured for this department.', ephemeral: true });
+          }
+
+          modal.addComponents(...rows);
+          return interaction.showModal(modal);
+        }
+
+        if (interaction.customId.startsWith('apply_approve_') || interaction.customId.startsWith('apply_deny_')) {
+          const { ApplySetup } = require('../db/models');
+          const settings = await ApplySetup.findOne({ where: { guild_id: interaction.guild.id } });
+
+          const parsedStaffRoles = settings?.staff_role_id ? settings.staff_role_id.split(',').filter(Boolean) : [];
+          const hasStaffRole = parsedStaffRoles.some(roleId => interaction.member.roles.cache.has(roleId));
+
+          if (!hasStaffRole && !interaction.member.permissions.has(PermissionFlagsBits.Administrator)) {
+            return interaction.reply({ content: '<:no:1526496561188831244>Only authorized staff can review applications.', ephemeral: true });
+          }
+
+          const parts = interaction.customId.split('_');
+          const action = parts[1] === 'approve' ? 'Approved' : 'Denied';
+          const clickedDept = parts[2];
+          const userId = parts[3];
+          const user = await interaction.guild.members.fetch(userId).catch(() => null);
+
+          // Get departments to find dynamic role and label
+          const getDepartments = (settings) => {
+            let depts = [];
+            if (settings && settings.departments) {
+              try {
+                depts = typeof settings.departments === 'string'
+                  ? JSON.parse(settings.departments)
+                  : settings.departments;
+              } catch { }
+            }
+            if (!Array.isArray(depts) || depts.length === 0) {
+              depts = [
+                { key: 'staff', label: 'Staff Team', role_id: settings?.role_staff_id },
+                { key: 'designer', label: 'Designer', role_id: settings?.role_designer_id },
+                { key: 'event', label: 'Event Hoster', role_id: settings?.role_event_id },
+                { key: 'partnership', label: 'Partnership', role_id: settings?.role_partnership_id }
+              ];
+            }
+            return depts;
+          };
+
+          const departments = getDepartments(settings);
+          let dept = null;
+          let deptIndex = parseInt(clickedDept, 10);
+          if (isNaN(deptIndex)) {
+            dept = departments.find(d => d.key === clickedDept);
+          } else {
+            dept = departments[deptIndex];
+          }
+
+          if (!dept) {
+            return interaction.reply({ content: '<:no:1526496561188831244>Department configuration not found.', ephemeral: true });
+          }
+
+          const container = UI.createContainer({
+            title: `Application ${action}`,
+            description: `The application for **${user?.user.tag || 'Unknown User'}** has been **${action.toLowerCase()}**.`,
+            color: action === 'Approved' ? 0x00FF00 : 0xFF0000,
+            fields: [
+              { name: 'Department', value: `\`${dept.label}\`` },
+              { name: 'Reviewer', value: `${interaction.user} (${interaction.user.tag})` }
+            ],
+            thumbnail: user ? user.displayAvatarURL({ dynamic: true }) : undefined
+          });
+
+          await interaction.update({ components: [container] });
+
+          // Role assignment logic
+          if (action === 'Approved' && user && settings) {
+            const roleId = dept.role_id;
+            if (roleId) {
+              await user.roles.add(roleId).catch(err => console.error("Failed to add role:", err));
+            }
+          }
+
+          // Log to log channel
+          if (settings.log_channel_id) {
+            const logChannel = interaction.guild.channels.cache.get(settings.log_channel_id);
+            if (logChannel) {
+              const logEmbed = new EmbedBuilder()
+                .setTitle(`Application ${action}`)
+                .setDescription(`**User:** ${user || 'Unknown'}\n**Department:** \`${dept.label}\`\n**Reviewer:** ${interaction.user}`)
+                .setColor(action === 'Approved' ? 'Green' : 'Red')
+                .setTimestamp();
+              await logChannel.send({ embeds: [logEmbed] });
+            }
+          }
+
+          // Notify User
+          if (user) {
+            await user.send({
+              content: `Hello! Your application in **${interaction.guild.name}** for **${dept.label}** has been **${action.toLowerCase()}**.`
+            }).catch(() => { });
+          }
+        }
+
+        // --- Verification Blacklist Request Handlers ---
+        if (interaction.customId.startsWith('vbl_accept_') || interaction.customId.startsWith('vbl_refuse_')) {
+          const { GuildSettings, VerificationBlacklist } = require('../db/models');
+          const settings = await GuildSettings.findOne({ where: { guild_id: interaction.guild.id } });
+
+          const ownerRoles = settings?.owner_role_id?.split(',') || [];
+          const isOwner = interaction.member.roles.cache.some(r => ownerRoles.includes(r.id)) ||
+            interaction.member.permissions.has(PermissionFlagsBits.Administrator);
+
+          if (!isOwner) {
+            return interaction.reply({ content: "- <:no:1526496561188831244>Only **Owners** or **Administrators** can approve/refuse blacklist requests!", ephemeral: true });
+          }
+
+          const [, action, targetId, verificatorId] = interaction.customId.split('_');
+          const requestEmbed = interaction.message.components[0].data; // UI.createContainer returns a component
+
+          // Note: UI.createContainer returns a ContainerBuilder which might need careful extraction if it's not raw data
+          // But based on usage, it's passed to components: []
+
+          if (action === 'accept') {
+            // Re-extract reason from description if possible, or just use a generic one
+            // Description was: `**Target:** <@${target.id}> (\`${target.id}\`)\n**Reason:** ${reason}\n**Requested By:** <@${message.author.id}>`
+            const desc = interaction.message.embeds[0]?.description || "";
+            const reasonMatch = desc.match(/\*\*Reason:\*\* (.*)\n/);
+            const reason = reasonMatch ? reasonMatch[1] : "No reason provided";
+
+            await VerificationBlacklist.upsert({
+              guild_id: interaction.guild.id,
+              user_id: targetId,
+              reason: reason,
+              verificator_id: verificatorId
+            });
+
+            await interaction.update({
+              components: [UI.createContainer({
+                title: 'Blacklist Request Accepted',
+                description: `${desc}\n\n<:success:1526086221338771567> **Accepted by:** ${interaction.user.tag}`
+              })],
+            });
+
+          } else if (action === 'refuse') {
+            const desc = interaction.message.embeds[0]?.description || "";
+            await interaction.update({
+              components: [UI.createContainer({
+                title: 'Blacklist Request Refused',
+                description: `${desc}\n\n<:no:1526496561188831244>**Refused by:** ${interaction.user.tag}`
+              })],
+            });
+          }
+        }
+
+        // --- Staff Need Help Management ---
+        if (interaction.customId.startsWith('nh_')) {
+          const NeedHelpManager = require('../utils/need-help-manager');
+          await NeedHelpManager.handleButton(interaction);
+        }
+
+        // --- Invite System Buttons ---
+        if (['my_invites', 'create_invite', 'invite_leaderboard', 'refresh_leaderboard', 'view_my_invites'].includes(interaction.customId)) {
+          const invitesCommand = require('../commands/Member Cmds/invites.js');
+
+          if (interaction.customId === 'create_invite') {
+            const invite = await interaction.channel.createInvite({ maxAge: 0, maxUses: 0, unique: true });
+            return interaction.reply({ content: `Here is your permanent invite link: ${invite.url}`, ephemeral: true });
+          }
+
+          if (interaction.customId === 'invite_leaderboard' || interaction.customId === 'refresh_leaderboard') {
+            // Mock a message object so we can reuse the command's method
+            const msgMock = {
+              author: interaction.user,
+              channel: interaction.channel,
+              guild: interaction.guild,
+              reply: async (opts) => {
+                // If updating, we edit. If new, we reply.
+                if (interaction.message && interaction.customId === 'refresh_leaderboard') {
+                  await interaction.update(opts);
+                } else {
+                  await interaction.reply(opts);
+                }
+              },
+              client: interaction.client
+            };
+            await invitesCommand.showLeaderboard(msgMock, interaction.guild);
+            return;
+          }
+
+          if (interaction.customId === 'my_invites' || interaction.customId === 'view_my_invites') {
+            const msgMock = {
+              author: interaction.user,
+              guild: interaction.guild,
+              client: interaction.client,
+              mentions: { users: { first: () => null } },
+              reply: async (opts) => {
+                await interaction.reply({ ...opts, ephemeral: true });
+              },
+              react: () => { }
+            };
+            await invitesCommand.execute(msgMock, []);
+            return;
+          }
+        }
+
+        // --- Setup Hub Live Selection Handlers (Direct Save) ---
+        if (interaction.isRoleSelectMenu() || interaction.isChannelSelectMenu()) {
+          const { JailSetup, AutoRoleSetup, WarnSetup, MuteSetup } = require('../db/models');
+
+          // 1. Jail System Handlers
+          if (interaction.customId === 'select_jailers') {
+            const roles = interaction.values;
+            await JailSetup.upsert({ guild_id: interaction.guild.id, jailer_role_id: JSON.stringify(roles) });
+            return interaction.reply({ content: `<:success:1526086221338771567> **Jailer Roles** updated: ${roles.map(id => `<@&${id}>`).join(', ')}`, ephemeral: true });
+          }
+          if (interaction.customId === 'select_jailed') {
+            const roleId = interaction.values[0];
+            await JailSetup.upsert({ guild_id: interaction.guild.id, jailed_role_id: roleId });
+            return interaction.reply({ content: `<:success:1526086221338771567> **Jailed Role** updated: <@&${roleId}>`, ephemeral: true });
+          }
+
+          // 2. Auto Role Handlers
+          if (interaction.customId === 'select_autoroles') {
+            const roles = interaction.values;
+            await AutoRoleSetup.upsert({ guild_id: interaction.guild.id, auto_role_id: roles.join(',') });
+            return interaction.reply({ content: `<:success:1526086221338771567> **Auto Roles** updated: ${roles.map(id => `<@&${id}>`).join(', ')}`, ephemeral: true });
+          }
+
+          // 3. Logging Handlers
+          if (interaction.customId === 'select_logs') {
+            const { GuildSettings } = require('../db/models');
+            const channelId = interaction.values[0];
+            await GuildSettings.upsert({ guild_id: interaction.guild.id, log_channel: channelId });
+            return interaction.reply({ content: `<:success:1526086221338771567> **Log Channel** updated: <#${channelId}>`, ephemeral: true });
+          }
+
+          // 4. Warning System Handlers
+          if (interaction.customId === 'select_warn_staff') {
+            const roles = interaction.values;
+            await WarnSetup.upsert({ guild_id: interaction.guild.id, warner_role: JSON.stringify(roles) });
+            return interaction.reply({ content: `<:success:1526086221338771567> **Staff Roles** updated: ${roles.map(id => `<@&${id}>`).join(', ')}`, ephemeral: true });
+          }
+          if (interaction.customId === 'select_warn_final') {
+            const roleId = interaction.values[0];
+            await WarnSetup.upsert({ guild_id: interaction.guild.id, warn_last: roleId });
+            return interaction.reply({ content: `<:success:1526086221338771567> **Final Warn Role** updated: <@&${roleId}>`, ephemeral: true });
+          }
+          if (interaction.customId === 'select_warn_logs') {
+            const channelId = interaction.values[0];
+            await WarnSetup.upsert({ guild_id: interaction.guild.id, warning_logs: channelId });
+            return interaction.reply({ content: `<:success:1526086221338771567> **Warn Logs** updated: <#${channelId}>`, ephemeral: true });
+          }
+
+          // 5. Mute System Handlers
+          if (interaction.customId === 'select_mute_role') {
+            const roleId = interaction.values[0];
+            await MuteSetup.upsert({ guild_id: interaction.guild.id, mute_role_id: roleId });
+            return interaction.reply({ content: `<:success:1526086221338771567> **Muted Role** updated: <@&${roleId}>`, ephemeral: true });
+          }
+          if (interaction.customId === 'select_mute_logs') {
+            const channelId = interaction.values[0];
+            await MuteSetup.upsert({ guild_id: interaction.guild.id, mute_logs_channel: channelId });
+            return interaction.reply({ content: `<:success:1526086221338771567> **Mute Logs** updated: <#${channelId}>`, ephemeral: true });
+          }
+
+          // 6. Room Setup Handlers
+          if (interaction.customId === 'select_room_join') {
+            const { RoomSettings } = require('../db/models');
+            const channelId = interaction.values[0];
+            await RoomSettings.upsert({ guild_id: interaction.guild.id, join_channel: channelId });
+            return interaction.reply({ content: `<:success:1526086221338771567> **Join Voice Channel** updated: <#${channelId}>`, ephemeral: true });
+          }
+          if (interaction.customId === 'select_room_category') {
+            const { RoomSettings } = require('../db/models');
+            const channelId = interaction.values[0];
+            await RoomSettings.upsert({ guild_id: interaction.guild.id, room_category: channelId });
+            return interaction.reply({ content: `<:success:1526086221338771567> **Room Category** updated: Category ID \`${channelId}\``, ephemeral: true });
+          }
+          if (interaction.customId === 'select_room_logs') {
+            const { RoomSettings } = require('../db/models');
+            const channelId = interaction.values[0];
+            await RoomSettings.upsert({ guild_id: interaction.guild.id, log_channel: channelId });
+            return interaction.reply({ content: `<:success:1526086221338771567> **Room System Logs Channel** updated: <#${channelId}>`, ephemeral: true });
+          }
+          if (interaction.customId === 'select_room_staff') {
+            const { RoomSettings } = require('../db/models');
+            const roleId = interaction.values[0];
+            await RoomSettings.upsert({ guild_id: interaction.guild.id, staff_role: JSON.stringify([roleId]) });
+            return interaction.reply({ content: `<:success:1526086221338771567> **Staff Role** updated: <@&${roleId}>`, ephemeral: true });
+          }
+
+          // 7. Verification Setup Handlers
+          if (interaction.customId === 'select_ver_role_male') {
+            const { VerificationRoles } = require('../db/models');
+            const roleId = interaction.values[0];
+            await VerificationRoles.upsert({ guild_id: interaction.guild.id, verified_role: roleId });
+            return interaction.reply({ content: `<:success:1526086221338771567> **Verified Male Role** updated: <@&${roleId}>`, ephemeral: true });
+          }
+          if (interaction.customId === 'select_ver_role_female') {
+            const { VerificationRoles } = require('../db/models');
+            const roleId = interaction.values[0];
+            await VerificationRoles.upsert({ guild_id: interaction.guild.id, verified_female_role: roleId });
+            return interaction.reply({ content: `<:success:1526086221338771567> **Verified Female Role** updated: <@&${roleId}>`, ephemeral: true });
+          }
+          if (interaction.customId === 'select_ver_role_unverified') {
+            const { VerificationRoles } = require('../db/models');
+            const roleId = interaction.values[0];
+            await VerificationRoles.upsert({ guild_id: interaction.guild.id, unverified_role: roleId });
+            return interaction.reply({ content: `<:success:1526086221338771567> **Unverified Role** updated: <@&${roleId}>`, ephemeral: true });
+          }
+          if (interaction.customId === 'select_ver_logs') {
+            const { VerificationRoles } = require('../db/models');
+            const channelId = interaction.values[0];
+            await VerificationRoles.upsert({ guild_id: interaction.guild.id, verification_logs: channelId });
+            return interaction.reply({ content: `<:success:1526086221338771567> **Verification Logs** updated: <#${channelId}>`, ephemeral: true });
+          }
+        }
+      }
+      // 3. Modals
+      else if (interaction.isModalSubmit()) {
+        const extractId = (str) => (str.match(/\d+/) || [null])[0];
+        const extractIds = (str) => str.match(/\d+/g) || [];
+
+        // --- Warning System Modal Submit Handler ---
+        if (interaction.customId === 'modal_setup_warn') {
+          const { WarnSetup } = require('../db/models');
+
+          const staffIds = interaction.fields.getRoleSelectMenuValues('warn_staff') || [];
+          const role3 = interaction.fields.getRoleSelectMenuValues('role3')?.[0];
+          const logs = interaction.fields.getChannelSelectMenuValues('warning_logs')?.[0];
+
+          if (!role3 || !logs || staffIds.length === 0) {
+            return interaction.reply({ content: '<:no:1526496561188831244>Invalid input. Please ensure you select a role and channel.', ephemeral: true });
+          }
+
+          try {
+            await WarnSetup.upsert({
+              guild_id: interaction.guild.id,
+              warn_last: role3,
+              warner_role: JSON.stringify(staffIds),
+              warning_logs: logs
+            });
+
+            const embed = UI.createEmbed({
+              type: 'success',
+              title: '🛡️ Warning System Configured',
+              description:
+                `Successfully updated your warning system settings!\n\n` +
+                `**Staff Roles:** ${staffIds.map(id => `<@&${id}>`).join(', ')}\n` +
+                `**Last Warn Role:** <@&${role3}>\n` +
+                `**Log Channel:** <#${logs}>`,
+              footer: interaction.guild.name
+            });
+
+            return interaction.reply({ embeds: [embed], ephemeral: true });
+          } catch (error) {
+            console.error(error);
+            return interaction.reply({ content: '<:no:1526496561188831244>An error occurred while saving the configuration.', ephemeral: true });
+          }
+        }
+
+        // --- Jail System Modal Submit Handler ---
+        if (interaction.customId === 'modal_setup_jail') {
+          const { JailSetup } = require('../db/models');
+
+          const jailerIds = interaction.fields.getRoleSelectMenuValues('jail_roles') || [];
+          const jailedId = interaction.fields.getRoleSelectMenuValues('jailed_role')?.[0];
+
+          if (!jailedId || jailerIds.length === 0) {
+            return interaction.reply({ content: '<:no:1526496561188831244>Invalid input. Please select roles.', ephemeral: true });
+          }
+
+          try {
+            await JailSetup.upsert({
+              guild_id: interaction.guild.id,
+              jailed_role_id: jailedId,
+              jailer_role_id: JSON.stringify(jailerIds)
+            });
+
+            const embed = UI.createEmbed({
+              type: 'success',
+              title: '⛓️ Jail System Configured',
+              description:
+                `Successfully updated your jailer settings!\n\n` +
+                `**Jailer Roles:** ${jailerIds.map(id => `<@&${id}>`).join(', ')}\n` +
+                `**Jailed Role:** <@&${jailedId}>`,
+              footer: interaction.guild.name
+            });
+
+            return interaction.reply({ embeds: [embed], ephemeral: true });
+          } catch (error) {
+            console.error(error);
+            return interaction.reply({ content: '<:no:1526496561188831244>An error occurred while saving the configuration.', ephemeral: true });
+          }
+        }
+
+        // --- Auto Role Modal Submit Handler ---
+        if (interaction.customId === 'modal_setup_autorole') {
+          const { AutoRoleSetup } = require('../db/models');
+          const roleIds = interaction.fields.getRoleSelectMenuValues('auto_roles') || [];
+
+          if (roleIds.length === 0) {
+            return interaction.reply({ content: '<:no:1526496561188831244>Invalid input. Please select at least one role.', ephemeral: true });
+          }
+
+          try {
+            await AutoRoleSetup.upsert({
+              guild_id: interaction.guild.id,
+              auto_role_id: roleIds.join(',')
+            });
+
+            const embed = UI.createEmbed({
+              type: 'success',
+              title: '⚙️ Auto Role Configured',
+              description:
+                `Successfully updated automatic role assignment!\n\n` +
+                `**New Member Roles:** ${roleIds.map(id => `<@&${id}>`).join(', ')}`,
+              footer: interaction.guild.name
+            });
+
+            return interaction.reply({ embeds: [embed], ephemeral: true });
+          } catch (error) {
+            console.error(error);
+            return interaction.reply({ content: '<:no:1526496561188831244>An error occurred while saving the configuration.', ephemeral: true });
+          }
+        }
+
+        // --- Logging Modal Submit Handler ---
+        if (interaction.customId === 'modal_setup_logs') {
+          const { GuildSettings } = require('../db/models');
+          const logId = interaction.fields.getChannelSelectMenuValues('log_channel')?.[0];
+
+          if (!logId) {
+            return interaction.reply({ content: '<:no:1526496561188831244>Invalid input. Please select a channel.', ephemeral: true });
+          }
+
+          try {
+            await GuildSettings.upsert({
+              guild_id: interaction.guild.id,
+              log_channel: logId
+            });
+
+            const embed = UI.createEmbed({
+              type: 'success',
+              title: '📜 Logging System Configured',
+              description:
+                `Successfully updated server logging!\n\n` +
+                `**Main Logs Channel:** <#${logId}>`,
+              footer: interaction.guild.name
+            });
+
+            return interaction.reply({ embeds: [embed], ephemeral: true });
+          } catch (error) {
+            console.error(error);
+            return interaction.reply({ content: '<:no:1526496561188831244>An error occurred while saving the configuration.', ephemeral: true });
+          }
+        }
+
+        if (interaction.customId.startsWith('apply_modal_')) {
+          const clickedDept = interaction.customId.split('_').pop();
+          const { ApplySetup } = require('../db/models');
+          const settings = await ApplySetup.findOne({ where: { guild_id: interaction.guild.id } });
+
+          if (!settings || !settings.staff_channel_id) {
+            return interaction.reply({ content: '<:no:1526496561188831244>Staff channel is not configured.', ephemeral: true });
+          }
+
+          const staffChannel = interaction.guild.channels.cache.get(settings.staff_channel_id) ||
+            await interaction.guild.channels.fetch(settings.staff_channel_id).catch(() => null);
+
+          if (!staffChannel) {
+            return interaction.reply({ content: '<:no:1526496561188831244>Staff channel not found or inaccessible.', ephemeral: true });
+          }
+
+          const getDepartments = (settings) => {
+            let depts = [];
+            if (settings && settings.departments) {
+              try {
+                depts = typeof settings.departments === 'string'
+                  ? JSON.parse(settings.departments)
+                  : settings.departments;
+              } catch { }
+            }
+            if (!Array.isArray(depts) || depts.length === 0) {
+              depts = [
+                {
+                  key: 'staff',
+                  label: 'Staff Team',
+                  questions: [
+                    'Why do you want to join our staff team?',
+                    'What experience do you have in moderation?',
+                    'How active can you be on a weekly basis?',
+                    'How would you handle a conflict between members?'
+                  ]
+                },
+                {
+                  key: 'designer',
+                  label: 'Designer',
+                  questions: [
+                    'What design software do you use?',
+                    'Link to your portfolio or examples of work.',
+                    'Describe your design style (Minimalist, etc.)',
+                    'Are you comfortable working with deadlines?'
+                  ]
+                },
+                {
+                  key: 'event',
+                  label: 'Event Hoster',
+                  questions: [
+                    'What kind of events would you like to host?',
+                    'Experience managing large groups/events?',
+                    'What makes a successful community event?',
+                    'What is your availability for hosting events?'
+                  ]
+                },
+                {
+                  key: 'partnership',
+                  label: 'Partnership',
+                  questions: [
+                    'Previous experience in server partnerships?',
+                    'How do you find potential partners?',
+                    'What are your methods for growing relationships?',
+                    'How many partnerships can you handle weekly?'
+                  ]
+                }
+              ];
+            }
+            return depts;
+          };
+
+          const departments = getDepartments(settings);
+          let dept = null;
+          let deptIndex = parseInt(clickedDept, 10);
+          if (isNaN(deptIndex)) {
+            dept = departments.find(d => d.key === clickedDept);
+            deptIndex = departments.indexOf(dept);
+          } else {
+            dept = departments[deptIndex];
+          }
+
+          if (!dept) {
+            return interaction.reply({ content: '<:no:1526496561188831244>Department configuration not found.', flags: MessageFlags.Ephemeral });
+          }
+
+          const { ActionRowBuilder, ButtonBuilder, ButtonStyle, SeparatorBuilder, SeparatorSpacingSize } = require('discord.js');
+
+          const btnVal = !isNaN(deptIndex) ? `${deptIndex}` : clickedDept;
+          const row = new ActionRowBuilder().addComponents(
+            new ButtonBuilder()
+              .setCustomId(`apply_approve_${btnVal}_${interaction.user.id}`)
+              .setLabel('Approve')
+              .setStyle(ButtonStyle.Success),
+            new ButtonBuilder()
+              .setCustomId(`apply_deny_${btnVal}_${interaction.user.id}`)
+              .setLabel('Deny')
+              .setStyle(ButtonStyle.Danger)
+          );
+
+          const container = UI.createContainer({
+            title: `New ${dept.label} Application`,
+            description: `**User:** ${interaction.user} (\`${interaction.user.id}\`)\n**Department:** \`${dept.label}\``,
+            color: 0xFFFF00,
+            thumbnail: interaction.user.displayAvatarURL({ dynamic: true })
+          });
+
+          const questions = dept.questions || [];
+          questions.forEach((q, i) => {
+            container.addSeparatorComponents(sep => sep.setSpacing(SeparatorSpacingSize.Small));
+            container.addTextDisplayComponents(td => td.setContent(`### ${q}\n${interaction.fields.getTextInputValue(`q_${i}`) || 'No answer'}`));
+          });
+
+          // Nest the buttons inside the container
+          container.addActionRowComponents(row);
+
+          await staffChannel.send({
+            components: [container],
+            flags: MessageFlags.IsComponentsV2
+          });
+          await interaction.reply({ content: '<:success:1526086221338771567> Your application has been submitted successfully!', flags: MessageFlags.Ephemeral });
+        }
+
+        if (interaction.customId === 'bank_deposit_modal') {
+          await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+          const amountStr = interaction.fields.getTextInputValue('deposit_amount');
+          const reason = interaction.fields.getTextInputValue('deposit_reason') || 'Quick Bank Deposit';
+
+          try {
+            const EconomyService = require('../services/economyService');
+            const UIManager = require('../managers/uiManager');
+            const res = await EconomyService.deposit(interaction.user.id, interaction.guild.id, amountStr);
+
+            const container = UIManager.createContainer({
+              title: '<:5526iconbank:1533131833338761297> Bank Deposit Successful',
+              accentColor: UIManager.ACCENTS.EMERALD
+            });
+
+            const sec = UIManager.createSection({
+              title: 'Vault Status',
+              content: `Deposited: \`+${Number(res.deposited).toLocaleString()}\` <:vivycoin:1533128699350749425>\nNote: \`${reason}\`\nBank Balance: \`${Number(res.newBank).toLocaleString()}\` <:vivycoin:1533128699350749425>\nRemaining Wallet: \`${Number(res.newWallet).toLocaleString()}\` <:vivycoin:1533128699350749425>`,
+              buttonLabel: 'Deposited',
+              buttonId: 'bank_dep_done'
+            });
+
+            container.addSectionComponents(sec);
+            return interaction.editReply(UIManager.toResponse(container, true));
+          } catch (err) {
+            const UIManager = require('../managers/uiManager');
+            const errContainer = UIManager.createContainer({
+              title: '❌ Deposit Failed',
+              accentColor: UIManager.ACCENTS.ROSE
+            });
+            errContainer.addSectionComponents(UIManager.createSection({
+              title: 'Error',
+              content: err.message,
+              buttonLabel: 'Failed',
+              buttonId: 'bank_dep_err'
+            }));
+            return interaction.editReply(UIManager.toResponse(errContainer, true));
+          }
+        }
+      }
+
+    } catch (error) {
+      console.error("Interaction Handler Error:", error);
+    }
+  },
+};

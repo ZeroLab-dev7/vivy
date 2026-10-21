@@ -1,0 +1,1730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vivy Documentation — Complete Guide & Reference</title>
+    <meta name="description" content="Complete documentation for Vivy Discord Bot and Dashboard. Guides, command references, API docs, tutorials, and troubleshooting.">
+    <meta property="og:title" content="Vivy Documentation">
+    <meta property="og:description" content="Everything you need to master Vivy. Complete guides, tutorials, command references, and more.">
+    <meta property="og:type" content="website">
+    <meta name="theme-color" content="#00f2fe">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-dark: #030712;
+            --bg-card: rgba(10, 15, 30, 0.45);
+            --bg-card-hover: rgba(17, 24, 39, 0.75);
+            --bg-sidebar: rgba(5, 8, 18, 0.95);
+            --bg-code: rgba(8, 12, 24, 0.9);
+            --border: rgba(255, 255, 255, 0.05);
+            --border-hover: rgba(255, 255, 255, 0.12);
+            --cyan: #00f2fe;
+            --purple: #9d4edd;
+            --pink: #f72585;
+            --gold: #fbbf24;
+            --blue: #3b82f6;
+            --green: #10b981;
+            --orange: #f59e0b;
+            --red: #ef4444;
+            --discord: #5865F2;
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+            --sidebar-width: 280px;
+            --toc-width: 240px;
+            --header-height: 64px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { background-color: var(--bg-dark); color: var(--text-primary); font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; scroll-behavior: smooth; overflow-x: hidden; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2); }
+
+        /* Typography & Headings */
+        h1, h2, h3, h4 { font-family: 'Outfit', sans-serif; font-weight: 700; letter-spacing: -0.02em; }
+        a { color: inherit; text-decoration: none; }
+
+        /* Layout */
+        .docs-header {
+            position: fixed; top: 0; left: 0; right: 0; height: var(--header-height);
+            background: rgba(3, 7, 18, 0.8); backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border); display: flex; align-items: center;
+            justify-content: space-between; padding: 0 24px; z-index: 100;
+        }
+        .logo-wrap { display: flex; align-items: center; gap: 10px; font-size: 1.25rem; font-weight: 800; font-family: 'Outfit', sans-serif; cursor: pointer; }
+        .logo-wrap img { width: 32px; height: 32px; object-fit: contain; }
+        .logo-wrap span { background: linear-gradient(135deg, #fff 40%, var(--cyan)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+
+        /* Search Input */
+        .search-wrap { position: relative; width: 320px; }
+        .search-input-container { position: relative; width: 100%; }
+        .search-input-container i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.875rem; }
+        .search-input {
+            width: 100%; padding: 8px 12px 8px 36px; background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary);
+            font-size: 0.875rem; outline: none; transition: all 0.2s;
+        }
+        .search-input:focus { border-color: var(--cyan); background: rgba(0,242,254,0.02); box-shadow: 0 0 12px rgba(0,242,254,0.1); }
+        .search-kbd {
+            position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+            font-size: 0.75rem; color: var(--text-muted); background: rgba(255,255,255,0.05);
+            padding: 2px 6px; border-radius: 4px; pointer-events: none; border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        /* Search Dropdown */
+        .search-results {
+            position: absolute; top: calc(100% + 8px); right: 0; width: 480px;
+            background: #090d1a; border: 1px solid var(--border-hover); border-radius: 12px;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05);
+            max-height: 400px; overflow-y: auto; display: none; z-index: 1000;
+        }
+        .search-results.active { display: block; }
+        .search-result-item { padding: 12px 16px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.15s; }
+        .search-result-item:last-child { border-bottom: none; }
+        .search-result-item:hover { background: rgba(255,255,255,0.03); }
+        .sr-title { font-weight: 600; font-size: 0.9rem; color: #fff; }
+        .sr-path { font-size: 0.75rem; color: var(--cyan); font-weight: 500; margin-bottom: 2px; }
+        .sr-snippet { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4; }
+        .sr-tag { font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; font-weight: 700; text-transform: uppercase; }
+        .sr-tag.guide { background: rgba(59,130,246,0.15); color: #60a5fa; }
+        .sr-tag.command { background: rgba(16,185,129,0.15); color: #34d399; }
+        .sr-tag.api { background: rgba(157,78,221,0.15); color: #c084fc; }
+        .sr-tag.faq { background: rgba(245,158,11,0.15); color: #fbbf24; }
+        .search-empty { padding: 16px; text-align: center; color: var(--text-secondary); font-size: 0.875rem; }
+
+        /* Main Container Wrap */
+        .docs-container { display: flex; margin-top: var(--header-height); min-height: calc(100vh - var(--header-height)); }
+
+        /* Left Sidebar */
+        .docs-sidebar {
+            width: var(--sidebar-width); background: var(--bg-sidebar);
+            border-right: 1px solid var(--border); position: fixed; top: var(--header-height);
+            bottom: 0; left: 0; overflow-y: auto; padding: 24px 16px; z-index: 90;
+        }
+        .sidebar-section { margin-bottom: 24px; }
+        .sidebar-section-title {
+            font-size: 0.75rem; font-weight: 700; color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; padding-left: 12px;
+        }
+        .sidebar-link {
+            display: flex; align-items: center; gap: 10px; padding: 8px 12px;
+            font-size: 0.875rem; color: var(--text-secondary); border-radius: 8px;
+            transition: all 0.2s; cursor: pointer; font-weight: 500;
+        }
+        .sidebar-link:hover { color: #fff; background: rgba(255,255,255,0.03); }
+        .sidebar-link.active { color: var(--cyan); background: rgba(0,242,254,0.06); font-weight: 600; }
+        .sidebar-link i { font-size: 0.95rem; width: 16px; text-align: center; color: var(--text-muted); }
+        .sidebar-link.active i { color: var(--cyan); }
+        .badge { font-size: 0.65rem; padding: 1px 5px; border-radius: 4px; font-weight: 700; margin-left: auto; }
+        .badge-new { background: var(--purple); color: #fff; }
+        .badge-premium { background: var(--cyan); color: #000; }
+
+        /* Main Content Area */
+        .docs-main {
+            flex: 1; margin-left: var(--sidebar-width); margin-right: var(--toc-width);
+            padding: 48px 64px; max-width: 960px; overflow-y: auto; height: calc(100vh - var(--header-height));
+        }
+
+        /* Right TOC */
+        .docs-toc {
+            width: var(--toc-width); position: fixed; top: var(--header-height);
+            bottom: 0; right: 0; padding: 24px 20px; overflow-y: auto;
+            border-left: 1px solid var(--border); background: var(--bg-dark); z-index: 85;
+        }
+        .toc-title { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; }
+        .toc-link { display: block; font-size: 0.825rem; color: var(--text-secondary); padding: 4px 0; border-left: 2px solid transparent; padding-left: 12px; transition: all 0.2s; }
+        .toc-link:hover { color: #fff; }
+        .toc-link.active { color: var(--cyan); border-left-color: var(--cyan); font-weight: 500; }
+        .toc-link.h3 { padding-left: 24px; }
+
+        /* Breadcrumb */
+        .docs-breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 24px; }
+        .docs-breadcrumb span { cursor: pointer; }
+        .docs-breadcrumb span:hover { color: #fff; }
+        .docs-breadcrumb .sep { color: var(--text-muted); pointer-events: none; }
+
+        /* Page Layout */
+        .doc-page { display: none; }
+        .doc-page.active { display: block; }
+
+        /* Hero */
+        .docs-hero { margin-bottom: 40px; }
+        .docs-hero-tag { display: inline-flex; align-items: center; gap: 6px; background: rgba(0,242,254,0.1); color: var(--cyan); padding: 6px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; margin-bottom: 16px; border: 1px solid rgba(0,242,254,0.15); }
+        .docs-hero-title { font-size: 2.75rem; line-height: 1.15; margin-bottom: 16px; font-weight: 800; }
+        .docs-hero-title span { background: linear-gradient(135deg, #fff, var(--cyan)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .docs-hero-sub { font-size: 1.125rem; color: var(--text-secondary); line-height: 1.6; max-width: 680px; }
+        .docs-hero-btns { display: flex; gap: 16px; margin-top: 24px; }
+        .hero-btn-primary { background: var(--cyan); color: #000; font-weight: 600; font-size: 0.9rem; padding: 10px 20px; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: transform 0.2s, box-shadow 0.2s; }
+        .hero-btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 15px rgba(0,242,254,0.35); }
+        .hero-btn-ghost { background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: #fff; font-weight: 600; font-size: 0.9rem; padding: 10px 20px; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; }
+        .hero-btn-ghost:hover { background: rgba(255,255,255,0.06); border-color: var(--border-hover); }
+
+        .doc-tag { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; margin-bottom: 12px; }
+        .doc-tag.tag-guide { background: rgba(59,130,246,0.12); color: #60a5fa; border: 1px solid rgba(59,130,246,0.2); }
+        .doc-tag.tag-dashboard { background: rgba(16,185,129,0.12); color: #34d399; border: 1px solid rgba(16,185,129,0.2); }
+        .doc-tag.tag-command { background: rgba(245,158,11,0.12); color: #fbbf24; border: 1px solid rgba(245,158,11,0.2); }
+        .doc-tag.tag-api { background: rgba(157,78,221,0.12); color: #c084fc; border: 1px solid rgba(157,78,221,0.2); }
+        .doc-tag.tag-premium { background: rgba(247,37,133,0.12); color: #f472b6; border: 1px solid rgba(247,37,133,0.2); }
+
+        .doc-title { font-size: 2.25rem; margin-bottom: 10px; font-weight: 800; color: #fff; }
+        .doc-subtitle { font-size: 1.1rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 16px; }
+        .doc-meta { display: flex; gap: 16px; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 24px; }
+        .doc-meta span { display: flex; align-items: center; gap: 6px; }
+        .doc-divider { height: 1px; background: var(--border); margin: 32px 0; }
+
+        /* Paragraphs & Text Content */
+        .doc-p { font-size: 0.95rem; color: var(--text-secondary); line-height: 1.7; margin-bottom: 20px; }
+        .doc-p strong { color: #fff; }
+        .doc-p a { color: var(--cyan); border-bottom: 1px solid transparent; transition: border 0.15s; }
+        .doc-p a:hover { border-bottom-color: var(--cyan); }
+        .doc-heading { font-size: 1.5rem; margin-top: 36px; margin-bottom: 16px; color: #fff; display: flex; align-items: center; gap: 8px; }
+        .doc-heading::after { content: '#'; color: var(--text-muted); opacity: 0; font-size: 1.1rem; transition: opacity 0.2s; cursor: pointer; }
+        .doc-heading:hover::after { opacity: 0.5; }
+        h3.doc-heading { font-size: 1.15rem; margin-top: 24px; }
+
+        .doc-ul { list-style: none; margin-bottom: 20px; padding-left: 8px; }
+        .doc-ul li { font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 8px; position: relative; padding-left: 20px; }
+        .doc-ul li::before { content: '•'; color: var(--cyan); font-size: 1.2rem; position: absolute; left: 4px; top: -1px; }
+
+        /* Category Grid */
+        .docs-category-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-top: 20px; }
+        .docs-cat-card {
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+            padding: 24px; cursor: pointer; transition: all 0.2s; display: flex; flex-direction: column; gap: 8px;
+        }
+        .docs-cat-card:hover { border-color: var(--border-hover); background: var(--bg-card-hover); transform: translateY(-2px); }
+        .cat-icon { font-size: 1.75rem; margin-bottom: 4px; }
+        .cat-title { font-weight: 700; font-size: 1.1rem; color: #fff; font-family: 'Outfit', sans-serif; }
+        .cat-desc { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5; }
+
+        /* Callouts */
+        .callout { display: flex; gap: 16px; padding: 16px 20px; border-radius: 10px; margin-bottom: 24px; border: 1px solid transparent; font-size: 0.9rem; line-height: 1.6; }
+        .callout-icon { font-size: 1.15rem; margin-top: 2px; }
+        .callout-body strong { color: #fff; }
+        .callout.info { background: rgba(59,130,246,0.06); border-color: rgba(59,130,246,0.15); color: #93c5fd; }
+        .callout.info i { color: #60a5fa; }
+        .callout.warning { background: rgba(245,158,11,0.06); border-color: rgba(245,158,11,0.15); color: #fde047; }
+        .callout.warning i { color: #fbbf24; }
+        .callout.danger { background: rgba(239,68,68,0.06); border-color: rgba(239,68,68,0.15); color: #fca5a5; }
+        .callout.danger i { color: #f87171; }
+        .callout.success { background: rgba(16,185,129,0.06); border-color: rgba(16,185,129,0.15); color: #86efac; }
+        .callout.success i { color: #34d399; }
+        .callout.premium { background: rgba(247,37,133,0.06); border-color: rgba(247,37,133,0.15); color: #f472b6; }
+        .callout.premium i { color: #f472b6; }
+
+        /* Code Blocks */
+        .code-block { background: var(--bg-code); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 24px; overflow: hidden; }
+        .code-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; border-bottom: 1px solid var(--border); }
+        .code-dots { display: flex; gap: 6px; }
+        .code-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.15); }
+        .code-lang { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-family: 'JetBrains Mono', monospace; }
+        .copy-btn { background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.75rem; font-family: 'Inter', sans-serif; display: flex; align-items: center; gap: 4px; transition: color 0.15s; outline: none; }
+        .copy-btn:hover { color: #fff; }
+        .copy-btn.copied { color: var(--green); }
+        pre { padding: 16px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; line-height: 1.5; color: #fff; }
+        code { font-family: 'JetBrains Mono', monospace; background: rgba(255,255,255,0.05); color: var(--cyan); padding: 2px 6px; border-radius: 4px; font-size: 0.85em; word-break: break-word; }
+        pre code { background: transparent; padding: 0; color: inherit; font-size: inherit; border-radius: 0; }
+
+        /* Steps Layout */
+        .steps { position: relative; padding-left: 32px; margin-bottom: 24px; }
+        .steps::before { content: ''; position: absolute; left: 15px; top: 8px; bottom: 8px; width: 2px; background: var(--border); }
+        .step { position: relative; margin-bottom: 32px; }
+        .step:last-child { margin-bottom: 0; }
+        .step-num { position: absolute; left: -32px; top: 0; transform: translateX(-50%); width: 32px; height: 32px; border-radius: 50%; background: var(--bg-dark); border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 0.875rem; font-weight: 700; color: var(--text-secondary); transition: all 0.2s; }
+        .step:hover .step-num { border-color: var(--cyan); color: #fff; box-shadow: 0 0 8px rgba(0,242,254,0.25); }
+        .step-content { padding-top: 4px; }
+        .step-title { font-weight: 700; font-size: 1rem; color: #fff; margin-bottom: 6px; }
+        .step-desc { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5; }
+
+        /* Custom Permissions Grid */
+        .perm-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 24px; }
+        .perm-item { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); padding: 10px 14px; border-radius: 8px; font-size: 0.85rem; color: var(--text-secondary); }
+        .perm-item i { color: var(--cyan); font-size: 0.8rem; }
+
+        /* Command Cards */
+        .cmd-card { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-bottom: 20px; transition: border-color 0.2s; }
+        .cmd-card:hover { border-color: var(--border-hover); }
+        .cmd-name { font-size: 1.15rem; font-weight: 700; color: #fff; font-family: 'Outfit', sans-serif; margin-bottom: 6px; display: flex; align-items: center; gap: 4px; }
+        .cmd-prefix { color: var(--cyan); }
+        .cmd-desc { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 12px; line-height: 1.4; }
+        .cmd-syntax { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; background: rgba(0,0,0,0.3); border: 1px solid var(--border); padding: 8px 12px; border-radius: 6px; color: var(--cyan); margin-bottom: 10px; }
+        .cmd-meta { display: flex; gap: 10px; }
+        .cmd-badge { font-size: 0.7rem; font-weight: 700; padding: 2px 6px; border-radius: 4px; display: inline-flex; align-items: center; gap: 4px; }
+        .cmd-badge.perm { background: rgba(157,78,221,0.12); color: #c084fc; border: 1px solid rgba(157,78,221,0.2); }
+        .cmd-badge.cooldown { background: rgba(239,68,68,0.12); color: #f87171; border: 1px solid rgba(239,68,68,0.2); }
+
+        /* Data Tables */
+        .doc-table-wrap { overflow-x: auto; margin-bottom: 24px; border: 1px solid var(--border); border-radius: 8px; background: rgba(255,255,255,0.01); }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.875rem; }
+        th { background: rgba(255,255,255,0.03); padding: 12px 16px; font-weight: 700; border-bottom: 1px solid var(--border); color: #fff; }
+        td { padding: 12px 16px; border-bottom: 1px solid var(--border); color: var(--text-secondary); line-height: 1.4; }
+        tr:last-child td { border-bottom: none; }
+        .param-tag { font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; font-weight: 700; text-transform: uppercase; }
+        .param-tag.param-required { background: rgba(239,68,68,0.15); color: #f87171; }
+        .param-tag.param-optional { background: rgba(59,130,246,0.15); color: #60a5fa; }
+
+        /* FAQ */
+        .faq-item { border: 1px solid var(--border); border-radius: 10px; margin-bottom: 12px; background: rgba(255,255,255,0.02); overflow: hidden; transition: border-color 0.2s; }
+        .faq-item:hover { border-color: var(--border-hover); }
+
+        /* Mobile responsive sidebar & button */
+        .mobile-sidebar-btn {
+            display: none;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            outline: none;
+        }
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+            z-index: 88;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+        }
+        .sidebar-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Next/Prev Navigation Card Footer */
+        .doc-nav-footer {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            margin-top: 48px;
+            margin-bottom: 24px;
+        }
+        .doc-nav-card {
+            flex: 1;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .doc-nav-card:hover {
+            border-color: var(--border-hover);
+            background: rgba(255,255,255,0.04);
+            transform: translateY(-1px);
+        }
+        .doc-nav-card.next {
+            align-items: flex-end;
+            text-align: right;
+            border-color: rgba(0,242,254,0.15);
+        }
+        .doc-nav-card.next:hover {
+            border-color: var(--cyan);
+            background: rgba(0,242,254,0.02);
+        }
+        .doc-nav-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+        .doc-nav-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #fff;
+            font-family: 'Outfit', sans-serif;
+        }
+        .doc-nav-card.next .doc-nav-title {
+            color: var(--cyan);
+        }
+
+        /* Collapsible FAQ Details */
+        .faq-question {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 20px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #fff;
+            user-select: none;
+            transition: background-color 0.15s;
+        }
+        .faq-question:hover {
+            background: rgba(255,255,255,0.02);
+        }
+        .faq-chevron {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            transition: transform 0.25s ease;
+        }
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.25s ease-out;
+            background: rgba(0,0,0,0.15);
+        }
+        .faq-answer-inner {
+            padding: 0 20px 18px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        .faq-item.open .faq-chevron {
+            transform: rotate(180deg);
+            color: var(--cyan);
+        }
+        .faq-item.open .faq-answer {
+            max-height: 200px;
+            transition: max-height 0.25s ease-in;
+        }
+
+        /* Changelog Timeline styles */
+        .changelog-timeline {
+            position: relative;
+            padding-left: 32px;
+            margin-top: 24px;
+        }
+        .changelog-timeline::before {
+            content: '';
+            position: absolute;
+            left: 11px;
+            top: 10px;
+            bottom: 10px;
+            width: 2px;
+            background: var(--border);
+        }
+        .changelog-entry {
+            position: relative;
+            margin-bottom: 40px;
+        }
+        .changelog-entry:last-child {
+            margin-bottom: 0;
+        }
+        .changelog-dot {
+            position: absolute;
+            left: -32px;
+            top: 2px;
+            transform: translateX(-50%);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--bg-dark);
+            border: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            transition: all 0.2s;
+        }
+        .changelog-entry:hover .changelog-dot {
+            border-color: var(--cyan);
+            color: var(--cyan);
+            box-shadow: 0 0 8px rgba(0,242,254,0.25);
+        }
+        .changelog-card {
+            background: rgba(255,255,255,0.01);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            transition: border-color 0.2s;
+        }
+        .changelog-card:hover {
+            border-color: var(--border-hover);
+        }
+        .changelog-version {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #fff;
+            font-family: 'Outfit', sans-serif;
+            display: inline-block;
+            margin-right: 8px;
+        }
+        .changelog-date {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            display: inline-block;
+        }
+        .changelog-changes {
+            margin-top: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .change-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+        .change-badge {
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            min-width: 60px;
+            text-align: center;
+        }
+        .change-badge.feat {
+            background: rgba(16,185,129,0.12);
+            color: #34d399;
+            border: 1px solid rgba(16,185,129,0.2);
+        }
+        .change-badge.improve {
+            background: rgba(59,130,246,0.12);
+            color: #60a5fa;
+            border: 1px solid rgba(59,130,246,0.2);
+        }
+        .change-badge.fix {
+            background: rgba(239,68,68,0.12);
+            color: #f87171;
+            border: 1px solid rgba(239,68,68,0.2);
+        }
+        .change-badge.security {
+            background: rgba(157,78,221,0.12);
+            color: #c084fc;
+            border: 1px solid rgba(157,78,221,0.2);
+        }
+
+        /* Mobile media queries */
+        @media (max-width: 1024px) {
+            .docs-main {
+                margin-right: 0;
+            }
+            .docs-toc {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            :root {
+                --sidebar-width: 240px;
+            }
+            .mobile-sidebar-btn {
+                display: block;
+            }
+            .docs-sidebar {
+                left: calc(-1 * var(--sidebar-width));
+                transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+                box-shadow: 10px 0 30px rgba(0,0,0,0.5);
+            }
+            .docs-sidebar.mobile-open {
+                transform: translateX(var(--sidebar-width));
+            }
+            .docs-main {
+                margin-left: 0;
+                padding: 32px 20px;
+            }
+            .search-wrap {
+                width: 200px;
+            }
+            .search-kbd {
+                display: none;
+            }
+            .search-results {
+                width: 320px;
+            }
+            .docs-hero-title {
+                font-size: 2rem;
+            }
+            .docs-category-grid {
+                grid-template-columns: 1fr;
+            }
+            .perm-grid {
+                grid-template-columns: 1fr;
+            }
+            .doc-nav-footer {
+                flex-direction: column;
+                gap: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header class="docs-header">
+    <div style="display:flex;align-items:center;gap:12px">
+        <button class="mobile-sidebar-btn" id="mobileSidebarBtn"><i class="fa-solid fa-bars"></i></button>
+        <div class="logo-wrap" data-nav="home">
+            <img src="/logo.png" alt="Vivy logo">
+            <span>Vivy Docs</span>
+        </div>
+    </div>
+    <div class="search-wrap">
+        <div class="search-input-container">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" placeholder="Search documentation..." class="search-input" id="searchInput">
+            <span class="search-kbd">⌘K</span>
+        </div>
+        <div class="search-results" id="searchResults"></div>
+    </div>
+</header>
+
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<div class="docs-container">
+<aside class="docs-sidebar" id="docsSidebar">
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">Getting Started</div>
+        <a class="sidebar-link active" data-page="home"><i class="fa-solid fa-house"></i> Home</a>
+        <a class="sidebar-link" data-page="getting-started"><i class="fa-solid fa-rocket"></i> Quick Start</a>
+        <a class="sidebar-link" data-page="invite"><i class="fa-solid fa-link"></i> Inviting Vivy</a>
+        <a class="sidebar-link" data-page="permissions"><i class="fa-solid fa-shield-halved"></i> Permissions Guide</a>
+        <a class="sidebar-link" data-page="login"><i class="fa-solid fa-right-to-bracket"></i> Logging In</a>
+        <a class="sidebar-link" data-page="basic-config"><i class="fa-solid fa-sliders"></i> Basic Config</a>
+    </div>
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">Dashboard Setup</div>
+        <a class="sidebar-link" data-page="dashboard-overview"><i class="fa-solid fa-gauge"></i> Overview</a>
+        <a class="sidebar-link" data-page="welcome"><i class="fa-solid fa-door-open"></i> Welcome Messages</a>
+        <a class="sidebar-link" data-page="autorole"><i class="fa-solid fa-user-plus"></i> Auto Role</a>
+        <a class="sidebar-link" data-page="security"><i class="fa-solid fa-user-shield"></i> Security & Prefix</a>
+        <a class="sidebar-link" data-page="antilink"><i class="fa-solid fa-link-slash"></i> Anti-Link Shield</a>
+        <a class="sidebar-link" data-page="automod"><i class="fa-solid fa-robot"></i> Auto Moderation</a>
+        <a class="sidebar-link" data-page="warn-dash"><i class="fa-solid fa-triangle-exclamation"></i> Warnings Setup</a>
+        <a class="sidebar-link" data-page="mute-dash"><i class="fa-solid fa-microphone-slash"></i> Mute Setup</a>
+        <a class="sidebar-link" data-page="jail-dash"><i class="fa-solid fa-lock"></i> Jail Setup</a>
+        <a class="sidebar-link" data-page="logging"><i class="fa-solid fa-scroll"></i> Server Logs</a>
+        <a class="sidebar-link" data-page="audit-logs"><i class="fa-solid fa-list-check"></i> Audit Logs</a>
+        <a class="sidebar-link" data-page="verification"><i class="fa-solid fa-user-check"></i> Verification System</a>
+        <a class="sidebar-link" data-page="applications"><i class="fa-solid fa-file-lines"></i> Apply Panel</a>
+        <a class="sidebar-link" data-page="economy"><i class="fa-solid fa-coins"></i> Economy Setup</a>
+        <a class="sidebar-link" data-page="leveling"><i class="fa-solid fa-chart-line"></i> Leveling Setup</a>
+        <a class="sidebar-link" data-page="giveaways"><i class="fa-solid fa-gift"></i> Giveaways</a>
+        <a class="sidebar-link" data-page="rooms"><i class="fa-solid fa-microphone"></i> Need Help Rooms</a>
+        <a class="sidebar-link" data-page="custom-commands"><i class="fa-solid fa-terminal"></i> Custom Commands</a>
+        <a class="sidebar-link" data-page="api-keys"><i class="fa-solid fa-key"></i> Developer API Keys</a>
+        <a class="sidebar-link" data-page="billing"><i class="fa-solid fa-star"></i> Premium Plan <span class="badge badge-premium">PRO</span></a>
+    </div>
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">Bot Commands</div>
+        <a class="sidebar-link" data-page="cmd-moderation"><i class="fa-solid fa-gavel"></i> Moderation</a>
+        <a class="sidebar-link" data-page="cmd-security"><i class="fa-solid fa-shield-halved"></i> Security</a>
+        <a class="sidebar-link" data-page="cmd-utility"><i class="fa-solid fa-wrench"></i> Utility</a>
+        <a class="sidebar-link" data-page="cmd-leveling"><i class="fa-solid fa-chart-line"></i> Leveling</a>
+        <a class="sidebar-link" data-page="cmd-economy"><i class="fa-solid fa-coins"></i> Economy</a>
+        <a class="sidebar-link" data-page="cmd-voice"><i class="fa-solid fa-microphone"></i> Voice</a>
+        <a class="sidebar-link" data-page="cmd-fun"><i class="fa-solid fa-face-smile"></i> Fun</a>
+        <a class="sidebar-link" data-page="cmd-marriage"><i class="fa-solid fa-heart"></i> Marriage</a>
+        <a class="sidebar-link" data-page="cmd-giveaways"><i class="fa-solid fa-gift"></i> Giveaways</a>
+        <a class="sidebar-link" data-page="cmd-premium"><i class="fa-solid fa-star"></i> Premium Rooms</a>
+    </div>
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">Developer</div>
+        <a class="sidebar-link" data-page="dev-portal"><i class="fa-solid fa-code"></i> Developer Portal</a>
+        <a class="sidebar-link" data-page="rest-api"><i class="fa-solid fa-plug"></i> REST API</a>
+        <a class="sidebar-link" data-page="auth-api"><i class="fa-solid fa-key"></i> Authentication</a>
+        <a class="sidebar-link" data-page="webhooks"><i class="fa-solid fa-bolt"></i> Webhooks</a>
+        <a class="sidebar-link" data-page="rate-limits"><i class="fa-solid fa-gauge-high"></i> Rate Limits</a>
+    </div>
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">Support</div>
+        <a class="sidebar-link" data-page="faq"><i class="fa-solid fa-circle-question"></i> FAQ</a>
+        <a class="sidebar-link" data-page="troubleshooting"><i class="fa-solid fa-bug"></i> Troubleshooting</a>
+        <a class="sidebar-link" data-page="changelog"><i class="fa-solid fa-clock-rotate-left"></i> Changelog</a>
+    </div>
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">Legal</div>
+        <a class="sidebar-link" data-page="terms"><i class="fa-solid fa-file-contract"></i> Terms of Service</a>
+        <a class="sidebar-link" data-page="privacy"><i class="fa-solid fa-user-shield"></i> Privacy Policy</a>
+    </div>
+</aside>
+
+<main class="docs-main" id="docsMain">
+    <div class="docs-breadcrumb" id="breadcrumb"></div>
+
+    <!-- ══ HOME ══ -->
+    <div class="doc-page active" id="page-home">
+        <div class="docs-hero">
+            <div class="docs-hero-tag"><i class="fa-solid fa-book-open"></i> Documentation</div>
+            <h1 class="docs-hero-title">Everything you need to<br><span>master Vivy.</span></h1>
+            <p class="docs-hero-sub">Complete guides, command references, dashboard walkthroughs, API documentation, and troubleshooting. Find answers instantly.</p>
+            <div class="docs-hero-btns">
+                <a class="hero-btn-primary"><i class="fa-solid fa-rocket"></i> Get Started</a>
+                <a href="/auth/discord/login" class="hero-btn-ghost"><i class="fa-brands fa-discord"></i> Open Dashboard</a>
+            </div>
+        </div>
+        <div class="docs-category-grid">
+            <div class="docs-cat-card"><span class="cat-icon">🚀</span><div class="cat-title">Getting Started</div><div class="cat-desc">Invite, configure, and go live in minutes</div></div>
+            <div class="docs-cat-card"><span class="cat-icon">🎛️</span><div class="cat-title">Dashboard</div><div class="cat-desc">Configure every feature from your browser</div></div>
+            <div class="docs-cat-card"><span class="cat-icon">⚙️</span><div class="cat-title">Bot Commands</div><div class="cat-desc">Full command reference with examples</div></div>
+            <div class="docs-cat-card"><span class="cat-icon">🛡️</span><div class="cat-title">AutoMod</div><div class="cat-desc">Smart spam and safety automation</div></div>
+            <div class="docs-cat-card"><span class="cat-icon">📈</span><div class="cat-title">Leveling</div><div class="cat-desc">XP, rank cards, and leaderboards</div></div>
+            <div class="docs-cat-card"><span class="cat-icon">💰</span><div class="cat-title">Economy</div><div class="cat-desc">Coins, balances, and server economy</div></div>
+            <div class="docs-cat-card"><span class="cat-icon">🎁</span><div class="cat-title">Giveaways</div><div class="cat-desc">Create and manage server giveaways</div></div>
+            <div class="docs-cat-card"><span class="cat-icon">🎙️</span><div class="cat-title">Voice Rooms</div><div class="cat-desc">Private dynamic support channels</div></div>
+            <div class="docs-cat-card"><span class="cat-icon">📋</span><div class="cat-title">Logging</div><div class="cat-desc">Track every action in your server</div></div>
+            <div class="docs-cat-card"><span class="cat-icon">💍</span><div class="cat-title">Marriage</div><div class="cat-desc">Server marriage system</div></div>
+            <div class="docs-cat-card"><span class="cat-icon">👨‍💻</span><div class="cat-title">Developers</div><div class="cat-desc">REST API, webhooks, and API keys</div></div>
+            <div class="docs-cat-card"><span class="cat-icon">❓</span><div class="cat-title">FAQ</div><div class="cat-desc">Answers to the most common questions</div></div>
+            <div class="docs-cat-card"><span class="cat-icon">🔧</span><div class="cat-title">Troubleshooting</div><div class="cat-desc">Diagnose and fix common issues</div></div>
+            <div class="docs-cat-card"><span class="cat-icon">📝</span><div class="cat-title">Changelog</div><div class="cat-desc">Latest updates and improvements</div></div>
+        </div>
+    </div>
+
+    <!-- ══ GETTING STARTED ══ -->
+    <div class="doc-page" id="page-getting-started">
+        <div class="doc-hero">
+            <span class="doc-tag tag-guide"><i class="fa-solid fa-rocket"></i> Getting Started</span>
+            <h1 class="doc-title">Quick Start Guide</h1>
+            <p class="doc-subtitle">Get Vivy up and running in your Discord server in under 5 minutes.</p>
+            <div class="doc-meta"><span><i class="fa-regular fa-clock"></i> 5 min read</span><span><i class="fa-regular fa-calendar"></i> Updated July 2026</span></div>
+        </div>
+        <div class="doc-divider"></div>
+        <h2 class="doc-heading" id="overview">Overview</h2>
+        <p class="doc-p">Vivy is an all-in-one Discord bot offering moderation, leveling, economy, giveaways, voice rooms, auto-moderation, verification, applications, and more — all configurable through a web dashboard.</p>
+        <div class="callout info"><i class="fa-solid fa-circle-info callout-icon"></i><div class="callout-body"><strong>No coding required!</strong> Everything is managed through the dashboard. The default command prefix is <code>?</code>.</div></div>
+        <h2 class="doc-heading" id="step1">Step 1: Invite Vivy</h2>
+        <div class="steps">
+            <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Visit the website</div><div class="step-desc">Go to the Vivy website and click <strong>Add to Discord</strong>.</div></div></div>
+            <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Select your server</div><div class="step-desc">Choose the server from the dropdown. You must have <strong>Manage Server</strong> permission.</div></div></div>
+            <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Authorize permissions</div><div class="step-desc">Review and approve the requested permissions, then click <strong>Authorize</strong>.</div></div></div>
+            <div class="step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Login to Dashboard</div><div class="step-desc">Open the dashboard at <a href="/auth/discord/login" style="color:var(--cyan)">/auth/discord/login</a>, select your server, and start configuring.</div></div></div>
+        </div>
+        <div class="doc-nav-footer">
+            <div class="doc-nav-card" data-nav="home"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Home</div></div>
+            <div class="doc-nav-card next" data-nav="invite"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Invite Vivy →</div></div>
+        </div>
+    </div>
+
+    <!-- ══ INVITE ══ -->
+    <div class="doc-page" id="page-invite">
+        <div class="doc-hero">
+            <span class="doc-tag tag-guide"><i class="fa-solid fa-link"></i> Getting Started</span>
+            <h1 class="doc-title">Inviting Vivy</h1>
+            <p class="doc-subtitle">How to invite Vivy to your Discord server and what permissions it needs.</p>
+            <div class="doc-meta"><span><i class="fa-regular fa-clock"></i> 3 min read</span></div>
+        </div>
+        <div class="doc-divider"></div>
+        <h2 class="doc-heading" id="invite-link">Invite Link</h2>
+        <div class="code-block">
+            <div class="code-header"><div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div><span class="code-lang">URL</span><button class="copy-btn"><i class="fa-regular fa-copy"></i> Copy</button></div>
+            <pre><code>https://discord.com/oauth2/authorize?client_id=1481773011668434975&permissions=8&scope=bot%20applications.commands</code></pre>
+        </div>
+        <h2 class="doc-heading" id="required-perms">Required Permissions</h2>
+        <div class="perm-grid">
+            <div class="perm-item"><i class="fa-solid fa-circle-check"></i> Administrator (recommended)</div>
+            <div class="perm-item"><i class="fa-solid fa-circle-check"></i> Manage Channels</div>
+            <div class="perm-item"><i class="fa-solid fa-circle-check"></i> Manage Roles</div>
+            <div class="perm-item"><i class="fa-solid fa-circle-check"></i> Manage Messages</div>
+            <div class="perm-item"><i class="fa-solid fa-circle-check"></i> Ban Members</div>
+            <div class="perm-item"><i class="fa-solid fa-circle-check"></i> Kick Members</div>
+            <div class="perm-item"><i class="fa-solid fa-circle-check"></i> Moderate Members</div>
+            <div class="perm-item"><i class="fa-solid fa-circle-check"></i> Send Messages</div>
+            <div class="perm-item"><i class="fa-solid fa-circle-check"></i> Embed Links</div>
+            <div class="perm-item"><i class="fa-solid fa-circle-check"></i> Read Message History</div>
+            <div class="perm-item"><i class="fa-solid fa-circle-check"></i> View Audit Log</div>
+            <div class="perm-item"><i class="fa-solid fa-circle-check"></i> Connect (Voice)</div>
+        </div>
+        <div class="callout warning"><i class="fa-solid fa-triangle-exclamation callout-icon"></i><div class="callout-body"><strong>Role Hierarchy:</strong> Vivy's role must be placed <em>above</em> any role it needs to manage in Server Settings → Roles.</div></div>
+        <div class="doc-nav-footer">
+            <div class="doc-nav-card" data-nav="getting-started"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Quick Start</div></div>
+            <div class="doc-nav-card next" data-nav="permissions"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Permissions →</div></div>
+        </div>
+    </div>
+
+    <!-- ══ PERMISSIONS ══ -->
+    <div class="doc-page" id="page-permissions">
+        <div class="doc-hero">
+            <span class="doc-tag tag-guide"><i class="fa-solid fa-shield-halved"></i> Getting Started</span>
+            <h1 class="doc-title">Permissions Guide</h1>
+            <p class="doc-subtitle">Which permissions Vivy needs and why each one matters.</p>
+            <div class="doc-meta"><span><i class="fa-regular fa-clock"></i> 4 min read</span></div>
+        </div>
+        <div class="doc-divider"></div>
+        <h2 class="doc-heading" id="perm-table">Permission Reference</h2>
+        <div class="doc-table-wrap"><table><thead><tr><th>Permission</th><th>Required For</th><th>Level</th></tr></thead><tbody>
+            <tr><td><code>BAN_MEMBERS</code></td><td>?ban, ?banforlife, ?unban</td><td><span class="param-tag param-required">Required</span></td></tr>
+            <tr><td><code>KICK_MEMBERS</code></td><td>?kick</td><td><span class="param-tag param-required">Required</span></td></tr>
+            <tr><td><code>MODERATE_MEMBERS</code></td><td>?timeout, ?untimeout</td><td><span class="param-tag param-required">Required</span></td></tr>
+            <tr><td><code>MANAGE_MESSAGES</code></td><td>?clear, automod deletion</td><td><span class="param-tag param-required">Required</span></td></tr>
+            <tr><td><code>MANAGE_ROLES</code></td><td>?autorole, ?temprole, ?jail, ?mute</td><td><span class="param-tag param-required">Required</span></td></tr>
+            <tr><td><code>MANAGE_CHANNELS</code></td><td>?hide, ?unhide, voice rooms</td><td><span class="param-tag param-required">Required</span></td></tr>
+            <tr><td><code>VIEW_AUDIT_LOG</code></td><td>Logging, moderation tracking</td><td><span class="param-tag param-required">Required</span></td></tr>
+            <tr><td><code>SEND_MESSAGES</code></td><td>All bot responses</td><td><span class="param-tag param-required">Required</span></td></tr>
+            <tr><td><code>EMBED_LINKS</code></td><td>Rich embeds, rank cards</td><td><span class="param-tag param-required">Required</span></td></tr>
+            <tr><td><code>ATTACH_FILES</code></td><td>Rank cards, welcome images</td><td><span class="param-tag param-required">Required</span></td></tr>
+            <tr><td><code>CONNECT</code></td><td>Voice rooms feature</td><td><span class="param-tag param-optional">Recommended</span></td></tr>
+        </tbody></table></div>
+        <div class="callout success"><i class="fa-solid fa-circle-check callout-icon"></i><div class="callout-body"><strong>Pro Tip:</strong> Grant Vivy Administrator permissions and place its role near the top of your role list for maximum functionality.</div></div>
+        <div class="doc-nav-footer">
+            <div class="doc-nav-card" data-nav="invite"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Invite Vivy</div></div>
+            <div class="doc-nav-card next" data-nav="login"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Logging In →</div></div>
+        </div>
+    </div>
+
+    <!-- ══ LOGIN ══ -->
+    <div class="doc-page" id="page-login">
+        <div class="doc-hero">
+            <span class="doc-tag tag-guide"><i class="fa-solid fa-right-to-bracket"></i> Getting Started</span>
+            <h1 class="doc-title">Logging In</h1>
+            <p class="doc-subtitle">How to authenticate using Discord OAuth2 to access the web dashboard.</p>
+            <div class="doc-meta"><span><i class="fa-regular fa-clock"></i> 2 min read</span></div>
+        </div>
+        <div class="doc-divider"></div>
+        <h2 class="doc-heading" id="oauth-flow">Authentication Flow</h2>
+        <div class="steps">
+            <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Click Login</div><div class="step-desc">Click the <strong>Open Dashboard</strong> or <strong>Login</strong> button on the website.</div></div></div>
+            <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Redirect to Discord</div><div class="step-desc">You will be redirected to Discord's official authorization page.</div></div></div>
+            <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Approve scopes</div><div class="step-desc">Approve the <code>identify</code> and <code>guilds</code> scopes, allowing the dashboard to verify your identity and servers list.</div></div></div>
+            <div class="step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Server list</div><div class="step-desc">You are redirected back to the dashboard server list to pick your guild.</div></div></div>
+        </div>
+        <div class="doc-nav-footer">
+            <div class="doc-nav-card" data-nav="permissions"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Permissions Guide</div></div>
+            <div class="doc-nav-card next" data-nav="basic-config"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Basic Config →</div></div>
+        </div>
+    </div>
+
+    <!-- ══ BASIC CONFIG ══ -->
+    <div class="doc-page" id="page-basic-config">
+        <div class="doc-hero">
+            <span class="doc-tag tag-guide"><i class="fa-solid fa-sliders"></i> Getting Started</span>
+            <h1 class="doc-title">Basic Configuration</h1>
+            <p class="doc-subtitle">Recommended configurations for newly added guilds.</p>
+            <div class="doc-meta"><span><i class="fa-regular fa-clock"></i> 4 min read</span></div>
+        </div>
+        <div class="doc-divider"></div>
+        <h2 class="doc-heading" id="first-settings">First Steps</h2>
+        <ul class="doc-ul">
+            <li><strong>Prefix:</strong> Ensure your prefix matches your preferred style. The default prefix is <code>?</code>.</li>
+            <li><strong>Logs Setup:</strong> Route moderation and message updates to logs channels under <strong>Server Logs</strong> dashboard tab.</li>
+            <li><strong>Admin Safeguards:</strong> Set up your Security Owner Role under <strong>Security & Prefix</strong> tab to secure configurations.</li>
+        </ul>
+        <div class="doc-nav-footer">
+            <div class="doc-nav-card" data-nav="login"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Logging In</div></div>
+            <div class="doc-nav-card next" data-nav="dashboard-overview"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Dashboard Overview →</div></div>
+        </div>
+    </div>
+
+    <!-- ══ DASHBOARD OVERVIEW ══ -->
+    <div class="doc-page" id="page-dashboard-overview">
+        <div class="doc-hero">
+            <span class="doc-tag tag-dashboard"><i class="fa-solid fa-gauge"></i> Dashboard</span>
+            <h1 class="doc-title">Dashboard Overview</h1>
+            <p class="doc-subtitle">Manage all 20 dashboard setups directly from your browser.</p>
+            <div class="doc-meta"><span><i class="fa-regular fa-clock"></i> 5 min read</span></div>
+        </div>
+        <div class="doc-divider"></div>
+        <p class="doc-p">The Vivy Web Dashboard consists of 20 modular tabs. Select your server to load configuration options immediately.</p>
+        <div class="doc-table-wrap"><table><thead><tr><th>Module Name</th><th>Settings Managed</th></tr></thead><tbody>
+            <tr><td>Overview</td><td>Server stats, member count, fast actions</td></tr>
+            <tr><td>Welcome Messages</td><td>Join cards, direct message logs</td></tr>
+            <tr><td>Auto Role</td><td>Apply default roles to joining users</td></tr>
+            <tr><td>Security & Prefix</td><td>Custom command prefix, anti-bot, anti-webhook</td></tr>
+            <tr><td>Anti-Link Shield</td><td>Enable domain block lists and whitelist roles</td></tr>
+            <tr><td>Auto Moderation</td><td>Caps filters, emojis spam filters, repeat text spam</td></tr>
+            <tr><td>Warnings Setup</td><td>Warning role, warning thresholds and temp mutes</td></tr>
+            <tr><td>Mute Setup</td><td>Set muted role and mute logs channel</td></tr>
+            <tr><td>Jail Setup</td><td>Isolation role and appeal channel routing</td></tr>
+            <tr><td>Server Logs</td><td>Event logger routing for messages, members, voice</td></tr>
+            <tr><td>Audit Logs</td><td>Interactive search of all moderator database logs</td></tr>
+            <tr><td>Verification System</td><td>Custom male/female/unverified roles for verify gates</td></tr>
+            <tr><td>Apply Panel</td><td> modal application setups and results logs</td></tr>
+            <tr><td>Economy Setup</td><td>Coins multipliers, shop items, tax rate config</td></tr>
+            <tr><td>Leveling Setup</td><td>XP gain rates, role rewards, rank background image</td></tr>
+            <tr><td>Giveaways</td><td>Deploy giveaways, winner count, whitelist filters</td></tr>
+            <tr><td>Need Help Rooms</td><td>Voice support join-to-create channels setup</td></tr>
+            <tr><td>Custom Commands</td><td>Create customized text replies and aliases</td></tr>
+            <tr><td>Developer API Keys</td><td>Generate secure API keys to integrate REST API data</td></tr>
+            <tr><td>Premium Plan</td><td>Unlock custom premium features</td></tr>
+        </tbody></table></div>
+        <div class="doc-nav-footer">
+            <div class="doc-nav-card" data-nav="basic-config"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Basic Config</div></div>
+            <div class="doc-nav-card next" data-nav="welcome"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Welcome Messages →</div></div>
+        </div>
+    </div>
+
+    <!-- ══ WELCOME ══ -->
+    <div class="doc-page" id="page-welcome">
+        <div class="doc-hero">
+            <span class="doc-tag tag-dashboard"><i class="fa-solid fa-door-open"></i> Dashboard</span>
+            <h1 class="doc-title">Welcome Messages</h1>
+            <p class="doc-subtitle">Configure custom join, leave, and direct message welcome logs.</p>
+            <div class="doc-meta"><span><i class="fa-regular fa-clock"></i> 4 min read</span></div>
+        </div>
+        <div class="doc-divider"></div>
+        <h2 class="doc-heading" id="welcome-options">Configuration</h2>
+        <ul class="doc-ul">
+            <li><strong>Channel Routing:</strong> Choose where welcome embeds are sent.</li>
+            <li><strong>Canvas Join Card:</strong> Upload custom canvas background image. Vivy paints the user avatar, nickname, and server join count dynamically on the card.</li>
+            <li><strong>DM Welcome:</strong> Send direct message alerts to newly joining members.</li>
+        </ul>
+        <div class="doc-nav-footer">
+            <div class="doc-nav-card" data-nav="dashboard-overview"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Dashboard Overview</div></div>
+            <div class="doc-nav-card next" data-nav="autorole"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Auto Role →</div></div>
+        </div>
+    </div>
+
+    <!-- ══ AUTO ROLE ══ -->
+    <div class="doc-page" id="page-autorole">
+        <div class="doc-hero">
+            <span class="doc-tag tag-dashboard"><i class="fa-solid fa-user-plus"></i> Dashboard</span>
+            <h1 class="doc-title">Auto Role</h1>
+            <p class="doc-subtitle">Automatically assign roles to new members on server join.</p>
+            <div class="doc-meta"><span><i class="fa-regular fa-clock"></i> 3 min read</span></div>
+        </div>
+        <div class="doc-divider"></div>
+        <p class="doc-p">Ensure new members receive default roles immediately on join (e.g. "Member"). You can also configure separate roles for bot accounts.</p>
+        <div class="doc-nav-footer">
+            <div class="doc-nav-card" data-nav="welcome"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Welcome Messages</div></div>
+            <div class="doc-nav-card next" data-nav="security"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Security & Prefix →</div></div>
+        </div>
+    </div>
+
+    <!-- ══ SECURITY & PREFIX ══ -->
+    <div class="doc-page" id="page-security">
+        <div class="doc-hero">
+            <span class="doc-tag tag-dashboard"><i class="fa-solid fa-user-shield"></i> Dashboard</span>
+            <h1 class="doc-title">Security & Prefix</h1>
+            <p class="doc-subtitle">Command prefixes, Security Owners Roles, Anti-Bot and Anti-Webhook defenses.</p>
+            <div class="doc-meta"><span><i class="fa-regular fa-clock"></i> 4 min read</span></div>
+        </div>
+        <div class="doc-divider"></div>
+        <h2 class="doc-heading" id="prefix-settings">Prefix Configuration</h2>
+        <p class="doc-p">Modify your bot's text command prefix (default: <code>?</code>). You can also set a backup prefix.</p>
+        <h2 class="doc-heading" id="owner-roles">Security Owner Roles</h2>
+        <p class="doc-p">Designate a specific role as the Security Owner. Only server administrators or members with this role can run sensitive protection toggles.</p>
+        <h2 class="doc-heading" id="defense-shields">Defense Shields</h2>
+        <ul class="doc-ul">
+            <li><strong>Anti-Bot:</strong> Automatically kick or ban newly joining unverified bot accounts.</li>
+            <li><strong>Anti-Webhook:</strong> Automatically destroy newly created webhooks to prevent token-leaks spam.</li>
+        </ul>
+        <div class="doc-nav-footer">
+            <div class="doc-nav-card" data-nav="autorole"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Auto Role</div></div>
+            <div class="doc-nav-card next" data-nav="antilink"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Anti-Link Shield →</div></div>
+        </div>
+    </div>
+
+    <!-- ══ ANTI-LINK ══ -->
+    <div class="doc-page" id="page-antilink">
+        <div class="doc-hero">
+            <span class="doc-tag tag-dashboard"><i class="fa-solid fa-link-slash"></i> Dashboard</span>
+            <h1 class="doc-title">Anti-Link Shield</h1>
+            <p class="doc-subtitle">Delete unauthorized Discord invites and external URL links instantly.</p>
+            <div class="doc-meta"><span><i class="fa-regular fa-clock"></i> 4 min read</span></div>
+        </div>
+        <div class="doc-divider"></div>
+        <h2 class="doc-heading" id="antilink-whitelist">Whitelist & Filters</h2>
+        <p class="doc-p">Enable the Link Filter shield to delete link messages. You can configure whitelisted roles that bypass this shield, as well as whitelisted domains (e.g. <code>youtube.com</code>, <code>spotify.com</code>).</p>
+        <div class="doc-nav-footer">
+            <div class="doc-nav-card" data-nav="security"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Security & Prefix</div></div>
+            <div class="doc-nav-card next" data-nav="automod"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Auto Moderation →</div></div>
+        </div>
+    </div>
+
+    <!-- ══ AUTOMOD ══ -->
+    <div class="doc-page" id="page-automod">
+        <div class="doc-hero">
+            <span class="doc-tag tag-dashboard"><i class="fa-solid fa-robot"></i> Dashboard</span>
+            <h1 class="doc-title">Auto Moderation</h1>
+            <p class="doc-subtitle">Automatically moderate spam, caps, mass mentions, and raids.</p>
+            <div class="doc-meta"><span><i class="fa-regular fa-clock"></i> 5 min read</span></div>
+        </div>
+        <div class="doc-divider"></div>
+        <h2 class="doc-heading" id="automod-filters">Filters Configuration</h2>
+        <p class="doc-p">Set limits for caps percentage, repeat messages (spam), emoji spam, and mass mentions. Configure punishments like deletion, warning, or automatic temp-mutes.</p>
+        <div class="doc-nav-footer">
+            <div class="doc-nav-card" data-nav="antilink"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Anti-Link Shield</div></div>
+            <div class="doc-nav-card next" data-nav="warn-dash"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Warnings Setup →</div></div>
+        </div>
+    </div>
+
+    <!-- ══ WARN DASH ══ -->
+    <div class="doc-page" id="page-warn-dash">
+        <div class="doc-hero">
+            <span class="doc-tag tag-dashboard"><i class="fa-solid fa-triangle-exclamation"></i> Dashboard</span>
+            <h1 class="doc-title">Warnings Setup</h1>
+            <p class="doc-subtitle">Configure warnings role, warning logs, and escalation actions.</p>
+            <div class="doc-meta"><span><i class="fa-regular fa-clock"></i> 3 min read</span></div>
+        </div>
+        <div class="doc-divider"></div>
+        <p class="doc-p">Set a role to assign to warned members, select a log channel, and create escalation thresholds (e.g. 3 warnings = temp mute, 5 warnings = server kick, 7 warnings = perm ban).</p>
+        <div class="doc-nav-footer">
+            <div class="doc-nav-card" data-nav="automod"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Auto Moderation</div></div>
+            <div class="doc-nav-card next" data-nav="mute-dash"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Mute Setup →</div></div>
+        </div>
+    </div>
+
+    <!-- ══ MUTE DASH ══ -->
+    <div class="doc-page" id="page-mute-dash">
+        <div class="doc-hero">
+            <span class="doc-tag tag-dashboard"><i class="fa-solid fa-microphone-slash"></i> Dashboard</span>
+            <h1 class="doc-title">Mute Setup</h1>
+            <p class="doc-subtitle">Configure muted roles and logging for muted users.</p>
+            <div class="doc-meta"><span><i class="fa-regular fa-clock"></i> 3 min read</span></div>
+        </div>
+        <div class="doc-divider"></div>
+        <p class="doc-p">Select the muted role assigned during a mute command. Ensure the role has Send Messages permissions denied in all channels. Logs are routed to the specified mute logs channel.</p>
+        <div class="doc-nav-footer">
+            <div class="doc-nav-card" data-nav="warn-dash"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Warnings Setup</div></div>
+            <div class="doc-nav-card next" data-nav="jail-dash"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Jail Setup →</div></div>
+        </div>
+    </div>
+
+    <!-- ══ JAIL DASH ══ -->
+    <div class="doc-page" id="page-jail-dash">
+        <div class="doc-hero">
+            <span class="doc-tag tag-dashboard"><i class="fa-solid fa-lock"></i> Dashboard</span>
+            <h1 class="doc-title">Jail Setup</h1>
+            <p class="doc-subtitle">Configure isolation roles and isolation jail channels.</p>
+            <div class="doc-meta"><span><i class="fa-regular fa-clock"></i> 3 min read</span></div>
+        </div>
+        <div class="doc-divider"></div>
+        <p class="doc-p">Assign the jail role and set the default jail channel. While jailed, members lose all regular roles and can only view and type in the jail channel to submit appeals.</p>
+        <div class="doc-nav-footer">
+            <div class="doc-nav-card" data-nav="mute-dash"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Mute Setup</div></div>
+            <div class="doc-nav-card next" data-nav="logging"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Server Logs →</div></div>
+        </div>
+    </div>
+
+    <!-- ══ SERVER LOGS ══ -->
+    <div class="doc-page" id="page-logging">
+        <div class="doc-hero">
+            <span class="doc-tag tag-dashboard"><i class="fa-solid fa-scroll"></i> Dashboard</span>
+            <h1 class="doc-title">Server Logs</h1>
+            <p class="doc-subtitle">Route specific server event logs to dedicated channels.</p>
+            <div class="doc-meta"><span><i class="fa-regular fa-clock"></i> 4 min read</span></div>
+        </div>
+        <div class="doc-divider"></div>
+        <h2 class="doc-heading" id="logging-channels">Channel Routing</h2>
+        <p class="doc-p">You can route specific events to dedicated channels:</p>
+        <div class="doc-table-wrap"><table><thead><tr><th>Log Type</th><th>Events Tracked</th></tr></thead><tbody>
+            <tr><td>Message Logs</td><td>Edits, deletions, bulk message purge</td></tr>
+            <tr><td>Member Logs</td><td>Joins, leaves, role updates, nickname changes</td></tr>
+            <tr><td>Voice Logs</td><td>Voice channel joins, leaves, moves, server mutes/deafens</td></tr>
+            <tr><td>Moderation Logs</td><td>Bans, kicks, mutes, warnings, jail isolation</td></tr>
+        </tbody></table></div>
+        <div class="doc-nav-footer">
+            <div class="doc-nav-card" data-nav="jail-dash"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Jail Setup</div></div>
+            <div class="doc-nav-card next" data-nav="audit-logs"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Audit Logs →</div></div>
+        </div>
+    </div>
+
+    <!-- ══ AUDIT LOGS ══ -->
+    <div class="doc-page" id="page-audit-logs">
+        <div class="doc-hero">
+            <span class="doc-tag tag-dashboard"><i class="fa-solid fa-list-check"></i> Dashboard</span>
+            <h1 class="doc-title">Audit Logs</h1>
+            <p class="doc-subtitle">Interactive logs search of all moderation actions executed by staff and AutoMod.</p>
+            <div class="doc-meta"><span><i class="fa-regular fa-clock"></i> 3 min read</span></div>
+        </div>
+        <div class="doc-divider"></div>
+        <p class="doc-p">Browse all past warnings, mutes, timeouts, bans, kicks, and jails. Filter entries by action type, moderator name, or targeted user.</p>
+        <div class="doc-nav-footer">
+            <div class="doc-nav-card" data-nav="logging"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Server Logs</div></div>
+            <div class="doc-nav-card next" data-nav="verification"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Verification System →</div></div>
+        </div>
+    </div>
+
+    <!-- ══ VERIFICATION ══ -->
+    <div class="doc-page" id="page-verification">
+        <div class="doc-hero">
+            <span class="doc-tag tag-dashboard"><i class="fa-solid fa-user-check"></i> Dashboard</span>
+            <h1 class="doc-title">Verification System</h1>
+            <p class="doc-subtitle">Staff-approved member verification gate with customizable roles.</p>
+            <div class="doc-meta"><span><i class="fa-regular fa-clock"></i> 4 min read</span></div>
+        </div>
+        <div class="doc-divider"></div>
+        <h2 class="doc-heading" id="verif-roles">Roles Setup</h2>
+        <p class="doc-p">Manage verification gate setup by configuring roles:</p>
+        <ul class="doc-ul">
+            <li><strong>Verificator Role:</strong> Staff allowed to approve member verification appeals.</li>
+            <li><strong>Unverified Role:</strong> Applied automatically on join to lock out general channels.</li>
+            <li><strong>Verified Role (Male/Default):</strong> Normal verified member role assigned on approval.</li>
+            <li><strong>Verified Female Role:</strong> Separate verified role available for female members.</li>
+            <li><strong>Verification Logs Channel:</strong> Channel routing verification events.</li>
+        </ul>
+        <div class="doc-nav-footer">
+            <div class="doc-nav-card" data-nav="audit-logs"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Audit Logs</div></div>
+            <div class="doc-nav-card next" data-nav="applications"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Apply Panel →</div></div>
+        </div>
+    </div>
+
+    <!-- ══ APPLICATIONS ══ -->
+    <div class="doc-page" id="page-applications">
+        <div class="doc-hero">
+            <span class="doc-tag tag-dashboard"><i class="fa-solid fa-file-lines"></i> Dashboard</span>
+            <h1 class="doc-title">Apply Panel</h1>
+            <p class="doc-subtitle">Build custom staff application forms with modals and review logs.</p>
+            <div class="doc-meta"><span><i class="fa-regular fa-clock"></i> 4 min read</span></div>
+        </div>
+        <div class="doc-divider"></div>
+        <p class="doc-p">Post custom application panels in channels. Users click <strong>Apply</strong>, answer questions in a Discord modal, and their application is routed to review channels where staff can accept or decline with a button.</p>
+        <div class="doc-nav-footer">
+            <div class="doc-nav-card" data-nav="verification"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Verification System</div></div>
+            <div class="doc-nav-card next" data-nav="economy"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Economy Setup →</div></div>
+        </div>
+    </div>
+
+    <!-- ══ ECONOMY ══ -->
+    <div class="doc-page" id="page-economy">
+        <div class="doc-hero">
+            <span class="doc-tag tag-dashboard"><i class="fa-solid fa-coins"></i> Dashboard</span>
+            <h1 class="doc-title">Economy Setup</h1>
+            <p class="doc-subtitle">Virtual coins, daily rewards, server shop items, and custom tax rates.</p>
+            <div class="doc-meta"><span><i class="fa-regular fa-clock"></i> 4 min read</span></div>
+        </div>
+        <div class="doc-divider"></div>
+        <p class="doc-p">Configure server coin multipliers, daily coin rewards, and transaction tax rates (e.g. 5% coin tax on transfers). Set up items in the Server Shop that users buy using their virtual balance.</p>
+        <div class="doc-nav-footer">
+            <div class="doc-nav-card" data-nav="applications"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Apply Panel</div></div>
+            <div class="doc-nav-card next" data-nav="leveling"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Leveling Setup →</div></div>
+        </div>
+    </div>
+
+    <!-- ══ LEVELING ══ -->
+    <div class="doc-page" id="page-leveling">
+        <div class="doc-hero">
+            <span class="doc-tag tag-dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</span>
+            <h1 class="doc-title">Leveling Setup</h1>
+            <p class="doc-subtitle">Configure message XP multipliers, level-up roles, and level boosters.</p>
+            <div class="doc-meta"><span><i class="fa-regular fa-clock"></i> 5 min read</span></div>
+        </div>
+        <div class="doc-divider"></div>
+        <h2 class="doc-heading" id="xp-config">XP Modifiers</h2>
+        <p class="doc-p">Adjust the XP gained per message and configuration of XP cooldown timers. Configure specific roles as Level Boosters to receive custom XP multipliers (e.g. 1.5x XP).</p>
+        <h2 class="doc-heading" id="level-roles">Level Up Rewards</h2>
+        <p class="doc-p">Create automatic role rewards assigned to users once they reach specific levels (e.g. level 10 grants "Veteran" role).</p>
+        <div class="doc-nav-footer">
+            <div class="doc-nav-card" data-nav="economy"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Economy Setup</div></div>
+            <div class="doc-nav-card next" data-nav="giveaways"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Giveaways →</div></div>
+        </div>
+    </div>
+
+    <!-- ══ GIVEAWAYS ══ -->
+    <div class="doc-page" id="page-giveaways">
+        <div class="doc-hero">
+            <span class="doc-tag tag-dashboard"><i class="fa-solid fa-gift"></i> Dashboard</span>
+            <h1 class="doc-title">Giveaways</h1>
+            <p class="doc-subtitle">Deploy giveaways with winner count settings and whitelist rules.</p>
+            <div class="doc-meta"><span><i class="fa-regular fa-clock"></i> 3 min read</span></div>
+        </div>
+        <div class="doc-divider"></div>
+        <p class="doc-p">Create, monitor, and cancel server giveaways from the dashboard. Whitelist specific roles to permit entries or set blacklisted members (using the <code>?vb</code> command) to forbid entries.</p>
+        <div class="doc-nav-footer">
+            <div class="doc-nav-card" data-nav="leveling"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Leveling Setup</div></div>
+            <div class="doc-nav-card next" data-nav="rooms"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Need Help Rooms →</div></div>
+        </div>
+    </div>
+
+    <!-- ══ ROOMS ══ -->
+    <div class="doc-page" id="page-rooms">
+        <div class="doc-hero">
+            <span class="doc-tag tag-dashboard"><i class="fa-solid fa-microphone"></i> Dashboard</span>
+            <h1 class="doc-title">Need Help Rooms</h1>
+            <p class="doc-subtitle">Configure voice channels where members join to generate private help sessions.</p>
+            <div class="doc-meta"><span><i class="fa-regular fa-clock"></i> 4 min read</span></div>
+        </div>
+        <div class="doc-divider"></div>
+        <p class="doc-p">Configure a "Join-to-Create" voice channel. When a member joins, Vivy automatically creates a private voice channel under the designated category. The channel is auto-deleted once empty.</p>
+        <h2 class="doc-heading" id="rooms-dashboard-setup">Settings</h2>
+        <ul class="doc-ul">
+            <li><strong>Join Voice Channel:</strong> Trigger voice channel.</li>
+            <li><strong>Room Category:</strong> Directory category where voice rooms spawn.</li>
+            <li><strong>System Logs Channel:</strong> Logs channel for session creations and joins.</li>
+            <li><strong>Staff Role:</strong> Role allowed to join and moderate help channels.</li>
+            <li><strong>Manager Role:</strong> Notified in logs when channels are generated.</li>
+        </ul>
+        <div class="doc-nav-footer">
+            <div class="doc-nav-card" data-nav="giveaways"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Giveaways</div></div>
+            <div class="doc-nav-card next" data-nav="custom-commands"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Custom Commands →</div></div>
+        </div>
+    </div>
+
+    <!-- ══ CUSTOM COMMANDS ══ -->
+    <div class="doc-page" id="page-custom-commands">
+        <div class="doc-hero">
+            <span class="doc-tag tag-dashboard"><i class="fa-solid fa-terminal"></i> Dashboard</span>
+            <h1 class="doc-title">Custom Commands</h1>
+            <p class="doc-subtitle">Create server-specific commands with custom text replies.</p>
+            <div class="doc-meta"><span><i class="fa-regular fa-clock"></i> 3 min read</span></div>
+        </div>
+        <div class="doc-divider"></div>
+        <p class="doc-p">Create text triggers and responses. When a member invokes the trigger (e.g. <code>?ip</code>), the bot sends the custom response text. Perfect for providing quick links, rules, and server FAQs.</p>
+        <div class="doc-nav-footer">
+            <div class="doc-nav-card" data-nav="rooms"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Need Help Rooms</div></div>
+            <div class="doc-nav-card next" data-nav="api-keys"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Developer API Keys →</div></div>
+        </div>
+    </div>
+
+    <!-- ══ API KEYS ══ -->
+    <div class="doc-page" id="page-api-keys">
+        <div class="doc-hero">
+            <span class="doc-tag tag-dashboard"><i class="fa-solid fa-key"></i> Dashboard</span>
+            <h1 class="doc-title">Developer API Keys</h1>
+            <p class="doc-subtitle">Generate API keys to communicate programmatically with your guild's data.</p>
+            <div class="doc-meta"><span><i class="fa-regular fa-clock"></i> 3 min read</span></div>
+        </div>
+        <div class="doc-divider"></div>
+        <p class="doc-p">Generate, scope, and revoke secure API keys. Keys permit REST API access (e.g. reading logs, warning tables, or leveling statistics) on behalf of your guild.</p>
+        <div class="callout danger"><i class="fa-solid fa-triangle-exclamation callout-icon"></i><div class="callout-body">Keep API keys secret. Anyone with access to the key can access server data and perform moderation actions.</div></div>
+        <div class="doc-nav-footer">
+            <div class="doc-nav-card" data-nav="custom-commands"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Custom Commands</div></div>
+            <div class="doc-nav-card next" data-nav="billing"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Premium Plan →</div></div>
+        </div>
+    </div>
+
+    <!-- ══ BILLING / PREMIUM ══ -->
+    <div class="doc-page" id="page-billing">
+        <div class="doc-hero">
+            <span class="doc-tag tag-premium"><i class="fa-solid fa-star"></i> Premium</span>
+            <h1 class="doc-title">Premium Plan</h1>
+            <p class="doc-subtitle">Activate premium services and personal voice channels for your guild.</p>
+            <div class="doc-meta"><span><i class="fa-regular fa-clock"></i> 4 min read</span></div>
+        </div>
+        <div class="doc-divider"></div>
+        <h2 class="doc-heading" id="premium-features">Premium Perks</h2>
+        <p class="doc-p">Enabling Premium activates advanced commands allowing users to spin up personal premium voice rooms. Premium rooms can be renamed, customized with emoji icons, assigned custom colors, and whitelist specific users.</p>
+        <div class="doc-nav-footer">
+            <div class="doc-nav-card" data-nav="api-keys"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Developer API Keys</div></div>
+            <div class="doc-nav-card next" data-nav="cmd-moderation"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Moderation Commands →</div></div>
+        </div>
+    </div>
+
+    <!-- ══ BOT COMMANDS: MODERATION ══ -->
+    <div class="doc-page" id="page-cmd-moderation">
+        <div class="doc-hero">
+            <span class="doc-tag tag-command"><i class="fa-solid fa-gavel"></i> Commands</span>
+            <h1 class="doc-title">Moderation Commands</h1>
+            <p class="doc-subtitle">Complete reference for all moderation actions, syntax, and permission requirements.</p>
+            <div class="doc-meta"><span><i class="fa-regular fa-clock"></i> 6 min read</span></div>
+        </div>
+        <div class="doc-divider"></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>ban</div><div class="cmd-desc">Permanently ban a member from the server.</div><div class="cmd-syntax">?ban &lt;user&gt; [reason]</div><div class="cmd-meta"><span class="cmd-badge perm"><i class="fa-solid fa-lock"></i> Ban Members</span></div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>banforlife</div><div class="cmd-desc">Ban a member permanently and record it in the lifetime database.</div><div class="cmd-syntax">?banforlife &lt;user&gt; [reason]</div><div class="cmd-meta"><span class="cmd-badge perm"><i class="fa-solid fa-lock"></i> Ban Members</span></div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>unban</div><div class="cmd-desc">Unban a member by ID.</div><div class="cmd-syntax">?unban &lt;userId&gt; [reason]</div><div class="cmd-meta"><span class="cmd-badge perm"><i class="fa-solid fa-lock"></i> Ban Members</span></div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>unbanforlife</div><div class="cmd-desc">Unban a member from the lifetime database.</div><div class="cmd-syntax">?unbanforlife &lt;userId&gt;</div><div class="cmd-meta"><span class="cmd-badge perm"><i class="fa-solid fa-lock"></i> Ban Members</span></div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>kick</div><div class="cmd-desc">Kick a member from the server.</div><div class="cmd-syntax">?kick &lt;user&gt; [reason]</div><div class="cmd-meta"><span class="cmd-badge perm"><i class="fa-solid fa-lock"></i> Kick Members</span></div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>mute</div><div class="cmd-desc">Assign the mute role to a member.</div><div class="cmd-syntax">?mute &lt;user&gt; [duration] [reason]</div><div class="cmd-meta"><span class="cmd-badge perm"><i class="fa-solid fa-lock"></i> Manage Roles</span></div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>unmute</div><div class="cmd-desc">Remove the mute role from a member.</div><div class="cmd-syntax">?unmute &lt;user&gt;</div><div class="cmd-meta"><span class="cmd-badge perm"><i class="fa-solid fa-lock"></i> Manage Roles</span></div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>timeout</div><div class="cmd-desc">Discord-native timeout. Expires automatically.</div><div class="cmd-syntax">?timeout &lt;user&gt; &lt;duration&gt; [reason]</div><div class="cmd-meta"><span class="cmd-badge perm"><i class="fa-solid fa-lock"></i> Moderate Members</span></div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>untimeout</div><div class="cmd-desc">Manually remove timeout early from a member.</div><div class="cmd-syntax">?untimeout &lt;user&gt;</div><div class="cmd-meta"><span class="cmd-badge perm"><i class="fa-solid fa-lock"></i> Moderate Members</span></div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>warn</div><div class="cmd-desc">Issue a warning stored in the database.</div><div class="cmd-syntax">?warn &lt;user&gt; &lt;reason&gt;</div><div class="cmd-meta"><span class="cmd-badge perm"><i class="fa-solid fa-lock"></i> Manage Messages</span></div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>warnlist</div><div class="cmd-desc">Display warnings log for a user.</div><div class="cmd-syntax">?warnlist &lt;user&gt;</div><div class="cmd-meta"><span class="cmd-badge perm"><i class="fa-solid fa-lock"></i> Manage Messages</span></div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>unwarn</div><div class="cmd-desc">Remove a warning by its warning ID.</div><div class="cmd-syntax">?unwarn &lt;user&gt; &lt;warnId&gt;</div><div class="cmd-meta"><span class="cmd-badge perm"><i class="fa-solid fa-lock"></i> Manage Messages</span></div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>jail</div><div class="cmd-desc">Jail a member (isolates channel view).</div><div class="cmd-syntax">?jail &lt;user&gt; [reason]</div><div class="cmd-meta"><span class="cmd-badge perm"><i class="fa-solid fa-lock"></i> Manage Roles</span></div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>unjail</div><div class="cmd-desc">Release jailed member and restore roles.</div><div class="cmd-syntax">?unjail &lt;user&gt;</div><div class="cmd-meta"><span class="cmd-badge perm"><i class="fa-solid fa-lock"></i> Manage Roles</span></div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>clear</div><div class="cmd-desc">Delete a specified amount of messages in channel.</div><div class="cmd-syntax">?clear &lt;amount&gt; [user]</div><div class="cmd-meta"><span class="cmd-badge perm"><i class="fa-solid fa-lock"></i> Manage Messages</span></div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>nick</div><div class="cmd-desc">Modify a user nickname.</div><div class="cmd-syntax">?nick &lt;user&gt; [nickname]</div><div class="cmd-meta"><span class="cmd-badge perm"><i class="fa-solid fa-lock"></i> Manage Nicknames</span></div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>temprole</div><div class="cmd-desc">Assign a role temporarily for a set duration.</div><div class="cmd-syntax">?temprole &lt;user&gt; &lt;role&gt; &lt;duration&gt;</div><div class="cmd-meta"><span class="cmd-badge perm"><i class="fa-solid fa-lock"></i> Manage Roles</span></div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>hide</div><div class="cmd-desc">Hide a channel from regular members.</div><div class="cmd-syntax">?hide [channel]</div><div class="cmd-meta"><span class="cmd-badge perm"><i class="fa-solid fa-lock"></i> Manage Channels</span></div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>unhide</div><div class="cmd-desc">Restore a hidden channel's visibility.</div><div class="cmd-syntax">?unhide [channel]</div><div class="cmd-meta"><span class="cmd-badge perm"><i class="fa-solid fa-lock"></i> Manage Channels</span></div></div>
+        <div class="doc-nav-footer">
+            <div class="doc-nav-card" data-nav="billing"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Premium Plan</div></div>
+            <div class="doc-nav-card next" data-nav="cmd-security"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Security Commands →</div></div>
+        </div>
+    </div>
+
+    <!-- ══ BOT COMMANDS: SECURITY ══ -->
+    <div class="doc-page" id="page-cmd-security">
+        <div class="doc-hero">
+            <span class="doc-tag tag-command"><i class="fa-solid fa-shield-halved"></i> Commands</span>
+            <h1 class="doc-title">Security Commands</h1>
+            <p class="doc-subtitle">Lockdown, link filters, and bot defense command references.</p>
+            <div class="doc-meta"><span><i class="fa-regular fa-clock"></i> 4 min read</span></div>
+        </div>
+        <div class="doc-divider"></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>lock</div><div class="cmd-desc">Lock down a channel. Regular members lose Send Messages rights.</div><div class="cmd-syntax">?lock [channel]</div><div class="cmd-meta"><span class="cmd-badge perm"><i class="fa-solid fa-lock"></i> Manage Channels</span></div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>unlock</div><div class="cmd-desc">Unlock a channel to restore normal posting permissions.</div><div class="cmd-syntax">?unlock [channel]</div><div class="cmd-meta"><span class="cmd-badge perm"><i class="fa-solid fa-lock"></i> Manage Channels</span></div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>antilink</div><div class="cmd-desc">Turn the anti-link link filter on or off.</div><div class="cmd-syntax">?antilink &lt;on|off&gt;</div><div class="cmd-meta"><span class="cmd-badge perm"><i class="fa-solid fa-lock"></i> Manage Guild</span></div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>antilink-whitelist</div><div class="cmd-desc">Add or remove a domain from the whitelist.</div><div class="cmd-syntax">?antilink-whitelist &lt;add|remove&gt; &lt;domain&gt;</div><div class="cmd-meta"><span class="cmd-badge perm"><i class="fa-solid fa-lock"></i> Manage Guild</span></div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>antilink-stats</div><div class="cmd-desc">Show anti-link whitelist configuration and statistics.</div><div class="cmd-syntax">?antilink-stats</div><div class="cmd-meta"><span class="cmd-badge perm"><i class="fa-solid fa-lock"></i> Manage Guild</span></div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>antibots</div><div class="cmd-desc">Manage action on newly joining unapproved bots.</div><div class="cmd-syntax">?antibots &lt;on|off|kick|ban&gt;</div><div class="cmd-meta"><span class="cmd-badge perm"><i class="fa-solid fa-lock"></i> Manage Guild</span></div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>antiwebhook</div><div class="cmd-desc">Enable or disable anti-webhook defense.</div><div class="cmd-syntax">?antiwebhook &lt;on|off&gt;</div><div class="cmd-meta"><span class="cmd-badge perm"><i class="fa-solid fa-lock"></i> Manage Guild</span></div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>v-blacklist</div><div class="cmd-desc">Blacklist a member from entering any server voice channels.</div><div class="cmd-syntax">?v-blacklist &lt;add|remove|list&gt; [user]</div><div class="cmd-meta"><span class="cmd-badge perm"><i class="fa-solid fa-lock"></i> Manage Guild</span></div></div>
+        <div class="doc-nav-footer">
+            <div class="doc-nav-card" data-nav="cmd-moderation"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Moderation Commands</div></div>
+            <div class="doc-nav-card next" data-nav="cmd-utility"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Utility Commands →</div></div>
+        </div>
+    </div>
+
+    <!-- ══ BOT COMMANDS: UTILITY ══ -->
+    <div class="doc-page" id="page-cmd-utility">
+        <div class="doc-hero">
+            <span class="doc-tag tag-command"><i class="fa-solid fa-wrench"></i> Commands</span>
+            <h1 class="doc-title">Utility Commands</h1>
+            <p class="doc-subtitle">Check stats, configurations, roles, and configure guilds.</p>
+            <div class="doc-meta"><span><i class="fa-regular fa-clock"></i> 5 min read</span></div>
+        </div>
+        <div class="doc-divider"></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>help</div><div class="cmd-desc">Display help command index.</div><div class="cmd-syntax">?help [command]</div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>ping</div><div class="cmd-desc">Check bot latency and API gateway latency.</div><div class="cmd-syntax">?ping</div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>user-info</div><div class="cmd-desc">View info about a member (joined dates, roles, ID).</div><div class="cmd-syntax">?user-info [user]</div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>server-info</div><div class="cmd-desc">Show statistics for the server.</div><div class="cmd-syntax">?server-info</div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>avatar</div><div class="cmd-desc">Get user avatar link.</div><div class="cmd-syntax">?avatar [user]</div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>banner</div><div class="cmd-desc">Get user profile banner link.</div><div class="cmd-syntax">?banner [user]</div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>role-info</div><div class="cmd-desc">Get role properties and user counts.</div><div class="cmd-syntax">?role-info &lt;role&gt;</div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>channel-info</div><div class="cmd-desc">Get channel information.</div><div class="cmd-syntax">?channel-info [channel]</div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>emoji-info</div><div class="cmd-desc">Get details about a custom server emoji.</div><div class="cmd-syntax">?emoji-info &lt;emoji&gt;</div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>addemoji</div><div class="cmd-desc">Upload a new custom emoji.</div><div class="cmd-syntax">?addemoji &lt;name&gt; [url]</div><div class="cmd-meta"><span class="cmd-badge perm"><i class="fa-solid fa-lock"></i> Manage Emojis</span></div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>invites</div><div class="cmd-desc">Show count of verified invites by a user.</div><div class="cmd-syntax">?invites [user]</div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>topinvites</div><div class="cmd-desc">Show top server inviters leaderboard.</div><div class="cmd-syntax">?topinvites</div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>boosters</div><div class="cmd-desc">List all current server nitro boosters.</div><div class="cmd-syntax">?boosters</div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>membercount</div><div class="cmd-desc">Show total count of users and bots in the server.</div><div class="cmd-syntax">?membercount</div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>inrole</div><div class="cmd-desc">List all members possessing a specific role.</div><div class="cmd-syntax">?inrole &lt;role&gt;</div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>embed</div><div class="cmd-desc">Construct and post a formatted rich embed.</div><div class="cmd-syntax">?embed &lt;title&gt; | &lt;description&gt; | [color]</div><div class="cmd-meta"><span class="cmd-badge perm"><i class="fa-solid fa-lock"></i> Manage Messages</span></div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>autorole</div><div class="cmd-desc">Add or remove roles from Auto Role join system.</div><div class="cmd-syntax">?autorole &lt;add|remove|list&gt; [role]</div><div class="cmd-meta"><span class="cmd-badge perm"><i class="fa-solid fa-lock"></i> Manage Roles</span></div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>addprefix</div><div class="cmd-desc">Register a new prefix.</div><div class="cmd-syntax">?addprefix &lt;prefix&gt;</div><div class="cmd-meta"><span class="cmd-badge perm"><i class="fa-solid fa-lock"></i> Manage Guild</span></div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>firstmessage</div><div class="cmd-desc">Generate URL to first message inside channel.</div><div class="cmd-syntax">?firstmessage [channel]</div></div>
+        <div class="doc-nav-footer">
+            <div class="doc-nav-card" data-nav="cmd-security"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Security Commands</div></div>
+            <div class="doc-nav-card next" data-nav="cmd-leveling"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Leveling Commands →</div></div>
+        </div>
+    </div>
+
+    <!-- ══ BOT COMMANDS: LEVELING ══ -->
+    <div class="doc-page" id="page-cmd-leveling">
+        <div class="doc-hero">
+            <span class="doc-tag tag-command"><i class="fa-solid fa-chart-line"></i> Commands</span>
+            <h1 class="doc-title">Leveling Commands</h1>
+            <p class="doc-subtitle">View rank card, XP leaderboards, and modify XP levels.</p>
+            <div class="doc-meta"><span><i class="fa-regular fa-clock"></i> 3 min read</span></div>
+        </div>
+        <div class="doc-divider"></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>rank</div><div class="cmd-desc">Generates card showing current level and XP.</div><div class="cmd-syntax">?rank [user]</div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>leaderboard</div><div class="cmd-desc">List the top ranked server members.</div><div class="cmd-syntax">?leaderboard [page]</div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>leveladmin</div><div class="cmd-desc">Set or add XP or level of a user.</div><div class="cmd-syntax">?leveladmin &lt;set|add|reset&gt; &lt;user&gt; [amount]</div><div class="cmd-meta"><span class="cmd-badge perm"><i class="fa-solid fa-lock"></i> Manage Guild</span></div></div>
+        <div class="doc-nav-footer">
+            <div class="doc-nav-card" data-nav="cmd-utility"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Utility Commands</div></div>
+            <div class="doc-nav-card next" data-nav="cmd-economy"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Economy Commands →</div></div>
+        </div>
+    </div>
+
+    <!-- ══ BOT COMMANDS: ECONOMY ══ -->
+    <div class="doc-page" id="page-cmd-economy">
+        <div class="doc-hero">
+            <span class="doc-tag tag-command"><i class="fa-solid fa-coins"></i> Commands</span>
+            <h1 class="doc-title">Economy Commands</h1>
+            <p class="doc-subtitle">Reference for coins balance, transfers, and daily claims.</p>
+            <div class="doc-meta"><span><i class="fa-regular fa-clock"></i> 3 min read</span></div>
+        </div>
+        <div class="doc-divider"></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>bal</div><div class="cmd-desc">Check coin balance for yourself or another member.</div><div class="cmd-syntax">?bal [user]</div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>daily</div><div class="cmd-desc">Claim daily coin reward.</div><div class="cmd-syntax">?daily</div><div class="cmd-meta"><span class="cmd-badge cooldown"><i class="fa-solid fa-clock"></i> 24h Cooldown</span></div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>transfer</div><div class="cmd-desc">Transfer coins to another user.</div><div class="cmd-syntax">?transfer &lt;user&gt; &lt;amount&gt;</div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>top</div><div class="cmd-desc">Richest members ranking page.</div><div class="cmd-syntax">?top [page]</div></div>
+        <div class="doc-nav-footer">
+            <div class="doc-nav-card" data-nav="cmd-leveling"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Leveling Commands</div></div>
+            <div class="doc-nav-card next" data-nav="cmd-voice"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Voice Commands →</div></div>
+        </div>
+    </div>
+
+    <!-- ══ BOT COMMANDS: VOICE ══ -->
+    <div class="doc-page" id="page-cmd-voice">
+        <div class="doc-hero">
+            <span class="doc-tag tag-command"><i class="fa-solid fa-microphone"></i> Commands</span>
+            <h1 class="doc-title">Voice Commands</h1>
+            <p class="doc-subtitle">Voice channel user controls, voice stats, and voice moderation.</p>
+            <div class="doc-meta"><span><i class="fa-regular fa-clock"></i> 4 min read</span></div>
+        </div>
+        <div class="doc-divider"></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>vmute</div><div class="cmd-desc">Server-mute a member in voice.</div><div class="cmd-syntax">?vmute &lt;user&gt; [reason]</div><div class="cmd-meta"><span class="cmd-badge perm"><i class="fa-solid fa-lock"></i> Mute Members</span></div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>vunmute</div><div class="cmd-desc">Server-unmute a member in voice.</div><div class="cmd-syntax">?vunmute &lt;user&gt;</div><div class="cmd-meta"><span class="cmd-badge perm"><i class="fa-solid fa-lock"></i> Mute Members</span></div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>vdeafen</div><div class="cmd-desc">Server-deafen a member in voice.</div><div class="cmd-syntax">?vdeafen &lt;user&gt; [reason]</div><div class="cmd-meta"><span class="cmd-badge perm"><i class="fa-solid fa-lock"></i> Deafen Members</span></div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>vundeafen</div><div class="cmd-desc">Server-undeafen a member in voice.</div><div class="cmd-syntax">?vundeafen &lt;user&gt;</div><div class="cmd-meta"><span class="cmd-badge perm"><i class="fa-solid fa-lock"></i> Deafen Members</span></div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>vkick</div><div class="cmd-desc">Disconnect a member from their current voice channel.</div><div class="cmd-syntax">?vkick &lt;user&gt; [reason]</div><div class="cmd-meta"><span class="cmd-badge perm"><i class="fa-solid fa-lock"></i> Move Members</span></div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>move</div><div class="cmd-desc">Move a member to a different voice channel.</div><div class="cmd-syntax">?move &lt;user&gt; &lt;channel&gt;</div><div class="cmd-meta"><span class="cmd-badge perm"><i class="fa-solid fa-lock"></i> Move Members</span></div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>vclist</div><div class="cmd-desc">List all members in server voice channels.</div><div class="cmd-syntax">?vclist</div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>stats-voice</div><div class="cmd-desc">View total voice minutes activity stats.</div><div class="cmd-syntax">?stats-voice [user]</div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>find</div><div class="cmd-desc">Locate the voice channel of a member.</div><div class="cmd-syntax">?find &lt;user&gt;</div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>join</div><div class="cmd-desc">Join the same voice channel as another member.</div><div class="cmd-syntax">?join &lt;user&gt;</div><div class="cmd-meta"><span class="cmd-badge perm"><i class="fa-solid fa-lock"></i> Move Members</span></div></div>
+        <div class="doc-nav-footer">
+            <div class="doc-nav-card" data-nav="cmd-economy"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Economy Commands</div></div>
+            <div class="doc-nav-card next" data-nav="cmd-fun"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Fun Commands →</div></div>
+        </div>
+    </div>
+
+    <!-- ══ BOT COMMANDS: FUN ══ -->
+    <div class="doc-page" id="page-cmd-fun">
+        <div class="doc-hero">
+            <span class="doc-tag tag-command"><i class="fa-solid fa-face-smile"></i> Commands</span>
+            <h1 class="doc-title">Fun Commands</h1>
+            <p class="doc-subtitle">Lighthearted command reference for reactions, rolls, and compatibility.</p>
+            <div class="doc-meta"><span><i class="fa-regular fa-clock"></i> 3 min read</span></div>
+        </div>
+        <div class="doc-divider"></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>hug</div><div class="cmd-desc">Hug a member.</div><div class="cmd-syntax">?hug &lt;user&gt;</div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>kiss</div><div class="cmd-desc">Kiss a member.</div><div class="cmd-syntax">?kiss &lt;user&gt;</div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>slap</div><div class="cmd-desc">Slap a member.</div><div class="cmd-syntax">?slap &lt;user&gt;</div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>dance</div><div class="cmd-desc">Perform a dance move.</div><div class="cmd-syntax">?dance</div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>smile</div><div class="cmd-desc">Smile.</div><div class="cmd-syntax">?smile</div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>love</div><div class="cmd-desc">Measure compatibility with another member.</div><div class="cmd-syntax">?love &lt;user1&gt; [user2]</div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>howgay</div><div class="cmd-desc">Measure how gay a member is.</div><div class="cmd-syntax">?howgay [user]</div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>gender</div><div class="cmd-desc">Check user gender.</div><div class="cmd-syntax">?gender [user]</div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>cringe</div><div class="cmd-desc">Rates a member's cringe level.</div><div class="cmd-syntax">?cringe [user]</div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>roll</div><div class="cmd-desc">Roll a dice.</div><div class="cmd-syntax">?roll [sides]</div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>cat</div><div class="cmd-desc">Generate a cute cat image.</div><div class="cmd-syntax">?cat</div></div>
+        <div class="doc-nav-footer">
+            <div class="doc-nav-card" data-nav="cmd-voice"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Voice Commands</div></div>
+            <div class="doc-nav-card next" data-nav="cmd-marriage"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Marriage Commands →</div></div>
+        </div>
+    </div>
+
+    <!-- ══ BOT COMMANDS: MARRIAGE ══ -->
+    <div class="doc-page" id="page-cmd-marriage">
+        <div class="doc-hero">
+            <span class="doc-tag tag-command"><i class="fa-solid fa-heart"></i> Commands</span>
+            <h1 class="doc-title">Marriage Commands</h1>
+            <p class="doc-subtitle">Propose, divorce, and check marriage statistics inside your guild.</p>
+            <div class="doc-meta"><span><i class="fa-regular fa-clock"></i> 3 min read</span></div>
+        </div>
+        <div class="doc-divider"></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>marriage</div><div class="cmd-desc">Propose marriage to a server member. Requires target to accept.</div><div class="cmd-syntax">?marriage &lt;user&gt;</div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>divorce</div><div class="cmd-desc">Divorce your current partner.</div><div class="cmd-syntax">?divorce</div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>marriage-stats</div><div class="cmd-desc">View details of a member's marriage state.</div><div class="cmd-syntax">?marriage-stats [user]</div></div>
+        <div class="doc-nav-footer">
+            <div class="doc-nav-card" data-nav="cmd-fun"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Fun Commands</div></div>
+            <div class="doc-nav-card next" data-nav="cmd-giveaways"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Giveaways Commands →</div></div>
+        </div>
+    </div>
+
+    <!-- ══ BOT COMMANDS: GIVEAWAYS ══ -->
+    <div class="doc-page" id="page-cmd-giveaways">
+        <div class="doc-hero">
+            <span class="doc-tag tag-command"><i class="fa-solid fa-gift"></i> Commands</span>
+            <h1 class="doc-title">Giveaways Commands</h1>
+            <p class="doc-subtitle">Commands reference for launching giveaways and ban list entries.</p>
+            <div class="doc-meta"><span><i class="fa-regular fa-clock"></i> 3 min read</span></div>
+        </div>
+        <div class="doc-divider"></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>vg</div><div class="cmd-desc">Launch a giveaway (e.g. ?vg 1d 2 Discord Nitro).</div><div class="cmd-syntax">?vg &lt;duration&gt; &lt;winners&gt; &lt;prize&gt;</div><div class="cmd-meta"><span class="cmd-badge perm"><i class="fa-solid fa-lock"></i> Manage Guild</span></div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>vb</div><div class="cmd-desc">Blacklist a user from joining future giveaways.</div><div class="cmd-syntax">?vb &lt;user&gt; [reason]</div><div class="cmd-meta"><span class="cmd-badge perm"><i class="fa-solid fa-lock"></i> Manage Guild</span></div></div>
+        <div class="doc-nav-footer">
+            <div class="doc-nav-card" data-nav="cmd-marriage"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Marriage Commands</div></div>
+            <div class="doc-nav-card next" data-nav="cmd-premium"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Premium Rooms Commands →</div></div>
+        </div>
+    </div>
+
+    <!-- ══ BOT COMMANDS: PREMIUM ══ -->
+    <div class="doc-page" id="page-cmd-premium">
+        <div class="doc-hero">
+            <span class="doc-tag tag-command"><i class="fa-solid fa-star"></i> Commands</span>
+            <h1 class="doc-title">Premium Rooms Commands</h1>
+            <p class="doc-subtitle">Create and manage customized personal premium voice rooms.</p>
+            <div class="doc-meta"><span><i class="fa-regular fa-clock"></i> 4 min read</span></div>
+        </div>
+        <div class="doc-divider"></div>
+        <div class="callout premium"><i class="fa-solid fa-star callout-icon"></i><div class="callout-body">Requires an active server Premium activation to run pcreate commands.</div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>pcreate</div><div class="cmd-desc">Generate your premium voice room channel.</div><div class="cmd-syntax">?pcreate &lt;name&gt;</div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>pdelete</div><div class="cmd-desc">Destroy your premium voice room channel.</div><div class="cmd-syntax">?pdelete</div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>pname</div><div class="cmd-desc">Rename your personal voice channel.</div><div class="cmd-syntax">?pname &lt;name&gt;</div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>picon</div><div class="cmd-desc">Add a custom emoji icon prefix to your room.</div><div class="cmd-syntax">?picon &lt;emoji&gt;</div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>pcolor</div><div class="cmd-desc">Configure color formatting of your custom room role.</div><div class="cmd-syntax">?pcolor &lt;hex_color&gt;</div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>padd</div><div class="cmd-desc">Add a member permissions to view/join your room.</div><div class="cmd-syntax">?padd &lt;user&gt;</div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>premove</div><div class="cmd-desc">Remove member permissions from your room.</div><div class="cmd-syntax">?premove &lt;user&gt;</div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>pmadd</div><div class="cmd-desc">Make a member a room manager.</div><div class="cmd-syntax">?pmadd &lt;user&gt;</div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>pmremove</div><div class="cmd-desc">Revoke room manager status from a member.</div><div class="cmd-syntax">?pmremove &lt;user&gt;</div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>plist</div><div class="cmd-desc">List all permitted room users.</div><div class="cmd-syntax">?plist</div></div>
+        <div class="cmd-card"><div class="cmd-name"><span class="cmd-prefix">?</span>pshowall</div><div class="cmd-desc">List all active premium voice rooms.</div><div class="cmd-syntax">?pshowall</div><div class="cmd-meta"><span class="cmd-badge perm"><i class="fa-solid fa-lock"></i> Manage Guild</span></div></div>
+        <div class="doc-nav-footer">
+            <div class="doc-nav-card" data-nav="cmd-giveaways"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Giveaways Commands</div></div>
+            <div class="doc-nav-card next" data-nav="dev-portal"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Developer Portal →</div></div>
+        </div>
+    </div>
+
+    <!-- ══ DEV PORTAL ══ -->
+    <div class="doc-page" id="page-dev-portal">
+        <div class="doc-hero">
+            <span class="doc-tag tag-api"><i class="fa-solid fa-code"></i> Developer</span>
+            <h1 class="doc-title">Developer Portal</h1>
+            <p class="doc-subtitle">API key management, developer tools, and analytics dashboards.</p>
+            <div class="doc-meta"><span><i class="fa-regular fa-clock"></i> 4 min read</span></div>
+        </div>
+        <div class="doc-divider"></div>
+        <div class="callout info"><i class="fa-solid fa-circle-info callout-icon"></i><div class="callout-body">The portal is accessible at <code>/developer</code> for authorized developers. Ask staff to grant you Developer roles.</div></div>
+        <h2 class="doc-heading" id="dev-features">Features</h2>
+        <ul class="doc-ul">
+            <li>Generate and delete API keys.</li>
+            <li>Monitor REST API requests rates and limit resets.</li>
+            <li>Inspect detailed usage charts.</li>
+        </ul>
+        <div class="doc-nav-footer">
+            <div class="doc-nav-card" data-nav="cmd-premium"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Premium Rooms Commands</div></div>
+            <div class="doc-nav-card next" data-nav="rest-api"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">REST API →</div></div>
+        </div>
+    </div>
+
+    <!-- ══ REST API ══ -->
+    <div class="doc-page" id="page-rest-api">
+        <div class="doc-hero">
+            <span class="doc-tag tag-api"><i class="fa-solid fa-plug"></i> Developer</span>
+            <h1 class="doc-title">REST API</h1>
+            <p class="doc-subtitle">REST endpoints overview for fetching levels, log files, and warnings.</p>
+            <div class="doc-meta"><span><i class="fa-regular fa-clock"></i> 8 min read</span></div>
+        </div>
+        <div class="doc-divider"></div>
+        <h2 class="doc-heading" id="api-base">Base Endpoint</h2>
+        <div class="code-block">
+            <div class="code-header"><div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div><span class="code-lang">URL</span><button class="copy-btn"><i class="fa-regular fa-copy"></i> Copy</button></div>
+            <pre><code>https://yourdomain.com/api/v1</code></pre>
+        </div>
+        <h2 class="doc-heading" id="api-auth">HTTP Headers Authorization</h2>
+        <div class="code-block">
+            <div class="code-header"><div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div><span class="code-lang">Headers</span><button class="copy-btn"><i class="fa-regular fa-copy"></i> Copy</button></div>
+            <pre><code>Authorization: Bearer YOUR_API_KEY
+Content-Type:  application/json</code></pre>
+        </div>
+        <h2 class="doc-heading" id="api-endpoints">Available Endpoints</h2>
+        <div class="doc-table-wrap"><table><thead><tr><th>Method</th><th>Path</th><th>Description</th></tr></thead><tbody>
+            <tr><td><span style="color:var(--green)">GET</span></td><td><code>/guilds/{id}</code></td><td>Retrieve server configuration and stats</td></tr>
+            <tr><td><span style="color:var(--blue)">POST</span></td><td><code>/guilds/{id}/ban</code></td><td>Ban a user</td></tr>
+            <tr><td><span style="color:var(--blue)">POST</span></td><td><code>/guilds/{id}/warn</code></td><td>Warn a user</td></tr>
+            <tr><td><span style="color:var(--green)">GET</span></td><td><code>/guilds/{id}/levels</code></td><td>Get XP leaderboard</td></tr>
+            <tr><td><span style="color:var(--orange)">PATCH</span></td><td><code>/guilds/{id}/levels/{userId}</code></td><td>Update XP values</td></tr>
+            <tr><td><span style="color:var(--green)">GET</span></td><td><code>/guilds/{id}/economy</code></td><td>Get coin leaderboard</td></tr>
+            <tr><td><span style="color:var(--green)">GET</span></td><td><code>/guilds/{id}/logs</code></td><td>Get logs routing config</td></tr>
+        </tbody></table></div>
+        <div class="doc-nav-footer">
+            <div class="doc-nav-card" data-nav="dev-portal"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Developer Portal</div></div>
+            <div class="doc-nav-card next" data-nav="auth-api"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Authentication →</div></div>
+        </div>
+    </div>
+
+    <!-- ══ AUTH API ══ -->
+    <div class="doc-page" id="page-auth-api">
+        <div class="doc-hero">
+            <span class="doc-tag tag-api"><i class="fa-solid fa-key"></i> Developer</span>
+            <h1 class="doc-title">Authentication</h1>
+            <p class="doc-subtitle">Scopes and rules for API keys authorization.</p>
+            <div class="doc-meta"><span><i class="fa-regular fa-clock"></i> 4 min read</span></div>
+        </div>
+        <div class="doc-divider"></div>
+        <p class="doc-p">API keys generated under Developer API Keys dashboard tab scopes restrict capabilities to specific database actions:</p>
+        <div class="doc-table-wrap"><table><thead><tr><th>Scope</th><th>Permissions granted</th></tr></thead><tbody>
+            <tr><td><code>read:guild</code></td><td>Read guild setups and counts</td></tr>
+            <tr><td><code>write:moderation</code></td><td>Execute kicks, warnings, bans</td></tr>
+            <tr><td><code>write:levels</code></td><td>Modify leveling XP</td></tr>
+            <tr><td><code>write:economy</code></td><td>Modify coin balances</td></tr>
+            <tr><td><code>read:logs</code></td><td>View warning histories and logs</td></tr>
+        </tbody></table></div>
+        <div class="doc-nav-footer">
+            <div class="doc-nav-card" data-nav="rest-api"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">REST API</div></div>
+            <div class="doc-nav-card next" data-nav="webhooks"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Webhooks →</div></div>
+        </div>
+    </div>
+
+    <!-- ══ WEBHOOKS ══ -->
+    <div class="doc-page" id="page-webhooks">
+        <div class="doc-hero">
+            <span class="doc-tag tag-api"><i class="fa-solid fa-bolt"></i> Developer</span>
+            <h1 class="doc-title">Webhooks</h1>
+            <p class="doc-subtitle">Receive instant HTTP POST callbacks for key server events.</p>
+            <div class="doc-meta"><span><i class="fa-regular fa-clock"></i> 5 min read</span></div>
+        </div>
+        <div class="doc-divider"></div>
+        <p class="doc-p">Configure webhook URLs to receive JSON payloads whenever the following events execute:</p>
+        <div class="doc-table-wrap"><table><thead><tr><th>Webhook Event</th><th>Trigger Context</th></tr></thead><tbody>
+            <tr><td><code>member.ban</code></td><td>Guild ban executed</td></tr>
+            <tr><td><code>member.kick</code></td><td>Guild kick executed</td></tr>
+            <tr><td><code>member.warn</code></td><td>Warning created in database</td></tr>
+            <tr><td><code>member.join</code></td><td>User joined guild</td></tr>
+            <tr><td><code>level.up</code></td><td>User level increased</td></tr>
+            <tr><td><code>automod.action</code></td><td>Automod deletion executed</td></tr>
+        </tbody></table></div>
+        <div class="doc-nav-footer">
+            <div class="doc-nav-card" data-nav="auth-api"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Authentication</div></div>
+            <div class="doc-nav-card next" data-nav="rate-limits"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Rate Limits →</div></div>
+        </div>
+    </div>
+
+    <!-- ══ RATE LIMITS ══ -->
+    <div class="doc-page" id="page-rate-limits">
+        <div class="doc-hero">
+            <span class="doc-tag tag-api"><i class="fa-solid fa-gauge-high"></i> Developer</span>
+            <h1 class="doc-title">Rate Limits</h1>
+            <p class="doc-subtitle">Overview of API request limits per token.</p>
+            <div class="doc-meta"><span><i class="fa-regular fa-clock"></i> 3 min read</span></div>
+        </div>
+        <div class="doc-divider"></div>
+        <div class="doc-table-wrap"><table><thead><tr><th>Endpoint Category</th><th>Max Requests</th><th>Reset Duration</th></tr></thead><tbody>
+            <tr><td>OAuth endpoints</td><td>20 requests</td><td>15 min</td></tr>
+            <tr><td>REST General</td><td>200 requests</td><td>5 min</td></tr>
+            <tr><td>Developer API Keys</td><td>100 requests</td><td>5 min</td></tr>
+        </tbody></table></div>
+        <div class="doc-nav-footer">
+            <div class="doc-nav-card" data-nav="webhooks"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Webhooks</div></div>
+            <div class="doc-nav-card next" data-nav="faq"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">FAQ →</div></div>
+        </div>
+    </div>
+
+    <!-- ══ FAQ ══ -->
+    <div class="doc-page" id="page-faq">
+        <div class="doc-hero">
+            <span class="doc-tag tag-guide"><i class="fa-solid fa-circle-question"></i> Support</span>
+            <h1 class="doc-title">Frequently Asked Questions</h1>
+            <p class="doc-subtitle">Answers to the most common questions regarding Vivy Discord integrations.</p>
+            <div class="doc-meta"><span><i class="fa-regular fa-clock"></i> 5 min read</span></div>
+        </div>
+        <div class="doc-divider"></div>
+        <div class="faq-item"><div class="faq-question"><span>How do I invite Vivy to my guild?</span><i class="fa-solid fa-chevron-down faq-chevron"></i></div><div class="faq-answer"><div class="faq-answer-inner">Visit the main page, click Add to Discord, choose your guild and authorize the permissions. Ensure you hold Manage Server rights.</div></div></div>
+        <div class="faq-item"><div class="faq-question"><span>What is the default command prefix?</span><i class="fa-solid fa-chevron-down faq-chevron"></i></div><div class="faq-answer"><div class="faq-answer-inner">The default prefix is <code>?</code>. You can change this or add extra prefixes by running <code>?addprefix [prefix]</code> or visiting Security & Prefix in the web dashboard.</div></div></div>
+        <div class="faq-item"><div class="faq-question"><span>Why doesn't my guild show in dashboard?</span><i class="fa-solid fa-chevron-down faq-chevron"></i></div><div class="faq-answer"><div class="faq-answer-inner">You must have <strong>Manage Server</strong> permissions on the target server and the bot must be invited. Log out and back in to refresh OAuth lists.</div></div></div>
+        <div class="faq-item"><div class="faq-question"><span>Bot does not respond to commands.</span><i class="fa-solid fa-chevron-down faq-chevron"></i></div><div class="faq-answer"><div class="faq-answer-inner">Verify: (1) Vivy is online in member list, (2) you are using correct prefix (default: <code>?</code>), (3) the bot has Send Messages and View Channel permissions. You can also mention <code>@Vivy help</code>.</div></div></div>
+        <div class="faq-item"><div class="faq-question"><span>Why can't the bot warn or mute a member?</span><i class="fa-solid fa-chevron-down faq-chevron"></i></div><div class="faq-answer"><div class="faq-answer-inner">Discord role hierarchies apply. Vivy's highest role must be placed higher than any member's role it tries to moderate. Vivy cannot moderate the server owner.</div></div></div>
+        <div class="faq-item"><div class="faq-question"><span>Dashboard says the bot is offline.</span><i class="fa-solid fa-chevron-down faq-chevron"></i></div><div class="faq-answer"><div class="faq-answer-inner">The bot may be undergoing minor updates or service restarts. If offline longer than 15 minutes, check the support channels.</div></div></div>
+        <div class="faq-item"><div class="faq-question"><span>Is my server data secure?</span><i class="fa-solid fa-chevron-down faq-chevron"></i></div><div class="faq-answer"><div class="faq-answer-inner">Yes. We only store settings, coins balances, warnings, and XP records needed to operate the bot. Client-dashboard authentication is secured via Discord OAuth.</div></div></div>
+        <div class="doc-nav-footer">
+            <div class="doc-nav-card" data-nav="rate-limits"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Rate Limits</div></div>
+            <div class="doc-nav-card next" data-nav="troubleshooting"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Troubleshooting →</div></div>
+        </div>
+    </div>
+
+    <!-- ══ TROUBLESHOOTING ══ -->
+    <div class="doc-page" id="page-troubleshooting">
+        <div class="doc-hero">
+            <span class="doc-tag tag-guide"><i class="fa-solid fa-bug"></i> Support</span>
+            <h1 class="doc-title">Troubleshooting</h1>
+            <p class="doc-subtitle">Quick fixes for common bot and dashboard configuration errors.</p>
+            <div class="doc-meta"><span><i class="fa-regular fa-clock"></i> 6 min read</span></div>
+        </div>
+        <div class="doc-divider"></div>
+        <h2 class="doc-heading" id="ts-bot">Bot offline or silent</h2>
+        <div class="steps">
+            <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Check status indicator</div><div class="step-desc">Confirm bot is online in server member list.</div></div></div>
+            <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Try direct mentions</div><div class="step-desc">Invoke <code>@Vivy help</code>. If it replies, the prefix has been customized. Check prefix configurations.</div></div></div>
+            <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Examine Channel Permissions Override</div><div class="step-desc">Confirm Vivy has permissions: View Channel, Send Messages, and Read Message History.</div></div></div>
+        </div>
+        <h2 class="doc-heading" id="ts-dashboard">Dashboard login errors</h2>
+        <ul class="doc-ul">
+            <li>Try logging out and back in to clear OAuth sessions.</li>
+            <li>Enable browser cookie support (disabled cookies block OAuth handshakes).</li>
+            <li>Disable private browsing or VPN filters if they block authorization tokens.</li>
+        </ul>
+        <h2 class="doc-heading" id="ts-oauth">Response Errors</h2>
+        <div class="doc-table-wrap"><table><thead><tr><th>Status Code</th><th>Potential Cause</th><th>Resolution</th></tr></thead><tbody>
+            <tr><td>403 Forbidden</td><td>Role hierarchy blocks command</td><td>Move Vivy role higher in settings</td></tr>
+            <tr><td>401 Unauthorized</td><td>Session token expired</td><td>Refresh dashboard login session</td></tr>
+            <tr><td>429 Rate Limit</td><td>API limit exceeded</td><td>Wait for resets</td></tr>
+        </tbody></table></div>
+        <div class="doc-nav-footer">
+            <div class="doc-nav-card" data-nav="faq"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">FAQ</div></div>
+            <div class="doc-nav-card next" data-nav="changelog"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Changelog →</div></div>
+        </div>
+    </div>
+
+    <!-- ══ CHANGELOG ══ -->
+    <div class="doc-page" id="page-changelog">
+        <div class="doc-hero">
+            <span class="doc-tag tag-guide"><i class="fa-solid fa-clock-rotate-left"></i> Changelog</span>
+            <h1 class="doc-title">Changelog</h1>
+            <p class="doc-subtitle">History of all updates and fixes for the Vivy bot platform.</p>
+            <div class="doc-meta"><span><i class="fa-regular fa-calendar"></i> Latest: July 2026</span></div>
+        </div>
+        <div class="doc-divider"></div>
+        <div class="changelog-timeline">
+            <div class="changelog-entry">
+                <div class="changelog-dot"><i class="fa-solid fa-star" style="font-size:14px"></i></div>
+                <div class="changelog-card">
+                    <div class="changelog-version">v3.5.0</div><div class="changelog-date">July 4, 2026</div>
+                    <div class="changelog-changes">
+                        <div class="change-item"><span class="change-badge feat">feat</span> Documentation center at /docs with instant search filters</div>
+                        <div class="change-item"><span class="change-badge feat">feat</span> Custom bot prefix options with multiple characters support</div>
+                        <div class="change-item"><span class="change-badge feat">feat</span> Marriage commands added: ?marriage, ?divorce, ?marriage-stats</div>
+                        <div class="change-item"><span class="change-badge feat">feat</span> Premium voice rooms commands added: ?pcreate, ?pname, ?pcolor etc.</div>
+                        <div class="change-item"><span class="change-badge improve">improve</span> Web dashboard tab integration with live database updates</div>
+                        <div class="change-item"><span class="change-badge fix">fix</span> Leveling XP multiplier booster bug</div>
+                        <div class="change-item"><span class="change-badge security">security</span> Enhanced secure cookies headers in REST API sessions</div>
+                    </div>
+                </div>
+            </div>
+            <div class="changelog-entry">
+                <div class="changelog-dot"><i class="fa-solid fa-rocket" style="font-size:12px"></i></div>
+                <div class="changelog-card">
+                    <div class="changelog-version">v3.0.0</div><div class="changelog-date">January 15, 2026</div>
+                    <div class="changelog-changes">
+                        <div class="change-item"><span class="change-badge feat">feat</span> Fully rewritten dashboard layout containing 20 modules</div>
+                        <div class="change-item"><span class="change-badge feat">feat</span> Member Verification Button system</div>
+                        <div class="change-item"><span class="change-badge feat">feat</span> Anti-Bot & Anti-Webhook protection shields</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="doc-nav-footer">
+            <div class="doc-nav-card" data-nav="troubleshooting"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Troubleshooting</div></div>
+            <div class="doc-nav-card next" data-nav="home"><div class="doc-nav-label">Back to <i class="fa-solid fa-house"></i></div><div class="doc-nav-title">Home</div></div>
+        </div>
+    </div>
+
+    <!-- ══ TERMS OF SERVICE ══ -->
+    <div class="doc-page" id="page-terms">
+        <h1 class="doc-title">Terms of Service</h1>
+        <p class="doc-subtitle">Last updated: October 2026. Please read these Terms carefully before using Vivy Discord Bot and Services.</p>
+
+        <h2 class="doc-heading" id="terms-acceptance">1. Acceptance of Terms</h2>
+        <p class="doc-text">By adding Vivy to your Discord server or accessing the Vivy dashboard, you agree to be bound by these Terms of Service, Discord's Terms of Service, and Discord's Community Guidelines.</p>
+
+        <h2 class="doc-heading" id="terms-service">2. Description of Service</h2>
+        <p class="doc-text">Vivy provides moderation, automation, anti-spam, ticket support, voice room management, leveling, and economy services for Discord communities. Features may be updated, improved, or modified at any time.</p>
+
+        <h2 class="doc-heading" id="terms-conduct">3. User Conduct & Responsibilities</h2>
+        <p class="doc-text">You agree not to use Vivy for any malicious or unlawful purposes, including but not limited to distributing malware, coordinating raids, harassing users, or violating Discord's Developer Terms. Abuse of the bot, API, or dashboard may result in immediate revocation of access and permanent blacklisting.</p>
+
+        <h2 class="doc-heading" id="terms-liability">4. Limitation of Liability</h2>
+        <p class="doc-text">Vivy and its maintainers are not liable for any server damages, data loss, Discord account actions, or indirect damages arising out of the use or inability to use our services.</p>
+
+        <div class="doc-nav-footer">
+            <div class="doc-nav-card" data-nav="home"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Home</div></div>
+            <div class="doc-nav-card next" data-nav="privacy"><div class="doc-nav-label">Next <i class="fa-solid fa-arrow-right"></i></div><div class="doc-nav-title">Privacy Policy</div></div>
+        </div>
+    </div>
+
+    <!-- ══ PRIVACY POLICY ══ -->
+    <div class="doc-page" id="page-privacy">
+        <h1 class="doc-title">Privacy Policy</h1>
+        <p class="doc-subtitle">Last updated: October 2026. How Vivy collects, uses, and protects your server and user information.</p>
+
+        <h2 class="doc-heading" id="privacy-data-collected">1. Data We Collect</h2>
+        <p class="doc-text">Vivy collects minimal data required to deliver its automated Discord server management features:</p>
+        <ul style="color:var(--text-secondary);margin-left:24px;margin-bottom:16px;line-height:1.7;">
+            <li><strong>Server Data:</strong> Server IDs, channel IDs, role IDs, and configured dashboard parameters (e.g. prefix, welcome messages, automod thresholds).</li>
+            <li><strong>User Data:</strong> Discord User IDs, usernames, and avatars for authentication, leveling XP, and economy balances.</li>
+            <li><strong>Audit & Security Logs:</strong> Basic timestamps, moderator action records, and ticket transcripts (only when enabled by server administrators).</li>
+        </ul>
+
+        <h2 class="doc-heading" id="privacy-data-usage">2. How We Use Data</h2>
+        <p class="doc-text">We strictly use the collected data to operate, maintain, and optimize Vivy's bot and dashboard functionality. We never sell, rent, or trade your personal data to third parties.</p>
+
+        <h2 class="doc-heading" id="privacy-storage">3. Data Storage & Security</h2>
+        <p class="doc-text">All data is securely stored in local SQLite databases protected by rate limiting, strict HTTP security headers, and authenticated sessions.</p>
+
+        <h2 class="doc-heading" id="privacy-deletion">4. Data Deletion Requests</h2>
+        <p class="doc-text">Server administrators and members may request the deletion of their server or user data at any time by contacting our support server or creating a support ticket.</p>
+
+        <div class="doc-nav-footer">
+            <div class="doc-nav-card" data-nav="terms"><div class="doc-nav-label"><i class="fa-solid fa-arrow-left"></i> Previous</div><div class="doc-nav-title">Terms of Service</div></div>
+            <div class="doc-nav-card next" data-nav="home"><div class="doc-nav-label">Back to <i class="fa-solid fa-house"></i></div><div class="doc-nav-title">Home</div></div>
+        </div>
+    </div>
+</main>
+
+<div class="docs-toc" id="docsToc">
+    <div class="toc-title">On this page</div>
+    <div id="tocContent"></div>
+</div>
+</div>
+
+<script src="/docs.js"></script>
+</body>
+</html>

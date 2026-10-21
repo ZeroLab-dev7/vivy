@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 250" width="100%" height="100%">
+    <defs>
+        <radialGradient id="space" cx="50%" cy="50%" r="70%">
+            <stop offset="0%" stop-color="#1b1464"/>
+            <stop offset="50%" stop-color="#0c082b"/>
+            <stop offset="100%" stop-color="#050212"/>
+        </radialGradient>
+        <linearGradient id="nebula" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#ff00ff" stop-opacity="0.4"/>
+            <stop offset="50%" stop-color="#00ffff" stop-opacity="0.2"/>
+            <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+        </linearGradient>
+    </defs>
+    <rect width="700" height="250" fill="url(#space)"/>
+    <ellipse cx="350" cy="125" rx="500" ry="200" fill="url(#nebula)" filter="blur(40px)"/>
+    <!-- Star fields -->
+    <circle cx="80" cy="50" r="1.5" fill="#fff" opacity="0.8"/>
+    <circle cx="210" cy="180" r="1" fill="#fff" opacity="0.6"/>
+    <circle cx="540" cy="90" r="2" fill="#fff" opacity="0.9"/>
+    <circle cx="620" cy="200" r="1.2" fill="#fff" opacity="0.7"/>
+    <circle cx="150" cy="100" r="1" fill="#00ffff" opacity="0.8"/>
+    <circle cx="480" cy="220" r="1.5" fill="#ff00ff" opacity="0.8"/>
+    <circle cx="300" cy="40" r="1.2" fill="#fff" opacity="0.5"/>
+</svg>
